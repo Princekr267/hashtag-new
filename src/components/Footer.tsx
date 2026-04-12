@@ -1,5 +1,3 @@
-import { ArrowRight, Mail } from 'lucide-react'
-
 export default function Footer(): JSX.Element {
   return (
     <footer className="relative border-t mt-20" style={{ borderColor: 'rgba(143,245,255,0.06)' }}>
