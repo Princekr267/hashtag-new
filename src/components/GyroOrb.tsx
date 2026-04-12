@@ -183,7 +183,7 @@ export default function GyroOrb(): JSX.Element {
       ctx.arc(cx, cy, 28 * pulse, 0, Math.PI * 2)
       ctx.stroke()
 
-      tRef.current += 0.006
+      tRef.current += 0.003
       animRef.current = requestAnimationFrame(draw)
     }
 

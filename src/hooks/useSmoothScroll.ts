@@ -1,8 +1,21 @@
 import { useEffect } from 'react'
+import Lenis from 'lenis'
 
 export function useSmoothScroll(): void {
   useEffect(() => {
-    // Smooth scroll polyfill for anchor links
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+    })
+
+    let rafId: number
+    function raf(time: number) {
+      lenis.raf(time)
+      rafId = requestAnimationFrame(raf)
+    }
+
+    rafId = requestAnimationFrame(raf)
+
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
       const anchor = target.closest('a[href^="#"]') as HTMLAnchorElement | null
@@ -15,10 +28,15 @@ export function useSmoothScroll(): void {
       const element = document.getElementById(id)
       if (!element) return
 
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      lenis.scrollTo(element, { offset: -50 })
     }
 
     document.addEventListener('click', handleClick)
-    return () => document.removeEventListener('click', handleClick)
+
+    return () => {
+      document.removeEventListener('click', handleClick)
+      cancelAnimationFrame(rafId)
+      lenis.destroy()
+    }
   }, [])
 }

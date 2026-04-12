@@ -62,18 +62,18 @@ export default function Blogs(): JSX.Element {
     <div className="relative z-10 pt-20">
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section className="section-sm px-6">
-        <div className="max-w-7xl mx-auto">
+        <div className="max-w-7xl mx-auto px-4">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.2, 0, 0, 1] }}
           >
             <span className="pill pill-cyan mb-6 inline-flex">Blog</span>
-            <h1 className="text-5xl md:text-7xl font-display font-bold leading-none mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold leading-tight mb-6">
               Ideas Worth<br />
               <span className="text-gradient">Sharing</span>
             </h1>
-            <p className="text-text-muted text-lg max-w-xl font-body leading-relaxed">
+            <p className="text-text-muted text-base md:text-lg max-w-xl font-body leading-relaxed">
               Thoughts on tech, design, careers, and culture — from the Hashtag team.
             </p>
           </motion.div>
@@ -165,16 +165,7 @@ export default function Blogs(): JSX.Element {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-6" style={{ borderTop: '1px solid rgba(143,245,255,0.06)' }}>
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/hashtag-logo.png" alt="Hashtag Official" className="h-8 w-auto" />
-            <img src="/jims-logo.png"    alt="JIMS Greater Noida" className="h-7 w-auto opacity-60" />
-          </div>
-          <p className="text-text-faint text-xs font-label">© 2025 Hashtag Official</p>
-        </div>
-      </footer>
+
     </div>
   )
 }

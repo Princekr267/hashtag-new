@@ -6,6 +6,7 @@ import Navbar from './components/Navbar'
 import CustomCursor from './components/CustomCursor'
 import PageLoader from './components/PageLoader'
 import AnimatedBackground from './components/AnimatedBackground'
+import Footer from './components/Footer'
 
 import Home from './pages/Home'
 import About from './pages/About'
@@ -56,8 +57,11 @@ function AppInner(): JSX.Element {
     <>
       <AnimatedBackground />
       <Navbar />
-      <main className="relative z-10">
-        <AnimatedRoutes />
+      <main className="relative z-10 min-h-screen flex flex-col justify-between">
+        <div className="flex-grow">
+          <AnimatedRoutes />
+        </div>
+        <Footer />
       </main>
     </>
   )
@@ -68,23 +72,21 @@ export default function App(): JSX.Element {
   const [showLoader, setShowLoader] = useState(false)
 
   useEffect(() => {
-    // Only show loader if not already seen this session
-    const seen = sessionStorage.getItem('loader-seen')
-    if (!seen) {
-      setShowLoader(true)
-    } else {
-      setLoaderDone(true)
-    }
+    setShowLoader(true)
   }, [])
 
   const handleLoaderComplete = () => {
-    sessionStorage.setItem('loader-seen', 'true')
     setLoaderDone(true)
     setShowLoader(false)
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter
+      future={{
+        v7_startTransition: true,
+        v7_relativeSplatPath: true,
+      }}
+    >
       {/* Custom cursor — desktop only via CSS */}
       <CustomCursor />
 

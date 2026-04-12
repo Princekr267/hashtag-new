@@ -173,7 +173,7 @@ export default function Home(): JSX.Element {
 
             {/* Stat strip */}
             <motion.div
-              className="flex items-center gap-8 pt-4"
+              className="flex flex-wrap items-center gap-6 sm:gap-8 pt-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.0 }}
@@ -363,30 +363,7 @@ export default function Home(): JSX.Element {
         </div>
       </section>
 
-      {/* ════════════════════════════════════════════════════════
-          FOOTER
-          ════════════════════════════════════════════════════ */}
-      <footer
-        className="py-14 px-6"
-        style={{ borderTop: '1px solid rgba(143,245,255,0.07)' }}
-      >
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex items-center gap-4">
-            <img src="/hashtag-logo.png" alt="Hashtag Official" className="h-9 w-auto" />
-            <div className="h-6 w-px bg-white/10" />
-            <img src="/jims-logo.png" alt="JIMS Greater Noida" className="h-7 w-auto opacity-55" />
-          </div>
-          <p className="text-text-faint text-xs font-label tracking-wider">
-            © 2025 Hashtag Official · JIMS Greater Noida
-          </p>
-          <a
-            href="mailto:hashtag@jims.edu.in"
-            className="text-text-muted hover:text-primary transition-colors text-xs font-label tracking-widest"
-          >
-            hashtag@jims.edu.in
-          </a>
-        </div>
-      </footer>
+
     </div>
   )
 }

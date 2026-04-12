@@ -154,7 +154,7 @@ export default function Navbar(): JSX.Element {
                     to={path}
                     end={path === '/'}
                     className={({ isActive }) =>
-                      `block py-4 text-4xl font-bold font-display border-b transition-colors duration-200
+                      `block py-4 text-2xl font-bold font-display border-b transition-colors duration-200
                       ${isActive
                         ? 'text-gradient border-primary/20'
                         : 'text-text-muted border-white/5 hover:text-text-primary'}`
