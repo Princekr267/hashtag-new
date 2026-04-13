@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TEAM, DEPARTMENTS, type TeamMember, type Department } from '../constants/data'
+import SubpageHeroVisual from '../components/SubpageHeroVisual'
 
 const DEPT_ACCENTS: Record<string, { color: string; glow: string; tag: string }> = {
   Leadership:  { color: '#60a5fa', glow: 'rgba(96,165,250,0.15)',  tag: 'bg-blue-500/10 text-blue-300' },
@@ -46,6 +47,7 @@ function MemberCard({ m }: { m: TeamMember }) {
         <p className="text-sm font-label tracking-widest uppercase drop-shadow-md" style={{ color: style.color }}>
           {m.title}
         </p>
+        
       </div>
 
       {/* Sliding Dark Panel (Slides up from bottom on hover) */}
@@ -110,11 +112,13 @@ export default function Team(): JSX.Element {
   })
 
   return (
+    
     <div className="min-h-screen pt-28 pb-24 px-6">
+      
       <div className="max-w-7xl mx-auto">
 
         {/* ── Header ─────────────────────────────────────────── */}
-        <div className="mb-16 px-4">
+        <div className="mb-16 px-4 relative">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -137,6 +141,11 @@ export default function Team(): JSX.Element {
               </p>
             </div>
           </motion.div>
+
+          {/* Background Visual */}
+          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
+            <SubpageHeroVisual type="rings" />
+          </div>
         </div>
 
         {/* ── Filter tabs ─────────────────────────────────────── */}

@@ -12,10 +12,10 @@ export default function Footer(): JSX.Element {
           
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              <img src="/hashtag-logo.png" alt="Hashtag Official" className="h-10 w-auto" />
-              <div className="h-6 w-px bg-outline-var" />
-              <img src="/jims-logo.png" alt="JIMS Greater Noida" className="h-8 w-auto opacity-60 grayscale hover:grayscale-0 transition-all" />
+            <div className="flex flex-wrap items-center gap-4 mb-8">
+              <img src="/hashtag-logo.png" alt="Hashtag Official" className="h-12 w-auto" />
+              <div className="h-8 w-px bg-outline-var hidden sm:block" />
+              <img src="/jims-logo.png" alt="JIMS Greater Noida" className="h-9 w-auto opacity-70 grayscale hover:grayscale-0 transition-all" />
             </div>
             <p className="text-text-muted font-body leading-relaxed max-w-sm mb-8">
               We are a community of developers, designers, and creators coming together to build the future at JIMS. Join us to learn, innovate, and grow.

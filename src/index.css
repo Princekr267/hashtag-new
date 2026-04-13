@@ -12,11 +12,11 @@
 
 /* ── Design Tokens ───────────────────────────────────────────── */
 :root {
-  --bg-base:          #030b1a;
-  --bg-container:     #071428;
-  --bg-container-hi:  #0c1e3d;
-  --bg-container-top: #112348;
-  --bg-bright:        #172d58;
+  --bg-base:          #000000;
+  --bg-container:     #0a0a0a;
+  --bg-container-hi:  #141414;
+  --bg-container-top: #1a1a1a;
+  --bg-bright:        #262626;
 
   --primary:          #60a5fa;
   --primary-glow:     rgba(96, 165, 250, 0.18);
@@ -29,8 +29,8 @@
   --text-primary:     #e8f0ff;
   --text-muted:       #94a3c4;
   --text-faint:       #4e5f82;
-  --outline:          #1e3a6e;
-  --outline-var:      #1a2f58;
+  --outline:          #1b3261;
+  --outline-var:      #14254b;
 }
 
 /* ── Base Reset ──────────────────────────────────────────────── */

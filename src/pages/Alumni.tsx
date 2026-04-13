@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
+import SubpageHeroVisual from '../components/SubpageHeroVisual'
 
 const ALUMNI = [
   { name: 'Harsh Nainwaya',  batch: '2024', role: 'SDE Intern @ Microsoft', quote: 'Hashtag gave me my first real product experience.', photo: '/Photos/Harsh_Nainwaya.jpg', accent: '#8ff5ff' },
@@ -40,6 +41,10 @@ export default function Alumni(): JSX.Element {
               They built Hashtag — and Hashtag built them.
             </p>
           </motion.div>
+
+          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
+            <SubpageHeroVisual type="rings" />
+          </div>
         </div>
       </section>
 

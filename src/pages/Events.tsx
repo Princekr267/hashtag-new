@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ExternalLink } from 'lucide-react'
+import SubpageHeroVisual from '../components/SubpageHeroVisual'
 import { EVENTS, type Event } from '../constants/data'
 
 const STATUS = ['All', 'upcoming', 'past'] as const
@@ -100,6 +101,10 @@ export default function Events(): JSX.Element {
               every Hashtag event is an experience.
             </p>
           </motion.div>
+
+          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
+            <SubpageHeroVisual type="gyro" />
+          </div>
         </div>
       </section>
 

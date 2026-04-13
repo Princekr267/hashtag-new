@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import WarpSpeed from './WarpSpeed'
 
 interface PageLoaderProps {
   onComplete: () => void
@@ -39,12 +40,14 @@ export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element
         variants={containerVariants}
         exit="exit"
         className="fixed inset-0 z-[100000] flex flex-col items-center justify-center overflow-hidden"
-        style={{ background: '#070b14' }}
+        style={{ background: '#020617' }}
       >
-        {/* Dynamic deep navy gradient background */}
+        <WarpSpeed />
+        
+        {/* Dynamic deep navy gradient background overlay */}
         <div
-          className="absolute inset-0 z-0 opacity-60"
-          style={{ background: 'radial-gradient(circle at 50% 50%, #0c1a3b 0%, #070b14 80%)' }}
+          className="absolute inset-0 z-0 opacity-80"
+          style={{ background: 'radial-gradient(circle at 50% 50%, #050a1f 0%, #020617 80%)' }}
         />
 
         {/* Scanning line */}
@@ -89,11 +92,11 @@ export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element
           </motion.div>
 
           <h1
-            className="font-display text-center"
+            className="font-display text-center whitespace-nowrap"
             style={{
               fontFamily: 'Outfit, sans-serif',
-              fontSize: 'clamp(3rem, 10vw, 7rem)',
-              fontWeight: 800,
+              fontSize: 'clamp(1.5rem, 8vw, 7rem)',
+              fontWeight: 900,
               lineHeight: 1,
               letterSpacing: '-0.02em',
             }}

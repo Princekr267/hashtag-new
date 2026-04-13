@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import MagneticButton from '../components/MagneticButton'
-import GyroOrb from '../components/GyroOrb'
+import CosmosHero from '../components/CosmosHero'
 import { STATS, MARQUEE_EVENTS } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -113,93 +113,60 @@ export default function Home(): JSX.Element {
           background: 'radial-gradient(ellipse 60% 70% at 70% 50%, rgba(143,245,255,0.04) 0%, transparent 70%)',
         }} />
 
-        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <CosmosHero />
+          {/* Subtle overlay for readability */}
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
 
-          {/* ── LEFT: Copy ── */}
-          <div className="flex flex-col gap-8 z-10">
-
-            {/* Tag pill */}
+        <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10 px-4">
+          {/* ── CONTENT ── */}
+          <div className="flex flex-col items-center gap-6 max-w-5xl">
+            {/* Tag pill - Blue TECH SOCIETY */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.15 }}
             >
-              <span className="pill pill-green inline-flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                JIMS GREATER NOIDA · SINCE 2023
+              <span className="text-[10px] md:text-xs font-label font-bold tracking-[0.4em] text-blue-500 uppercase px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5">
+                TECH SOCIETY
               </span>
             </motion.div>
 
-            {/* Headline */}
+            {/* Headline - "Explore the cosmos of technology" */}
             <motion.h1
-              className="hero-heading"
+              className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, delay: 0.3, ease: [0.76, 0, 0.24, 1] }}
+              transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             >
-              WHERE CODE<br />
-              <span className="text-gradient">MEETS CULTURE</span>
+              Explore the cosmos<br />of technology
             </motion.h1>
 
-            {/* Sub */}
+            {/* Subtext - "Where innovation meets the infinite" */}
             <motion.p
-              className="text-text-muted text-lg leading-relaxed max-w-md font-body"
+              className="text-blue-200/50 text-base md:text-xl leading-relaxed max-w-2xl font-body italic"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
             >
-              Hashtag Official is JIMS Greater Noida's premier technical society —
-              where builders, designers, and dreamers build real things together.
+              Where innovation meets the infinite
             </motion.p>
 
-            {/* CTAs */}
+            {/* Subtle Scroll Hint or Secondary CTA */}
             <motion.div
-              className="flex flex-wrap gap-3"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.78, duration: 0.5 }}
-            >
-              <MagneticButton>
-                <Link to="/events" className="btn-primary">
-                  Explore Events <ArrowRight size={15} />
-                </Link>
-              </MagneticButton>
-              <MagneticButton>
-                <Link to="/team" className="btn-ghost">
-                  Meet the Team
-                </Link>
-              </MagneticButton>
-            </motion.div>
-
-            {/* Stat strip */}
-            <motion.div
-              className="flex flex-wrap items-center gap-6 sm:gap-8 pt-4"
+              className="mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.0 }}
+              transition={{ delay: 1.2, duration: 1 }}
             >
-              {[
-                { n: '50+', label: 'Members' },
-                { n: '8',   label: 'Events' },
-                { n: '1',   label: 'Microsoft Partnership' },
-              ].map(({ n, label }) => (
-                <div key={label} className="flex flex-col">
-                  <span className="text-2xl font-display font-bold text-gradient">{n}</span>
-                  <span className="text-xs font-label text-text-faint tracking-wider mt-0.5">{label}</span>
-                </div>
-              ))}
+               <Link to="/events" className="text-white/40 hover:text-white transition-colors text-xs font-label tracking-[0.3em] uppercase flex items-center gap-4">
+                 <div className="w-8 h-px bg-white/10" />
+                 ENTER SOCIETY
+                 <div className="w-8 h-px bg-white/10" />
+               </Link>
             </motion.div>
           </div>
-
-          {/* ── RIGHT: 3-D Orb ── */}
-          <motion.div
-            className="relative h-[380px] md:h-[520px]"
-            initial={{ opacity: 0, scale: 0.88 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.1, delay: 0.4, ease: [0.2, 0, 0, 1] }}
-          >
-            <GyroOrb />
-          </motion.div>
         </div>
 
         {/* Scroll cue */}

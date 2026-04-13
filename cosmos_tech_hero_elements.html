@@ -1,0 +1,378 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.page{background:#000;font-family:var(--font-sans,'Inter',sans-serif);color:#fff}
+.section-label{font-size:11px;letter-spacing:.12em;color:#1e5fa8;text-transform:uppercase;margin-bottom:8px;font-weight:500}
+.section-title{font-size:22px;font-weight:500;color:#e0eeff;margin-bottom:6px}
+.section-sub{font-size:13px;color:#3a6899;margin-bottom:0}
+.divider{height:1px;background:linear-gradient(90deg,transparent,#0a2a4a,#0d4a8a,#0a2a4a,transparent);margin:0}
+</style>
+
+<div class="page">
+
+<!-- ═══════════════════════════════════════════════════════
+     HERO SECTION — Deep Space Rotating Planet + Star Field
+═══════════════════════════════════════════════════════ -->
+<div style="position:relative;height:520px;overflow:hidden;background:#000">
+  <canvas id="hero" style="display:block;width:100%;height:100%"></canvas>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2;pointer-events:none">
+    <div class="section-label">Tech Society</div>
+    <h1 style="font-size:38px;font-weight:500;color:#e8f4ff;line-height:1.2;margin-bottom:10px">Explore the cosmos<br>of technology</h1>
+    <p style="font-size:14px;color:#2a6090;max-width:320px;margin:0 auto">Where innovation meets the infinite</p>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2 — Constellation Network
+═══════════════════════════════════════════════════════ -->
+<div style="padding:40px 24px 32px;background:#000">
+  <div style="text-align:center;margin-bottom:20px">
+    <div class="section-label">Connect</div>
+    <div class="section-title">Constellation network</div>
+    <div class="section-sub">Live nodes, pulsing connections</div>
+  </div>
+  <canvas id="constellation" style="display:block;width:100%;height:220px"></canvas>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 3 — Warp Speed / Hyperspace Lines
+═══════════════════════════════════════════════════════ -->
+<div style="padding:40px 24px 32px;background:#000">
+  <div style="text-align:center;margin-bottom:20px">
+    <div class="section-label">Velocity</div>
+    <div class="section-title">Warp speed</div>
+    <div class="section-sub">Moving at the speed of innovation</div>
+  </div>
+  <canvas id="warp" style="display:block;width:100%;height:200px"></canvas>
+</div>
+
+<div class="divider"></div>
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 4 — 3D Rotating Ring / Saturn
+═══════════════════════════════════════════════════════ -->
+<div style="padding:40px 24px 48px;background:#000">
+  <div style="text-align:center;margin-bottom:20px">
+    <div class="section-label">Structure</div>
+    <div class="section-title">Orbital rings</div>
+    <div class="section-sub">Layered depth in motion</div>
+  </div>
+  <canvas id="rings" style="display:block;width:100%;height:260px"></canvas>
+</div>
+
+</div>
+
+<script>
+// ── HERO: Deep Space Planet + Starfield ──────────────────────────────────
+(function(){
+  const cv=document.getElementById('hero');
+  const ctx=cv.getContext('2d');
+  let W,H,stars=[];
+  function resize(){
+    W=cv.offsetWidth;H=cv.offsetHeight;
+    cv.width=W;cv.height=H;
+    stars=Array.from({length:280},()=>({
+      x:Math.random()*W,y:Math.random()*H,
+      r:Math.random()*1.4,twinkle:Math.random()*Math.PI*2,
+      speed:0.02+Math.random()*0.03
+    }));
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // star field
+    stars.forEach(s=>{
+      s.twinkle+=s.speed;
+      const alpha=0.3+0.7*((Math.sin(s.twinkle)+1)/2);
+      ctx.beginPath();
+      ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+      const b=Math.round(180+alpha*75);
+      ctx.fillStyle=`rgba(${Math.round(b*0.7)},${Math.round(b*0.85)},${b},${alpha})`;
+      ctx.fill();
+    });
+
+    // planet
+    const cx=W/2,cy=H/2+10,pr=110;
+    // atmosphere glow
+    for(let i=5;i>=1;i--){
+      ctx.beginPath();
+      ctx.arc(cx,cy,pr+i*14,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(10,80,200,${0.04*i})`;
+      ctx.lineWidth=12;
+      ctx.stroke();
+    }
+    // planet body
+    const pg=ctx.createRadialGradient(cx-35,cy-35,8,cx,cy,pr);
+    pg.addColorStop(0,'#1a4a8a');
+    pg.addColorStop(0.3,'#0a2860');
+    pg.addColorStop(0.65,'#041438');
+    pg.addColorStop(1,'#000510');
+    ctx.beginPath();
+    ctx.arc(cx,cy,pr,0,Math.PI*2);
+    ctx.fillStyle=pg;
+    ctx.fill();
+
+    // animated surface lines (latitude bands)
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx,cy,pr,0,Math.PI*2);
+    ctx.clip();
+    for(let i=0;i<7;i++){
+      const yy=cy-pr+i*(pr*2/6);
+      const halfW=Math.sqrt(Math.max(0,pr*pr-(yy-cy)*(yy-cy)));
+      const speed=(i%2===0?1:-1)*0.3;
+      const off=((t*speed*0.5)%(halfW*2));
+      ctx.beginPath();
+      ctx.ellipse(cx,yy,halfW*0.92,halfW*0.08,0,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(20,100,255,${0.06+0.04*(i%3)})`;
+      ctx.lineWidth=0.8;
+      ctx.stroke();
+    }
+    // shimmer
+    const sg=ctx.createRadialGradient(cx-45,cy-45,0,cx-20,cy-20,75);
+    sg.addColorStop(0,'rgba(100,160,255,0.18)');
+    sg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=sg;
+    ctx.beginPath();
+    ctx.arc(cx,cy,pr,0,Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+
+    // ring
+    ctx.save();
+    ctx.translate(cx,cy);
+    ctx.scale(1,0.22);
+    for(let ri=0;ri<3;ri++){
+      const r1=pr+20+ri*18,r2=pr+30+ri*18;
+      const rg=ctx.createRadialGradient(0,0,r1,0,0,r2);
+      rg.addColorStop(0,`rgba(10,60,180,${0.5-ri*0.12})`);
+      rg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.beginPath();
+      ctx.arc(0,0,r2,0,Math.PI*2);
+      ctx.arc(0,0,r1,0,Math.PI*2,true);
+      ctx.fillStyle=rg;
+      ctx.fill();
+    }
+    ctx.restore();
+
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── CONSTELLATION NETWORK ────────────────────────────────────────────────
+(function(){
+  const cv=document.getElementById('constellation');
+  const ctx=cv.getContext('2d');
+  let W,H,nodes=[];
+  const N=28;
+  function resize(){
+    W=cv.offsetWidth;H=220;
+    cv.width=W;cv.height=H;
+    nodes=Array.from({length:N},()=>({
+      x:40+Math.random()*(W-80),y:20+Math.random()*(H-40),
+      vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,
+      r:1.5+Math.random()*2,pulse:Math.random()*Math.PI*2,
+      pspeed:0.03+Math.random()*0.02
+    }));
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  let t=0;
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    nodes.forEach(n=>{
+      n.x+=n.vx;n.y+=n.vy;
+      n.pulse+=n.pspeed;
+      if(n.x<20||n.x>W-20)n.vx*=-1;
+      if(n.y<10||n.y>H-10)n.vy*=-1;
+    });
+    // edges
+    for(let i=0;i<N;i++){
+      for(let j=i+1;j<N;j++){
+        const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){
+          const alpha=(1-d/120)*0.5;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x,nodes[i].y);
+          ctx.lineTo(nodes[j].x,nodes[j].y);
+          ctx.strokeStyle=`rgba(20,90,210,${alpha})`;
+          ctx.lineWidth=0.6;
+          ctx.stroke();
+        }
+      }
+    }
+    // nodes
+    nodes.forEach(n=>{
+      const pulse=(Math.sin(n.pulse)+1)/2;
+      // outer ring
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r+3+pulse*3,0,Math.PI*2);
+      ctx.fillStyle=`rgba(10,60,180,${0.08+pulse*0.08})`;
+      ctx.fill();
+      // core
+      ctx.beginPath();
+      ctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(${Math.round(80+pulse*120)},${Math.round(140+pulse*80)},255,${0.7+pulse*0.3})`;
+      ctx.fill();
+    });
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── WARP SPEED ───────────────────────────────────────────────────────────
+(function(){
+  const cv=document.getElementById('warp');
+  const ctx=cv.getContext('2d');
+  let W,H,streaks=[];
+  function mkStreak(W,H){
+    const a=Math.random()*Math.PI*2;
+    const d=5+Math.random()*80;
+    return {
+      x:W/2+Math.cos(a)*d,y:H/2+Math.sin(a)*d,
+      a,speed:2+Math.random()*5,
+      len:20+Math.random()*60,life:0,maxLife:40+Math.random()*40,
+      bright:0.4+Math.random()*0.6
+    };
+  }
+  function resize(){
+    W=cv.offsetWidth;H=200;
+    cv.width=W;cv.height=H;
+    streaks=Array.from({length:120},()=>{
+      const s=mkStreak(W,H);
+      s.life=Math.random()*s.maxLife;
+      return s;
+    });
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  function draw(){
+    ctx.fillStyle='rgba(0,0,0,0.18)';
+    ctx.fillRect(0,0,W,H);
+    streaks.forEach((s,i)=>{
+      s.life++;
+      const prog=s.life/s.maxLife;
+      const spd=s.speed*(0.5+prog*1.5);
+      const cx2=W/2,cy2=H/2;
+      const dist=Math.sqrt((s.x-cx2)**2+(s.y-cy2)**2);
+      s.x+=Math.cos(s.a)*spd;
+      s.y+=Math.sin(s.a)*spd;
+      const tailLen=s.len*prog;
+      const tx=s.x-Math.cos(s.a)*tailLen;
+      const ty=s.y-Math.sin(s.a)*tailLen;
+      const alpha=s.bright*(1-prog*0.3);
+      const gr=ctx.createLinearGradient(tx,ty,s.x,s.y);
+      gr.addColorStop(0,'rgba(0,30,120,0)');
+      gr.addColorStop(0.6,`rgba(20,90,220,${alpha*0.5})`);
+      gr.addColorStop(1,`rgba(140,200,255,${alpha})`);
+      ctx.beginPath();
+      ctx.moveTo(tx,ty);
+      ctx.lineTo(s.x,s.y);
+      ctx.strokeStyle=gr;
+      ctx.lineWidth=0.8+prog*0.8;
+      ctx.stroke();
+      if(s.life>=s.maxLife||s.x<0||s.x>W||s.y<0||s.y>H){
+        streaks[i]=mkStreak(W,H);
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── ORBITAL RINGS ────────────────────────────────────────────────────────
+(function(){
+  const cv=document.getElementById('rings');
+  const ctx=cv.getContext('2d');
+  let W,H;
+  function resize(){
+    W=cv.offsetWidth;H=260;
+    cv.width=W;cv.height=H;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+
+  const orbits=[
+    {r:40,tilt:0.2,speed:0.022,dotR:4,color:[100,180,255],dotCount:1},
+    {r:72,tilt:0.45,speed:-0.014,dotR:3,color:[50,120,220],dotCount:2},
+    {r:105,tilt:0.7,speed:0.009,dotR:3.5,color:[20,80,180],dotCount:3},
+  ];
+  const orbitAngles=orbits.map(()=>Math.random()*Math.PI*2);
+  let t=0;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const cx=W/2,cy=H/2;
+
+    // central sphere
+    const cg=ctx.createRadialGradient(cx-18,cy-18,4,cx,cy,38);
+    cg.addColorStop(0,'#4a90e2');
+    cg.addColorStop(0.4,'#1a50a0');
+    cg.addColorStop(1,'#050e28');
+    ctx.beginPath();
+    ctx.arc(cx,cy,38,0,Math.PI*2);
+    ctx.fillStyle=cg;
+    ctx.fill();
+    // specular
+    const sg=ctx.createRadialGradient(cx-14,cy-14,1,cx-10,cy-10,18);
+    sg.addColorStop(0,'rgba(180,220,255,0.4)');
+    sg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=sg;
+    ctx.beginPath();
+    ctx.arc(cx,cy,38,0,Math.PI*2);
+    ctx.fill();
+
+    orbits.forEach((o,oi)=>{
+      orbitAngles[oi]+=o.speed;
+      const scaleY=Math.abs(Math.sin(o.tilt+t*0.002))*0.35+0.18;
+
+      // orbit path
+      ctx.beginPath();
+      ctx.ellipse(cx,cy,o.r,o.r*scaleY,0,0,Math.PI*2);
+      ctx.strokeStyle=`rgba(${o.color[0]},${o.color[1]},${o.color[2]},0.18)`;
+      ctx.lineWidth=0.8;
+      ctx.stroke();
+
+      // dots on orbit
+      for(let d=0;d<o.dotCount;d++){
+        const ang=orbitAngles[oi]+d*(Math.PI*2/o.dotCount);
+        const dx=cx+Math.cos(ang)*o.r;
+        const dy=cy+Math.sin(ang)*o.r*scaleY;
+        const depth=(Math.sin(ang)+1)/2;
+
+        // trail
+        for(let tr=1;tr<=8;tr++){
+          const ta=ang-tr*0.12;
+          const tdx=cx+Math.cos(ta)*o.r;
+          const tdy=cy+Math.sin(ta)*o.r*scaleY;
+          ctx.beginPath();
+          ctx.arc(tdx,tdy,o.dotR*(0.3+depth*0.3)*(1-tr/9),0,Math.PI*2);
+          ctx.fillStyle=`rgba(${o.color[0]},${o.color[1]},${o.color[2]},${(1-tr/9)*0.3*depth})`;
+          ctx.fill();
+        }
+        // dot
+        ctx.beginPath();
+        ctx.arc(dx,dy,o.dotR*(0.5+depth*0.7),0,Math.PI*2);
+        ctx.fillStyle=`rgba(${Math.round(o.color[0]*0.5+128*depth)},${Math.round(o.color[1]*0.5+100*depth)},255,${0.5+depth*0.5})`;
+        ctx.fill();
+      }
+    });
+    t++;
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+</script>

@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        'bg-base':        '#0e0e10',
-        'bg-container':   '#19191c',
-        'bg-hi':          '#1f1f22',
-        'bg-top':         '#262528',
-        'bg-bright':      '#2c2c2f',
+        'bg-base':        '#000000',
+        'bg-container':   '#0a0a0a',
+        'bg-hi':          '#141414',
+        'bg-top':         '#1a1a1a',
+        'bg-bright':      '#262626',
         primary:          '#8ff5ff',
         'primary-dim':    '#00eab7',
         secondary:        '#00fc40',

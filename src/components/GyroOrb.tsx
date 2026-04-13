@@ -87,9 +87,9 @@ export default function GyroOrb(): JSX.Element {
 
       // Ring definitions: radius, tilt preset, rotation speed, colour
       const rings = [
-        { r: 155, tilt: [0, 0, 0],                       speed: 0.28, color: [96, 165, 250],  alpha: 0.9,  lw: 1.5 },  // blue
-        { r: 115, tilt: [Math.PI / 2.6, 0, 0],           speed: -0.18, color: [129, 140, 248], alpha: 0.80, lw: 1.1 }, // indigo
-        { r: 90,  tilt: [Math.PI / 4, Math.PI / 3.5, 0], speed: 0.40, color: [56, 189, 248],  alpha: 0.70, lw: 0.9 },  // sky
+        { r: 125, tilt: [0, 0, 0],                       speed: 0.28, color: [160, 210, 255],  alpha: 0.85, lw: 1.4 },
+        { r: 95, tilt: [Math.PI / 2.6, 0, 0],           speed: -0.18, color: [100, 180, 255], alpha: 0.75, lw: 1.2 },
+        { r: 75,  tilt: [Math.PI / 4, Math.PI / 3.5, 0], speed: 0.40, color: [140, 200, 255],  alpha: 0.65, lw: 0.9 },
       ]
 
       rings.forEach(({ r, tilt, speed, color, alpha, lw }) => {
@@ -152,22 +152,22 @@ export default function GyroOrb(): JSX.Element {
       const pulse = 1 + 0.04 * Math.sin(t * 2.1)
 
       // Outer atmospheric haze
-      const haze = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60 * pulse)
-      haze.addColorStop(0,   'rgba(96,165,250,0.25)')
-      haze.addColorStop(0.45,'rgba(56,189,248,0.12)')
-      haze.addColorStop(0.7, 'rgba(129,140,248,0.06)')
+      const haze = ctx.createRadialGradient(cx, cy, 0, cx, cy, 55 * pulse)
+      haze.addColorStop(0,   'rgba(140,200,255,0.4)')
+      haze.addColorStop(0.45,'rgba(100,180,255,0.22)')
+      haze.addColorStop(0.7, 'rgba(60,130,240,0.12)')
       haze.addColorStop(1,   'transparent')
       ctx.fillStyle = haze
       ctx.beginPath()
-      ctx.arc(cx, cy, 60 * pulse, 0, Math.PI * 2)
+      ctx.arc(cx, cy, 55 * pulse, 0, Math.PI * 2)
       ctx.fill()
 
       // Inner core
-      const core = ctx.createRadialGradient(cx - 8, cy - 8, 0, cx, cy, 28 * pulse)
-      core.addColorStop(0,   'rgba(220,240,255,0.95)')
-      core.addColorStop(0.35,'rgba(96,165,250,0.85)')
-      core.addColorStop(0.7, 'rgba(56,189,248,0.55)')
-      core.addColorStop(1,   'rgba(3,11,26,0)')
+      const core = ctx.createRadialGradient(cx - 5, cy - 5, 0, cx, cy, 24 * pulse)
+      core.addColorStop(0,   'rgba(240,252,255,1)')
+      core.addColorStop(0.35,'rgba(160,210,255,0.95)')
+      core.addColorStop(0.7,   'rgba(80,160,255,0.75)')
+      core.addColorStop(1,   'rgba(0,0,0,0)')
       ctx.fillStyle   = core
       ctx.shadowBlur  = 30
       ctx.shadowColor = 'rgba(96,165,250,0.7)'
@@ -210,7 +210,7 @@ export default function GyroOrb(): JSX.Element {
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background: 'radial-gradient(circle at 50% 50%, rgba(56,189,248,0.06) 0%, rgba(96,165,250,0.03) 40%, transparent 70%)',
+          background: 'radial-gradient(circle at 50% 50%, rgba(59,130,246,0.06) 0%, rgba(37,99,235,0.03) 40%, transparent 70%)',
         }}
       />
       <canvas ref={canvasRef} className="w-full h-full" />
@@ -229,9 +229,9 @@ export default function GyroOrb(): JSX.Element {
       {/* DEV / DESIGN / IMPACT labels */}
       <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-4 pointer-events-none select-none">
         {[
-          { l: 'ORBIT-1', c: '#60a5fa', bc: 'rgba(96,165,250,0.2)' },
-          { l: 'ORBIT-2', c: '#818cf8', bc: 'rgba(129,140,248,0.2)' },
-          { l: 'ORBIT-3', c: '#38bdf8', bc: 'rgba(56,189,248,0.2)' },
+          { l: 'ORBIT-1', c: '#93c5fd', bc: 'rgba(147,197,253,0.2)' },
+          { l: 'ORBIT-2', c: '#60a5fa', bc: 'rgba(96,165,250,0.2)' },
+          { l: 'ORBIT-3', c: '#3b82f6', bc: 'rgba(59,130,246,0.2)' },
         ].map(({ l, c, bc }) => (
           <span
             key={l}

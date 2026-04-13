@@ -65,7 +65,7 @@ export default function Navbar(): JSX.Element {
             <img
               src="/hashtag-logo.png"
               alt="Hashtag Official Logo"
-              className="h-9 w-auto object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(143,245,255,0.6)]"
+              className="h-10 w-auto object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(143,245,255,0.6)]"
             />
             <div
               className="h-6 w-px hidden sm:block"

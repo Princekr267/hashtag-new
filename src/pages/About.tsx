@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import TiltCard from '../components/TiltCard'
+import SubpageHeroVisual from '../components/SubpageHeroVisual'
 import { MILESTONES } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -84,6 +85,10 @@ export default function About(): JSX.Element {
               committed to making real impact through technology.
             </p>
           </motion.div>
+
+          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
+             <SubpageHeroVisual type="rings" />
+          </div>
 
           {/* Horizontal rule with glow */}
           <div
