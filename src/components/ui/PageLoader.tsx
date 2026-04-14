@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import WarpSpeed from './WarpSpeed'
+import WarpSpeed from '../visuals/WarpSpeed'
 
 interface PageLoaderProps {
   onComplete: () => void

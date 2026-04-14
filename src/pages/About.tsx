@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import TiltCard from '../components/TiltCard'
-import SubpageHeroVisual from '../components/SubpageHeroVisual'
+import TiltCard from '../components/ui/TiltCard'
+import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 import { MILESTONES } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)

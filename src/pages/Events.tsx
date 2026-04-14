@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ExternalLink } from 'lucide-react'
-import SubpageHeroVisual from '../components/SubpageHeroVisual'
+import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 import { EVENTS, type Event } from '../constants/data'
 
 const STATUS = ['All', 'upcoming', 'past'] as const

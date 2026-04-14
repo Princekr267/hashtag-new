@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import SubpageHeroVisual from '../components/SubpageHeroVisual'
+import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 
 const BLOGS = [
   {

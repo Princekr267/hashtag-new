@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import SubpageHeroVisual from '../components/SubpageHeroVisual'
+import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 
 const ALUMNI = [
   { name: 'Harsh Nainwaya',  batch: '2024', role: 'SDE Intern @ Microsoft', quote: 'Hashtag gave me my first real product experience.', photo: '/Photos/Harsh_Nainwaya.jpg', accent: '#8ff5ff' },

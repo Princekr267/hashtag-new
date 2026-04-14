@@ -4,8 +4,8 @@ import { ChevronDown, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import MagneticButton from '../components/MagneticButton'
-import CosmosHero from '../components/CosmosHero'
+import MagneticButton from '../components/ui/MagneticButton'
+import CosmosHero from '../components/visuals/CosmosHero'
 import { STATS, MARQUEE_EVENTS } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
