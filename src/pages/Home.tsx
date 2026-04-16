@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import MagneticButton from '../components/ui/MagneticButton'
 import CosmosHero from '../components/visuals/CosmosHero'
 import { STATS, MARQUEE_EVENTS } from '../constants/data'
+import InteractiveCard3D from '../components/ui/InteractiveCard3D'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -94,12 +95,16 @@ export default function Home(): JSX.Element {
   return (
     <div className="relative z-10">
 
+      {/* Subtle mascot watermark in background */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] opacity-[0.03] pointer-events-none -z-10 mix-blend-screen overflow-hidden">
+         <img src="/mascot.png" alt="" className="w-full h-full object-contain filter grayscale invert" />
+      </div>
+
       {/* ════════════════════════════════════════════════════════
           HERO SECTION
           ════════════════════════════════════════════════════ */}
       <section className="min-h-screen flex items-center px-6 pt-24 pb-12 relative overflow-hidden">
-
-        {/* Background grid lines */}
+        {/* ... existing hero code ... */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: `
             linear-gradient(rgba(143,245,255,0.025) 1px, transparent 1px),
@@ -108,21 +113,17 @@ export default function Home(): JSX.Element {
           backgroundSize: '80px 80px',
         }} />
 
-        {/* Radial gradient polish */}
         <div className="absolute inset-0 pointer-events-none" style={{
           background: 'radial-gradient(ellipse 60% 70% at 70% 50%, rgba(143,245,255,0.04) 0%, transparent 70%)',
         }} />
 
         <div className="absolute inset-0 z-0 pointer-events-none">
           <CosmosHero />
-          {/* Subtle overlay for readability */}
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10 px-4">
-          {/* ── CONTENT ── */}
           <div className="flex flex-col items-center gap-6 max-w-5xl">
-            {/* Tag pill - Blue TECH SOCIETY */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
@@ -133,7 +134,6 @@ export default function Home(): JSX.Element {
               </span>
             </motion.div>
 
-            {/* Headline - "Explore the cosmos of technology" */}
             <motion.h1
               className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
               initial={{ opacity: 0, y: 40 }}
@@ -143,7 +143,6 @@ export default function Home(): JSX.Element {
               Explore the cosmos<br />of technology
             </motion.h1>
 
-            {/* Subtext - "Where innovation meets the infinite" */}
             <motion.p
               className="text-blue-200/50 text-base md:text-xl leading-relaxed max-w-2xl font-body italic"
               initial={{ opacity: 0, y: 20 }}
@@ -153,7 +152,6 @@ export default function Home(): JSX.Element {
               Where innovation meets the infinite
             </motion.p>
 
-            {/* Subtle Scroll Hint or Secondary CTA */}
             <motion.div
               className="mt-6"
               initial={{ opacity: 0 }}
@@ -169,7 +167,6 @@ export default function Home(): JSX.Element {
           </div>
         </div>
 
-        {/* Scroll cue */}
         <motion.div
           className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-text-faint"
           initial={{ opacity: 0 }}
@@ -195,7 +192,7 @@ export default function Home(): JSX.Element {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-outline-var/30">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {FEATURES.map((f, idx) => (
               <motion.div
                 key={f.title}
@@ -203,57 +200,120 @@ export default function Home(): JSX.Element {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.2, 0, 0, 1] }}
-                className="group relative p-10 overflow-hidden cursor-default"
-                style={{
-                  background: 'var(--bg-container)',
-                  borderRight: idx < 2 ? '1px solid rgba(143,245,255,0.08)' : 'none',
-                }}
+                className="h-full"
               >
-                {/* Hover gradient fill */}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                  style={{ background: `radial-gradient(circle at 30% 30%, ${f.accent}0a 0%, transparent 70%)` }}
-                />
+                <InteractiveCard3D accentColor={f.accent} className="h-full">
+                  <div className="p-10 flex flex-col gap-6 h-full">
+                    <div className="flex items-center justify-between">
+                      <span
+                        className="text-4xl font-mono-custom"
+                        style={{ color: f.accent, textShadow: `0 0 20px ${f.accent}66` }}
+                      >
+                        {f.icon}
+                      </span>
+                      <span
+                        className="text-[10px] font-label tracking-widest px-2 py-1 border rounded"
+                        style={{ color: `${f.accent}99`, borderColor: `${f.accent}25` }}
+                      >
+                        {f.tag}
+                      </span>
+                    </div>
 
-                {/* Top bevel */}
-                <div
-                  className="absolute top-0 left-0 right-0 h-px"
-                  style={{ background: `linear-gradient(90deg, transparent, ${f.accent}50, transparent)` }}
-                />
+                    <div>
+                      <h3
+                        className="text-2xl font-display font-bold mb-3"
+                        style={{ color: f.accent }}
+                      >
+                        {f.title}
+                      </h3>
+                      <p className="text-text-muted leading-relaxed text-sm font-body">{f.desc}</p>
+                    </div>
 
-                <div className="flex flex-col gap-6 h-full relative z-10">
-                  <div className="flex items-center justify-between">
-                    <span
-                      className="text-3xl font-mono-custom"
-                      style={{ color: f.accent, textShadow: `0 0 20px ${f.accent}66` }}
-                    >
-                      {f.icon}
-                    </span>
-                    <span
-                      className="text-xs font-label tracking-widest px-2 py-1 border"
-                      style={{ color: `${f.accent}99`, borderColor: `${f.accent}25` }}
-                    >
-                      {f.tag}
-                    </span>
+                    <div
+                      className="h-px mt-auto transition-all duration-500 group-hover:w-full"
+                      style={{ width: '3rem', background: `linear-gradient(90deg, ${f.accent}, transparent)` }}
+                    />
                   </div>
-
-                  <div>
-                    <h3
-                      className="text-2xl font-display font-bold mb-3"
-                      style={{ color: f.accent }}
-                    >
-                      {f.title}
-                    </h3>
-                    <p className="text-text-muted leading-relaxed text-sm font-body">{f.desc}</p>
-                  </div>
-
-                  <div
-                    className="h-px mt-auto transition-all duration-500 group-hover:w-full"
-                    style={{ width: '3rem', background: `linear-gradient(90deg, ${f.accent}, transparent)` }}
-                  />
-                </div>
+                </InteractiveCard3D>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+
+      {/* ════════════════════════════════════════════════════════
+          ARTIFACTS SECTION
+          ════════════════════════════════════════════════════ */}
+      <section className="section px-6 relative z-10">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
+            <div>
+              <h2 data-reveal className="text-4xl md:text-5xl font-display font-bold mb-4">
+                Live <span className="text-gradient">Artifacts</span>
+              </h2>
+              <p className="text-text-muted font-body max-w-xl">
+                Open-source projects and internal tools built by the Hashtag community. 
+                We don't just learn tech, we ship it to production.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Artifact 1 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="group"
+            >
+              <div className="surface-card p-8 h-full bg-[#050a1a] border border-cyan-500/20 hover:border-cyan-500/50 transition-colors rounded-3xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-cyan-500/10 to-transparent pointer-events-none" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-xs font-mono-custom tracking-widest text-cyan-400">STATUS.ONLINE</span>
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-2">HashDash Finance</h3>
+                  <p className="text-text-muted mb-6 text-sm">
+                    A full-stack React and Node.js finance dashboard with role-based access control and live data streaming.
+                  </p>
+                  <div className="flex gap-2 font-mono-custom text-[10px] text-cyan-200/50 uppercase">
+                    <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">React</span>
+                    <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">Node.js</span>
+                    <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">MongoDB</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Artifact 2 */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="group"
+            >
+              <div className="surface-card p-8 h-full bg-[#050a1a] border border-purple-500/20 hover:border-purple-500/50 transition-colors rounded-3xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-purple-500/10 to-transparent pointer-events-none" />
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-6">
+                    <span className="w-2 h-2 rounded-full bg-purple-500 opacity-50" />
+                    <span className="text-xs font-mono-custom tracking-widest text-purple-400">V2.BETA</span>
+                  </div>
+                  <h3 className="text-2xl font-display font-bold text-white mb-2">CodeTrek Platform</h3>
+                  <p className="text-text-muted mb-6 text-sm">
+                    An automated judging platform built for our relay coding hackathons, capable of evaluating 100+ submissions per minute.
+                  </p>
+                  <div className="flex gap-2 font-mono-custom text-[10px] text-purple-200/50 uppercase">
+                    <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Python</span>
+                    <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Docker</span>
+                    <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Redis</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -298,12 +358,11 @@ export default function Home(): JSX.Element {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 border border-outline-var/30">
-            {STATS.map((stat, idx) => (
+          <div className="grid grid-cols-2 lg:grid-cols-3 border border-outline-var/30">
+            {STATS.map((stat) => (
               <div
                 key={stat.label}
-                className="p-12 surface-card"
-                style={{ borderRight: idx < 3 ? '1px solid rgba(143,245,255,0.06)' : 'none' }}
+                className="p-10 md:p-12 surface-card border-b border-r border-outline-var/30"
               >
                 <StatCounter stat={stat} />
               </div>

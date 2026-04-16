@@ -431,9 +431,11 @@ export const EVENTS: Event[] = [
 // ── Stats ──────────────────────────────────────────────────────
 export const STATS: Stat[] = [
   { value: 50, suffix: '+', label: 'Members' },
-  { value: 8, suffix: '', label: 'Events Hosted' },
-  { value: 2, suffix: '', label: 'Ideathons' },
-  { value: 12, suffix: '+', label: 'Industry Partners' },
+  { value: 12, suffix: '+', label: 'Events Hosted' },
+  { value: 15, suffix: 'K+', label: 'Lines of Code' },
+  { value: 20, suffix: '+', label: 'Live Artifacts' },
+  { value: 5, suffix: '', label: 'Hackathons Won' },
+  { value: 8, suffix: '+', label: 'Industry Partners' },
 ]
 
 // ── Timeline Milestones ────────────────────────────────────────

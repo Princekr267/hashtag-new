@@ -3,9 +3,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ExternalLink } from 'lucide-react'
 import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 import { EVENTS, type Event } from '../constants/data'
+import InteractiveCard3D from '../components/ui/InteractiveCard3D'
 
 const STATUS = ['All', 'upcoming', 'past'] as const
-
 type StatusFilter = typeof STATUS[number]
 
 function EventCard({ event }: { event: Event }): JSX.Element {
@@ -16,60 +16,71 @@ function EventCard({ event }: { event: Event }): JSX.Element {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
-      className="surface-card shimmer-card group cursor-default"
+      className="p-4"
     >
-      {/* Gradient top accent strip */}
-      <div
-        className="h-1 w-full"
-        style={{ background: `linear-gradient(90deg, ${event.gradientFrom}, ${event.gradientTo})` }}
-      />
+      <InteractiveCard3D accentColor={event.gradientFrom} className="h-full">
+        {/* Gradient top accent strip */}
+        <div
+          className="h-1 w-full"
+          style={{ background: `linear-gradient(90deg, ${event.gradientFrom}, ${event.gradientTo})` }}
+        />
 
-      <div className="p-7 flex flex-col h-full gap-4">
-        {/* Header row */}
-        <div className="flex items-start justify-between gap-3">
-          <div>
-            <span
-              className="text-xs font-label tracking-widest"
-              style={{ color: event.gradientFrom }}
-            >
-              {event.tag.toUpperCase()}
-            </span>
-            <h3 className="text-xl font-display font-bold mt-1.5 text-text-primary">
-              {event.title}
-            </h3>
+        <div className="p-7 flex flex-col h-full gap-4">
+          {/* Header row */}
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <span
+                className="text-xs font-label tracking-widest"
+                style={{ color: event.gradientFrom }}
+              >
+                {event.tag.toUpperCase()}
+              </span>
+              <h3 className="text-xl font-display font-bold mt-1.5 text-text-primary">
+                {event.title}
+              </h3>
+            </div>
+            {event.status === 'upcoming' && (
+              <span className="pill pill-live flex-shrink-0 text-xs">LIVE SOON</span>
+            )}
           </div>
-          {event.status === 'upcoming' && (
-            <span className="pill pill-live flex-shrink-0 text-xs">LIVE SOON</span>
-          )}
+
+          {/* Description */}
+          <p className="text-text-muted text-sm font-body leading-relaxed flex-1 line-clamp-4">
+            {event.description}
+          </p>
+
+          {/* Footer */}
+          <div className="mt-auto pt-4 flex items-center justify-between">
+            {event.registerUrl && event.status === 'upcoming' && (
+              <a
+                href={event.registerUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-primary inline-flex self-start text-xs"
+                style={{ padding: '10px 20px' }}
+              >
+                Register Now <ExternalLink size={13} />
+              </a>
+            )}
+            {event.status === 'past' && (
+              <div
+                className="flex items-center gap-2 text-xs font-label"
+                style={{ color: event.gradientFrom + 'aa' }}
+              >
+                <span>Completed</span>
+                <ArrowRight size={12} />
+              </div>
+            )}
+            
+            {/* Visual fluff for 3D feel */}
+            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+               <div className="w-8 h-8 rounded-full border border-white/5 flex items-center justify-center">
+                 <ArrowRight size={14} className="text-white/20" />
+               </div>
+            </div>
+          </div>
         </div>
-
-        {/* Description */}
-        <p className="text-text-muted text-sm font-body leading-relaxed flex-1 line-clamp-4">
-          {event.description}
-        </p>
-
-        {/* Footer */}
-        {event.registerUrl && event.status === 'upcoming' && (
-          <a
-            href={event.registerUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-primary inline-flex self-start text-xs"
-            style={{ padding: '10px 20px' }}
-          >
-            Register Now <ExternalLink size={13} />
-          </a>
-        )}
-        {event.status === 'past' && (
-          <div
-            className="flex items-center gap-2 text-xs font-label"
-            style={{ color: event.gradientFrom + 'aa' }}
-          >
-            <span>Completed</span>
-            <ArrowRight size={12} />
-          </div>
-        )}
-      </div>
+      </InteractiveCard3D>
     </motion.div>
   )
 }

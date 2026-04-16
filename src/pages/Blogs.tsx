@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
+import InteractiveCard3D from '../components/ui/InteractiveCard3D'
 
 const BLOGS = [
   {
@@ -95,30 +96,52 @@ export default function Blogs(): JSX.Element {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="surface-card p-12 group cursor-default"
-            style={{ borderBottom: `3px solid`, borderImage: `linear-gradient(90deg, ${featured.accent}, transparent) 1` }}
+            className="p-[1px] rounded-3xl group"
+            style={{ background: `linear-gradient(135deg, ${featured.accent}70, transparent 60%, ${featured.accent}20)` }}
           >
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-              <div className="flex-1">
-                <span
-                  className="text-xs font-label tracking-widest mb-4 block"
-                  style={{ color: featured.accent }}
+            <div className="w-full bg-bg-container rounded-3xl h-full transition-all duration-500 group-hover:bg-[#060d1c]">
+              <div className="p-12 flex flex-col md:flex-row md:items-end justify-between gap-8 h-full relative overflow-hidden">
+                {/* Neon corner accent */}
+                <div
+                  className="absolute top-0 left-0 w-24 h-24 pointer-events-none"
+                  style={{
+                    background: `radial-gradient(circle at 0% 0%, ${featured.accent}20, transparent 70%)`,
+                  }}
+                />
+                {/* Bottom right accent */}
+                <div
+                  className="absolute bottom-0 right-0 w-48 h-48 pointer-events-none"
+                  style={{
+                    background: `radial-gradient(circle at 100% 100%, ${featured.accent}10, transparent 70%)`,
+                  }}
+                />
+                {/* Hover glow */}
+                <div 
+                  className="absolute -inset-24 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-full blur-3xl"
+                  style={{ background: `radial-gradient(circle at 30% 50%, ${featured.accent}18, transparent 50%)` }}
+                />
+                
+                <div className="flex-1 relative z-10">
+                  <span
+                    className="text-xs font-label tracking-widest mb-4 block"
+                    style={{ color: featured.accent }}
+                  >
+                    {featured.tag.toUpperCase()} · {featured.date} · {featured.readTime}
+                  </span>
+                  <h2 className="text-3xl md:text-5xl font-display font-bold text-text-primary mb-6 leading-tight">
+                    {featured.title}
+                  </h2>
+                  <p className="text-text-muted font-body leading-relaxed max-w-2xl">
+                    {featured.excerpt}
+                  </p>
+                </div>
+                <button
+                  className="btn-ghost flex items-center gap-2 self-end flex-shrink-0 relative z-10 hover:-translate-y-1 transition-transform"
+                  style={{ color: featured.accent, borderColor: `${featured.accent}50` }}
                 >
-                  {featured.tag.toUpperCase()} · {featured.date} · {featured.readTime}
-                </span>
-                <h2 className="text-3xl md:text-5xl font-display font-bold text-text-primary mb-6 leading-tight">
-                  {featured.title}
-                </h2>
-                <p className="text-text-muted font-body leading-relaxed max-w-2xl">
-                  {featured.excerpt}
-                </p>
+                  Read More <ArrowRight size={14} />
+                </button>
               </div>
-              <button
-                className="btn-ghost flex items-center gap-2 self-end flex-shrink-0"
-                style={{ color: featured.accent, borderColor: `${featured.accent}40` }}
-              >
-                Read More <ArrowRight size={14} />
-              </button>
             </div>
           </motion.div>
         </div>
@@ -133,7 +156,7 @@ export default function Blogs(): JSX.Element {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {others.map((blog, idx) => (
               <motion.div
                 key={blog.id}
@@ -141,29 +164,31 @@ export default function Blogs(): JSX.Element {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.5, ease: [0.2, 0, 0, 1] }}
-                className="surface-card shimmer-card p-8 cursor-default group"
-                style={{
-                  borderRight: idx % 2 === 0 ? '1px solid rgba(143,245,255,0.05)' : 'none',
-                  borderBottom: '1px solid rgba(143,245,255,0.05)',
-                }}
+                className="h-full"
               >
-                <div
-                  className="h-0.5 w-12 mb-6"
-                  style={{ background: `linear-gradient(90deg, ${blog.accent}, transparent)` }}
-                />
-                <span className="text-xs font-label tracking-widest mb-3 block" style={{ color: blog.accent }}>
-                  {blog.tag.toUpperCase()} · {blog.date}
-                </span>
-                <h3 className="text-xl font-display font-bold text-text-primary mb-3 leading-tight">
-                  {blog.title}
-                </h3>
-                <p className="text-text-muted text-sm font-body leading-relaxed mb-6">
-                  {blog.excerpt}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-text-faint text-xs font-label">{blog.readTime}</span>
-                  <ArrowRight size={16} style={{ color: blog.accent }} className="opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
+                <InteractiveCard3D accentColor={blog.accent} className="h-full">
+                  <div className="p-8 flex flex-col h-full">
+                    <div
+                      className="h-0.5 w-12 mb-6"
+                      style={{ background: `linear-gradient(90deg, ${blog.accent}, transparent)` }}
+                    />
+                    <span className="text-xs font-label tracking-widest mb-3 block" style={{ color: blog.accent }}>
+                      {blog.tag.toUpperCase()} · {blog.date}
+                    </span>
+                    <h3 className="text-xl font-display font-bold text-text-primary mb-3 leading-tight">
+                      {blog.title}
+                    </h3>
+                    <p className="text-text-muted text-sm font-body leading-relaxed mb-6 flex-grow">
+                      {blog.excerpt}
+                    </p>
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
+                      <span className="text-text-faint text-xs font-label">{blog.readTime}</span>
+                      <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                        <ArrowRight size={16} style={{ color: blog.accent }} />
+                      </div>
+                    </div>
+                  </div>
+                </InteractiveCard3D>
               </motion.div>
             ))}
           </div>

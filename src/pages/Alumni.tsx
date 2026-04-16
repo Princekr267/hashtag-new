@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
+import AlumniCard3D from '../components/ui/AlumniCard3D'
 
 const ALUMNI = [
   { name: 'Harsh Nainwaya',  batch: '2024', role: 'SDE Intern @ Microsoft', quote: 'Hashtag gave me my first real product experience.', photo: '/Photos/Harsh_Nainwaya.jpg', accent: '#8ff5ff' },
@@ -8,7 +9,7 @@ const ALUMNI = [
   { name: 'Nikhil',          batch: '2023', role: 'UX Designer @ Startup',    quote: 'Design thinking at Hashtag changed my career.',       photo: '/Photos/Nikhil.jpg',         accent: '#ac89ff' },
   { name: 'Neelesh',         batch: '2024', role: 'Backend Engineer',          quote: 'CodeTrek pushed me beyond my comfort zone every time.', photo: '/Photos/Neelesh.png',       accent: '#00fc40' },
   { name: 'Tanuja',          batch: '2023', role: 'Product Manager Intern',    quote: 'IdeaUtsav was where I found my passion for product.', photo: '/Photos/Tanuja.jpg',         accent: '#ff6b9b' },
-  { name: 'Rishabh',         batch: '2024', role: 'Data Science Intern',       quote: 'Hashtag taught me to build, not just study.', photo: '/Photos/Rishabh.png',               accent: '#8ff5ff' },
+  { name: 'Rishabh',         batch: '2024', role: 'Data Science Intern',       quote: 'Hashtag taught me to build, not just study.',         photo: '/Photos/Rishabh.png',        accent: '#8ff5ff' },
 ]
 
 const BATCHES = ['All', '2023', '2024'] as const
@@ -68,59 +69,23 @@ export default function Alumni(): JSX.Element {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0">
+          <motion.div
+            layout
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+          >
             {filtered.map((a, idx) => (
               <motion.div
                 key={a.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                layout
+                initial={{ opacity: 0, y: 30, scale: 0.95 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.08, duration: 0.5, ease: [0.2, 0, 0, 1] }}
-                className="surface-card p-8 group"
-                style={{
-                  borderRight: idx % 3 !== 2 ? '1px solid rgba(143,245,255,0.05)' : 'none',
-                  borderBottom: '1px solid rgba(143,245,255,0.05)',
-                }}
+                transition={{ delay: idx * 0.06, duration: 0.5, ease: [0.2, 0, 0, 1] }}
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div
-                    className="w-16 h-16 relative overflow-hidden flex-shrink-0"
-                    style={{ boxShadow: `0 0 16px ${a.accent}30` }}
-                  >
-                    <img
-                      src={a.photo}
-                      alt={a.name}
-                      className="w-full h-full object-cover object-top"
-                      onError={(e) => {
-                        const t = e.currentTarget as HTMLImageElement
-                        t.style.display = 'none'
-                      }}
-                    />
-                    <div
-                      className="absolute top-0 left-0 right-0 h-px"
-                      style={{ background: `linear-gradient(90deg, transparent, ${a.accent}80, transparent)` }}
-                    />
-                  </div>
-                  <div>
-                    <h3 className="font-display font-bold text-text-primary">{a.name}</h3>
-                    <p className="text-xs font-label tracking-wider" style={{ color: a.accent }}>
-                      {a.role}
-                    </p>
-                    <p className="text-text-faint text-xs font-label mt-0.5">BATCH {a.batch}</p>
-                  </div>
-                </div>
-
-                <blockquote className="text-text-muted text-sm font-body italic leading-relaxed">
-                  "{a.quote}"
-                </blockquote>
-
-                <div
-                  className="h-px w-10 mt-6"
-                  style={{ background: `linear-gradient(90deg, ${a.accent}, transparent)` }}
-                />
+                <AlumniCard3D member={a} />
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
