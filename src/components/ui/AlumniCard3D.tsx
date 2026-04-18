@@ -1,239 +1,212 @@
-import React, { useRef, useState } from 'react';
+import React from 'react'
 
 /**
- * AlumniCard3D — CSS 3D flip card with Neon Spotlight cursor tracking
+ * AlumniCard — Change 7
  *
- * Front: Batch badge + photo + name + role + neon spotlight on hover
- * Back:  Quote + #HASHTAG Legacy branding + social if available
+ * Horizontal flex-row layout:
+ * - Left: 80×80 circle photo (object-fit: cover)
+ * - Right: Name (16px/600), batch badge, role/company (muted 14px)
+ * - Bottom: Email + LinkedIn pill buttons (outlined, hover fills)
+ * - Card: white bg → replaced with dark surface for site consistency
+ *   border-radius 12px, padding 1rem, subtle border
+ * - Hover: translateY(-3px) + shadow increase
  */
 
 interface AlumniMember {
-  name: string;
-  batch: string;
-  role: string;
-  quote: string;
-  photo: string;
-  accent: string;
+  name: string
+  batch: string
+  role: string
+  quote: string
+  photo: string
+  accent: string
+  email?: string
+  linkedin?: string
 }
 
-interface AlumniCard3DProps {
-  member: AlumniMember;
+interface AlumniCardProps {
+  member: AlumniMember
 }
 
-const AlumniCard3D: React.FC<AlumniCard3DProps> = ({ member }) => {
-  const [flipped, setFlipped] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const accentColor = member.accent;
-
-  const handleClick = () => {
-    if ('ontouchstart' in window) setFlipped(!flipped);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const mx = ((e.clientX - rect.left) / rect.width) * 100;
-    const my = ((e.clientY - rect.top) / rect.height) * 100;
-    card.style.setProperty('--mx', `${mx}%`);
-    card.style.setProperty('--my', `${my}%`);
-  };
-
-  const handleMouseLeave = () => {
-    const card = cardRef.current;
-    if (!card) return;
-    card.style.setProperty('--mx', '50%');
-    card.style.setProperty('--my', '50%');
-  };
+const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
+  const { name, batch, role, photo, accent, email, linkedin } = member
 
   return (
-    <>
-      <style>{`
-        .alumni-flip-card {
-          perspective: 1200px;
-          height: 320px;
-        }
-        @media (min-width: 640px) {
-          .alumni-flip-card { height: 360px; }
-        }
-        .alumni-flip-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transition: transform 0.75s cubic-bezier(0.2, 0, 0, 1);
-          transform-style: preserve-3d;
-        }
-        .alumni-flip-card:hover .alumni-flip-inner,
-        .alumni-flip-inner.flipped { transform: rotateY(180deg); }
-        .alumni-flip-face {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          -webkit-backface-visibility: hidden;
-          border-radius: 20px;
-        }
-        .alumni-flip-back { transform: rotateY(180deg); }
-
-        .alumni-spotlight::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: 20px;
-          background: radial-gradient(
-            circle at var(--mx, 50%) var(--my, 50%),
-            color-mix(in srgb, var(--accent) 28%, transparent),
-            transparent 52%
-          );
-          opacity: 0;
-          transition: opacity 0.35s ease;
-          pointer-events: none;
-          z-index: 15;
-        }
-        .alumni-flip-card:hover .alumni-spotlight::before {
-          opacity: 1;
-        }
-      `}</style>
-
-      <div
-        ref={cardRef}
-        className="alumni-flip-card w-full group select-none"
-        style={{ '--accent': accentColor } as React.CSSProperties}
-        onClick={handleClick}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      >
-        <div className={`alumni-flip-inner h-full ${flipped ? 'flipped' : ''}`}>
-
-          {/* ── FRONT FACE ─────────────────────────────────── */}
-          <div
-            className="alumni-flip-face alumni-spotlight overflow-hidden h-full flex flex-col bg-bg-container border border-white/5 transition-all duration-300 group-hover:border-white/20 relative"
-            style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
-          >
-            {/* Internal grid texture */}
-            <div
-              className="absolute inset-0 z-0 opacity-0 group-hover:opacity-[0.07] transition-opacity duration-500 pointer-events-none"
-              style={{
-                backgroundImage: `
-                  linear-gradient(${accentColor} 1px, transparent 1px),
-                  linear-gradient(90deg, ${accentColor} 1px, transparent 1px)
-                `,
-                backgroundSize: '18px 18px',
-              }}
-            />
-            {/* Top glow edge */}
-            <div
-              className="absolute top-0 left-0 right-0 h-px z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-              style={{ background: `linear-gradient(90deg, transparent, ${accentColor}80, transparent)` }}
-            />
-
-            {/* Photo */}
-            <div className="relative flex-shrink-0 z-10" style={{ height: '58%', overflow: 'hidden' }}>
-              <img
-                src={member.photo}
-                alt={member.name}
-                className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
-                loading="lazy"
-                onError={(e) => {
-                  const img = e.currentTarget;
-                  img.onerror = null;
-                  img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(member.name)}&backgroundColor=071428&textColor=${accentColor.replace('#', '')}`;
-                }}
-              />
-
-              {/* Batch badge */}
-              <div className="absolute top-3 left-3 z-20">
-                <span
-                  className="inline-block px-2.5 py-0.5 rounded-full font-label text-[9px] uppercase tracking-widest backdrop-blur-md border"
-                  style={{
-                    background: `${accentColor}15`,
-                    color: accentColor,
-                    borderColor: `${accentColor}40`,
-                  }}
-                >
-                  BATCH {member.batch}
-                </span>
-              </div>
-
-              {/* Fade to black */}
-              <div
-                className="absolute bottom-0 left-0 right-0 h-16"
-                style={{ background: 'linear-gradient(to bottom, transparent, #0a0a0a)' }}
-              />
-            </div>
-
-            {/* Info */}
-            <div className="px-4 py-3 flex-1 flex flex-col justify-center bg-[#0a0a0a] relative z-20">
-              <h3
-                className="font-display font-bold text-white line-clamp-1 mb-0.5 transition-colors duration-300"
-                style={{ fontSize: 'clamp(0.9rem, 3vw, 1.05rem)' }}
-                onMouseEnter={e => (e.currentTarget.style.color = accentColor)}
-                onMouseLeave={e => (e.currentTarget.style.color = 'white')}
-              >
-                {member.name}
-              </h3>
-              <p
-                className="text-[9px] sm:text-[10px] font-label uppercase tracking-wider line-clamp-1"
-                style={{ color: accentColor }}
-              >
-                {member.role}
-              </p>
-            </div>
-          </div>
-
-          {/* ── BACK FACE ──────────────────────────────────── */}
-          <div
-            className="alumni-flip-face alumni-flip-back flex flex-col p-5 sm:p-6 h-full overflow-hidden"
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        gap: '16px',
+        padding: '16px',
+        borderRadius: '12px',
+        background: 'rgba(10,14,24,0.8)',
+        border: '1px solid rgba(255,255,255,0.07)',
+        transition: 'transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s cubic-bezier(0.16,1,0.3,1)',
+        willChange: 'transform',
+        cursor: 'default',
+      }}
+      onMouseEnter={e => {
+        const el = e.currentTarget
+        el.style.transform  = 'translateY(-3px)'
+        el.style.boxShadow  = `0 14px 40px rgba(0,0,0,0.5), 0 0 0 1px ${accent}22`
+      }}
+      onMouseLeave={e => {
+        const el = e.currentTarget
+        el.style.transform  = 'translateY(0)'
+        el.style.boxShadow  = 'none'
+      }}
+    >
+      {/* ── Photo ─────────────────────────────────── */}
+      <div style={{ flexShrink: 0 }}>
+        <div
+          style={{
+            width: '80px',
+            height: '80px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            border: `2px solid ${accent}35`,
+            flexShrink: 0,
+          }}
+        >
+          <img
+            src={photo}
+            alt={name}
+            loading="lazy"
+            decoding="async"
+            width={80}
+            height={80}
             style={{
-              background: '#060d1a',
-              borderRadius: '20px',
-              border: `1px solid ${accentColor}30`,
-              boxShadow: `0 0 60px ${accentColor}12, inset 0 0 30px ${accentColor}05`,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'center top',
+              display: 'block',
             }}
-          >
-            {/* Top line */}
-            <div className="absolute top-0 left-0 h-px w-full" style={{ background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)` }} />
-            {/* Dot grid bg */}
-            <div
-              className="absolute inset-0 opacity-[0.04]"
-              style={{
-                backgroundImage: `radial-gradient(${accentColor} 1px, transparent 1px)`,
-                backgroundSize: '16px 16px',
-              }}
-            />
-
-            <div className="flex-1 flex flex-col items-center justify-center text-center relative z-10 gap-4">
-              {/* Quote icon */}
-              <div
-                className="w-9 h-9 rounded-full flex items-center justify-center text-lg"
-                style={{ background: `${accentColor}15`, color: accentColor, border: `1px solid ${accentColor}30` }}
-              >
-                "
-              </div>
-              <blockquote
-                className="text-text-muted text-xs sm:text-sm font-body italic leading-relaxed max-w-[90%]"
-              >
-                {member.quote}
-              </blockquote>
-
-              {/* Role label */}
-              <p
-                className="font-label text-[9px] uppercase tracking-widest"
-                style={{ color: accentColor }}
-              >
-                {member.role}
-              </p>
-            </div>
-
-            <p className="text-[9px] font-label text-text-faint tracking-widest text-center relative z-10">
-              HASHTAG LEGACY
-            </p>
-          </div>
-
+            onError={e => {
+              const img = e.currentTarget
+              img.onerror = null
+              img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=071428&textColor=${accent.replace('#', '')}`
+            }}
+          />
         </div>
       </div>
-    </>
-  );
-};
 
-export default AlumniCard3D;
+      {/* ── Info ──────────────────────────────────── */}
+      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
+        {/* Name */}
+        <p style={{
+          fontSize: '16px',
+          fontWeight: 600,
+          color: 'rgba(255,255,255,0.9)',
+          margin: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}>
+          {name}
+        </p>
+
+        {/* Batch badge */}
+        <div>
+          <span style={{
+            display: 'inline-block',
+            padding: '1px 8px',
+            borderRadius: '999px',
+            fontSize: '10px',
+            fontWeight: 700,
+            letterSpacing: '0.1em',
+            background: `${accent}18`,
+            color: accent,
+            border: `1px solid ${accent}30`,
+          }}>
+            Batch {batch}
+          </span>
+        </div>
+
+        {/* Role / Company */}
+        <p style={{
+          fontSize: '13px',
+          color: 'rgba(148,163,184,0.75)',
+          margin: 0,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}>
+          {role}
+        </p>
+
+        {/* Action buttons — only shown if data exists */}
+        {(email || linkedin) && (
+          <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
+            {email && (
+              <PillButton href={`mailto:${email}`} accent={accent}>
+                <EnvelopeIcon /> Email
+              </PillButton>
+            )}
+            {linkedin && (
+              <PillButton href={linkedin} accent={accent}>
+                <LinkedInIcon /> LinkedIn
+              </PillButton>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+// ── Pill button — outlined, fills on hover ───────────────────────
+const PillButton: React.FC<{ href: string; accent: string; children: React.ReactNode }> = ({
+  href, accent, children,
+}) => (
+  <a
+    href={href}
+    target={href.startsWith('mailto:') ? undefined : '_blank'}
+    rel="noopener noreferrer"
+    style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      gap: '5px',
+      padding: '5px 13px',
+      borderRadius: '999px',
+      fontSize: '12px',
+      fontWeight: 600,
+      letterSpacing: '0.03em',
+      color: accent,
+      border: `1px solid ${accent}`,
+      background: 'transparent',
+      textDecoration: 'none',
+      transition: 'background 0.2s ease, color 0.2s ease',
+      cursor: 'pointer',
+    }}
+    onMouseEnter={e => {
+      const el = e.currentTarget
+      el.style.background = accent
+      el.style.color      = '#fff'
+    }}
+    onMouseLeave={e => {
+      const el = e.currentTarget
+      el.style.background = 'transparent'
+      el.style.color      = accent
+    }}
+  >
+    {children}
+  </a>
+)
+
+const EnvelopeIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="4" width="20" height="16" rx="2" />
+    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+  </svg>
+)
+
+const LinkedInIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+    <rect x="2" y="9" width="4" height="12" />
+    <circle cx="4" cy="4" r="2" />
+  </svg>
+)
+
+export default AlumniCard

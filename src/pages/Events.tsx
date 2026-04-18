@@ -4,11 +4,22 @@ import { ArrowRight, ExternalLink } from 'lucide-react'
 import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 import { EVENTS, type Event } from '../constants/data'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
+import CountdownTimer from '../components/ui/CountdownTimer'
 
 const STATUS = ['All', 'upcoming', 'past'] as const
 type StatusFilter = typeof STATUS[number]
 
-function EventCard({ event }: { event: Event }): JSX.Element {
+// ── Polaroid tilt seeded by index ─────────────────────────────
+function getPolaroidRotation(idx: number): number {
+  // Deterministic "random" rotation between -3 and +3 deg
+  return ((idx * 137.5) % 7) - 3
+}
+
+// ── Event card — past events get polaroid treatment ───────────
+function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
+  const isPast      = event.status === 'past'
+  const rotation    = getPolaroidRotation(idx)
+
   return (
     <motion.div
       layout
@@ -16,7 +27,8 @@ function EventCard({ event }: { event: Event }): JSX.Element {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
-      className="p-4"
+      className={`p-4 ${isPast ? 'polaroid-card' : ''}`}
+      style={isPast ? { transform: `rotate(${rotation}deg)`, zIndex: 1 } : undefined}
     >
       <InteractiveCard3D accentColor={event.gradientFrom} className="h-full">
         {/* Gradient top accent strip */}
@@ -41,6 +53,14 @@ function EventCard({ event }: { event: Event }): JSX.Element {
             </div>
             {event.status === 'upcoming' && (
               <span className="pill pill-live flex-shrink-0 text-xs">LIVE SOON</span>
+            )}
+            {event.status === 'past' && (
+              <span
+                className="text-[10px] font-label tracking-widest px-2 py-1 rounded border opacity-50"
+                style={{ color: event.gradientFrom, borderColor: `${event.gradientFrom}40` }}
+              >
+                COMPLETED
+              </span>
             )}
           </div>
 
@@ -71,13 +91,6 @@ function EventCard({ event }: { event: Event }): JSX.Element {
                 <ArrowRight size={12} />
               </div>
             )}
-            
-            {/* Visual fluff for 3D feel */}
-            <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-               <div className="w-8 h-8 rounded-full border border-white/5 flex items-center justify-center">
-                 <ArrowRight size={14} className="text-white/20" />
-               </div>
-            </div>
           </div>
         </div>
       </InteractiveCard3D>
@@ -85,15 +98,53 @@ function EventCard({ event }: { event: Event }): JSX.Element {
   )
 }
 
+// ── Featured upcoming event card with animated gradient border ─
+function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
+  return (
+    <div className="event-gradient-border">
+      <div className="event-gradient-inner surface-card p-10">
+        <div className="flex flex-wrap items-start justify-between gap-6 mb-6">
+          <div>
+            <span className="pill pill-live inline-flex mb-4">LIVE SOON</span>
+            <h2 className="text-3xl font-display font-bold text-text-primary">
+              {event.title}
+            </h2>
+          </div>
+          {/* Live countdown */}
+          <CountdownTimer
+            targetDate={new Date('2025-05-15T10:00:00')}
+            label="Event starts in"
+          />
+        </div>
+
+        <p className="text-text-muted font-body leading-relaxed mb-8 max-w-lg">
+          {event.description}
+        </p>
+
+        {event.registerUrl && (
+          <a
+            href={event.registerUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-primary inline-flex"
+          >
+            Register Now <ExternalLink size={15} />
+          </a>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function Events(): JSX.Element {
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('All')
 
-  const filtered = EVENTS.filter((e) => {
-    return statusFilter === 'All' || e.status === statusFilter
-  })
+  const filtered  = EVENTS.filter((e) => statusFilter === 'All' || e.status === statusFilter)
+  const upcoming  = EVENTS.filter(e => e.status === 'upcoming')
 
   return (
     <div className="relative z-10 pt-20">
+
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section className="section-sm px-6">
         <div className="max-w-7xl mx-auto px-4">
@@ -119,38 +170,16 @@ export default function Events(): JSX.Element {
         </div>
       </section>
 
-      {/* ── UPCOMING HIGHLIGHT ────────────────────────────────── */}
-      {EVENTS.filter(e => e.status === 'upcoming').length > 0 && (
+      {/* ── UPCOMING HIGHLIGHT — animated gradient border ─────── */}
+      {upcoming.length > 0 && (
         <section className="section-sm px-6">
           <div className="max-w-7xl mx-auto">
             <div className="mb-6">
               <span className="text-xs font-label text-secondary tracking-widest">COMING NEXT</span>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-              {EVENTS.filter(e => e.status === 'upcoming').map((event) => (
-                <div
-                  key={event.id}
-                  className="surface-card p-10"
-                  style={{ borderBottom: '3px solid', borderImage: `linear-gradient(90deg, ${event.gradientFrom}, ${event.gradientTo}) 1` }}
-                >
-                  <span className="pill pill-live inline-flex mb-4">LIVE SOON</span>
-                  <h2 className="text-3xl font-display font-bold text-text-primary mb-4">
-                    {event.title}
-                  </h2>
-                  <p className="text-text-muted font-body leading-relaxed mb-8 max-w-lg">
-                    {event.description}
-                  </p>
-                  {event.registerUrl && (
-                    <a
-                      href={event.registerUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="btn-primary inline-flex"
-                    >
-                      Register Now <ExternalLink size={15} />
-                    </a>
-                  )}
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {upcoming.map((event) => (
+                <FeaturedEventCard key={event.id} event={event} />
               ))}
             </div>
           </div>
@@ -183,6 +212,7 @@ export default function Events(): JSX.Element {
             </div>
           </div>
 
+          {/* Cards grid — past events have polaroid tilt */}
           <motion.div
             layout
             className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-0"
@@ -194,9 +224,10 @@ export default function Events(): JSX.Element {
                   style={{
                     borderRight: (idx % 3 !== 2) ? '1px solid rgba(143,245,255,0.05)' : 'none',
                     borderBottom: '1px solid rgba(143,245,255,0.05)',
+                    position: 'relative',
                   }}
                 >
-                  <EventCard event={event} />
+                  <EventCard event={event} idx={idx} />
                 </div>
               ))}
             </AnimatePresence>

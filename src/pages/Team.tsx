@@ -3,21 +3,22 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { TEAM, DEPARTMENTS, type Department } from '../constants/data'
 import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 import TeamCard3D from '../components/ui/TeamCard3D'
+import { useCursorSpotlight } from '../hooks/useCursorSpotlight'
 
 const DEPT_ACCENTS: Record<string, { color: string; glow: string; tag: string }> = {
-  Leadership:  { color: '#60a5fa', glow: 'rgba(96,165,250,0.15)',  tag: 'bg-blue-500/10 text-blue-300' },
-  Technical:   { color: '#38bdf8', glow: 'rgba(56,189,248,0.15)',  tag: 'bg-sky-500/10 text-sky-300' },
-  Graphics:    { color: '#818cf8', glow: 'rgba(129,140,248,0.15)', tag: 'bg-indigo-500/10 text-indigo-300' },
-  Management:  { color: '#f472b6', glow: 'rgba(244,114,182,0.15)', tag: 'bg-pink-500/10 text-pink-300' },
-  Content:     { color: '#fbbf24', glow: 'rgba(251,191,36,0.15)',  tag: 'bg-yellow-500/10 text-yellow-300' },
-  Social:      { color: '#60a5fa', glow: 'rgba(96,165,250,0.15)',  tag: 'bg-blue-500/10 text-blue-300' },
+  Leadership:   { color: '#60a5fa', glow: 'rgba(96,165,250,0.15)',  tag: 'bg-blue-500/10 text-blue-300' },
+  Technical:    { color: '#38bdf8', glow: 'rgba(56,189,248,0.15)',  tag: 'bg-sky-500/10 text-sky-300' },
+  Graphics:     { color: '#818cf8', glow: 'rgba(129,140,248,0.15)', tag: 'bg-indigo-500/10 text-indigo-300' },
+  Management:   { color: '#f472b6', glow: 'rgba(244,114,182,0.15)', tag: 'bg-pink-500/10 text-pink-300' },
+  Content:      { color: '#fbbf24', glow: 'rgba(251,191,36,0.15)',  tag: 'bg-yellow-500/10 text-yellow-300' },
+  Social:       { color: '#60a5fa', glow: 'rgba(96,165,250,0.15)',  tag: 'bg-blue-500/10 text-blue-300' },
+  'Social Media': { color: '#60a5fa', glow: 'rgba(96,165,250,0.15)', tag: 'bg-blue-500/10 text-blue-300' },
 }
-
-
-// Old MemberCard removed
 
 export default function Team(): JSX.Element {
   const [active, setActive] = useState<Department>('All')
+  // Cursor spotlight hook — updates --mouse-x / --mouse-y on the grid
+  const spotlightRef = useCursorSpotlight<HTMLDivElement>()
 
   const filtered = active === 'All'
     ? TEAM
@@ -30,9 +31,7 @@ export default function Team(): JSX.Element {
   })
 
   return (
-    
     <div className="min-h-screen pt-28 pb-24 px-6">
-      
       <div className="max-w-7xl mx-auto">
 
         {/* ── Header ─────────────────────────────────────────── */}
@@ -89,27 +88,33 @@ export default function Team(): JSX.Element {
           })}
         </div>
 
-        {/* ── Cards grid ──────────────────────────────────────── */}
+        {/* ── Cards grid — uniform size, spotlight effect ───── */}
         <motion.div
           layout
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          ref={spotlightRef}
+          className="team-spotlight-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
         >
           <AnimatePresence mode="popLayout">
-            {leadershipFirst.map((m, i) => (
-              <motion.div
-                key={m.id}
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                transition={{ duration: 0.4, delay: i * 0.05 }}
-              >
-                <TeamCard3D 
-                  member={m} 
-                  accentColor={DEPT_ACCENTS[m.department]?.color ?? '#60a5fa'} 
-                />
-              </motion.div>
-            ))}
+            {leadershipFirst.map((m, i) => {
+              const accentColor = DEPT_ACCENTS[m.department]?.color ?? '#60a5fa'
+
+              return (
+                <motion.div
+                  key={m.id}
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.4, delay: i * 0.04 }}
+                  className="team-spotlight-card"
+                >
+                  <TeamCard3D
+                    member={m}
+                    accentColor={accentColor}
+                  />
+                </motion.div>
+              )
+            })}
           </AnimatePresence>
         </motion.div>
 

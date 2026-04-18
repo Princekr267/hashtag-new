@@ -6,12 +6,14 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import MagneticButton from '../components/ui/MagneticButton'
 import CosmosHero from '../components/visuals/CosmosHero'
-import { STATS, MARQUEE_EVENTS } from '../constants/data'
+import AmbientOrbs from '../components/ui/AmbientOrbs'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
+import { STATS, MARQUEE_EVENTS } from '../constants/data'
+import { useScrambleText } from '../hooks/useScrambleText'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// ── What We Do ──────────────────────────────────────────────-
+// ── What We Do ──────────────────────────────────────────────
 const FEATURES = [
   {
     icon: '</',
@@ -19,6 +21,7 @@ const FEATURES = [
     desc: 'We build real projects — from zero to shipped. Full stack, mobile, APIs. We write code that actually runs in the world.',
     accent: '#60a5fa',
     tag: 'TECHNICAL',
+    back: '15K+ lines shipped to production by our community.',
   },
   {
     icon: '◈',
@@ -26,6 +29,7 @@ const FEATURES = [
     desc: 'We craft experiences people feel. Product design, motion, and branding that makes a lasting impression.',
     accent: '#818cf8',
     tag: 'CREATIVE',
+    back: 'Every pixel is intentional. Aesthetic meets function.',
   },
   {
     icon: '⚡',
@@ -33,6 +37,7 @@ const FEATURES = [
     desc: 'We solve real problems. Hackathons, ideathons, and experiments that push the limit of what students can build.',
     accent: '#38bdf8',
     tag: 'IMPACT',
+    back: '5 hackathons won. Countless ideas born here.',
   },
 ]
 
@@ -75,6 +80,30 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   )
 }
 
+// ── Hero headline with scramble — resets on every route entry ─────
+// We use useEffect to track mount count so the hook key resets
+import { useState as _useState } from 'react'
+function ScrambleHeading() {
+  // remountKey changes on every mount, forcing useScrambleText to restart
+  const [remountKey] = _useState(() => Date.now())
+  const line1 = useScrambleText('Explore the cosmos', { staggerMs: 28, iterations: 8, initialDelay: 400 })
+  const line2 = useScrambleText('of technology',      { staggerMs: 28, iterations: 8, initialDelay: 700 })
+
+  return (
+    <motion.h1
+      key={remountKey}
+      className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3, delay: 0.25 }}
+      style={{ willChange: 'opacity' }}
+    >
+      <span className="block">{line1}</span>
+      <span className="block">{line2}</span>
+    </motion.h1>
+  )
+}
+
 export default function Home(): JSX.Element {
   const marqueeDoubled = [...MARQUEE_EVENTS, ...MARQUEE_EVENTS]
 
@@ -95,7 +124,7 @@ export default function Home(): JSX.Element {
   return (
     <div className="relative z-10">
 
-      {/* Subtle mascot watermark in background */}
+      {/* Subtle mascot watermark */}
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] opacity-[0.03] pointer-events-none -z-10 mix-blend-screen overflow-hidden">
          <img src="/mascot.png" alt="" className="w-full h-full object-contain filter grayscale invert" />
       </div>
@@ -104,7 +133,11 @@ export default function Home(): JSX.Element {
           HERO SECTION
           ════════════════════════════════════════════════════ */}
       <section className="min-h-screen flex items-center px-6 pt-24 pb-12 relative overflow-hidden">
-        {/* ... existing hero code ... */}
+
+        {/* Ambient background orbs */}
+        <AmbientOrbs />
+
+        {/* Grid pattern */}
         <div className="absolute inset-0 pointer-events-none" style={{
           backgroundImage: `
             linear-gradient(rgba(143,245,255,0.025) 1px, transparent 1px),
@@ -134,20 +167,14 @@ export default function Home(): JSX.Element {
               </span>
             </motion.div>
 
-            <motion.h1
-              className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            >
-              Explore the cosmos<br />of technology
-            </motion.h1>
+            {/* Scramble headline */}
+            <ScrambleHeading />
 
             <motion.p
               className="text-blue-200/50 text-base md:text-xl leading-relaxed max-w-2xl font-body italic"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6 }}
+              transition={{ delay: 0.9, duration: 0.6 }}
             >
               Where innovation meets the infinite
             </motion.p>
@@ -156,13 +183,31 @@ export default function Home(): JSX.Element {
               className="mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.2, duration: 1 }}
+              transition={{ delay: 1.3, duration: 1 }}
             >
-               <Link to="/events" className="text-white/40 hover:text-white transition-colors text-xs font-label tracking-[0.3em] uppercase flex items-center gap-4">
-                 <div className="w-8 h-px bg-white/10" />
-                 ENTER SOCIETY
-                 <div className="w-8 h-px bg-white/10" />
-               </Link>
+              {/* CTA with pulsing glow — Change 2 */}
+              <style>{`
+                @keyframes ctaGlow {
+                  0%, 100% { box-shadow: 0 0 0px rgba(96,165,250,0); }
+                  50%       { box-shadow: 0 0 18px rgba(96,165,250,0.4); }
+                }
+                .cta-glow-link {
+                  animation: ctaGlow 3s ease-in-out infinite;
+                  will-change: box-shadow;
+                  border-radius: 999px;
+                }
+                @media (prefers-reduced-motion: reduce) {
+                  .cta-glow-link { animation: none !important; }
+                }
+              `}</style>
+              <Link
+                to="/events"
+                className="cta-glow-link text-white/40 hover:text-white transition-colors text-xs font-label tracking-[0.3em] uppercase flex items-center gap-4"
+              >
+                <div className="w-8 h-px bg-white/10" />
+                ENTER SOCIETY
+                <div className="w-8 h-px bg-white/10" />
+              </Link>
             </motion.div>
           </div>
         </div>
@@ -388,7 +433,6 @@ export default function Home(): JSX.Element {
           </motion.div>
         </div>
       </section>
-
 
     </div>
   )

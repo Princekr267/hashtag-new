@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence, type Variants } from 'framer-motion'
 import { X, Menu, Mail } from 'lucide-react'
@@ -15,19 +15,13 @@ const NAV_ITEMS: NavItem[] = [
 ]
 
 const mobileMenuVariants: Variants = {
-  hidden: { opacity: 0, x: '100%' },
-  visible: {
-    opacity: 1, x: 0,
-    transition: { duration: 0.4, ease: [0.2, 0, 0, 1] },
-  },
-  exit: {
-    opacity: 0, x: '100%',
-    transition: { duration: 0.3, ease: [0.2, 0, 0, 1] },
-  },
+  hidden:  { opacity: 0, x: '100%' },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.4, ease: [0.2, 0, 0, 1] } },
+  exit:    { opacity: 0, x: '100%', transition: { duration: 0.3, ease: [0.2, 0, 0, 1] } },
 }
 
 const mobileLinkVariants: Variants = {
-  hidden: { opacity: 0, x: 40 },
+  hidden:  { opacity: 0, x: 40 },
   visible: (i: number) => ({
     opacity: 1, x: 0,
     transition: { delay: i * 0.07, duration: 0.3, ease: [0.2, 0, 0, 1] },
@@ -35,30 +29,63 @@ const mobileLinkVariants: Variants = {
 }
 
 export default function Navbar(): JSX.Element {
-  const [scrolled, setScrolled]     = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const location = useLocation()
+  const [scrolled, setScrolled]       = useState(false)
+  const [mobileOpen, setMobileOpen]   = useState(false)
+  const [navVisible, setNavVisible]   = useState(true)
+  const lastScrollY                   = useRef(0)
+  const location                      = useLocation()
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
+    const onScroll = () => {
+      const currentY = window.scrollY
+      const diff     = currentY - lastScrollY.current
+
+      // Frosted glass kicks in after 60px
+      setScrolled(currentY > 60)
+
+      // Hide on scroll down (more than 8px), show on scroll up
+      if (currentY > 120) {
+        if (diff > 8) {
+          setNavVisible(false)
+        } else if (diff < -5) {
+          setNavVisible(true)
+        }
+      } else {
+        setNavVisible(true)
+      }
+
+      lastScrollY.current = currentY
+    }
+
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => { setMobileOpen(false) }, [location.pathname])
+  useEffect(() => {
+    setMobileOpen(false)
+    // Always show nav on route change
+    setNavVisible(true)
+  }, [location.pathname])
 
   return (
     <>
       <nav
         className="fixed top-0 left-0 right-0 z-[100] transition-all duration-500"
         style={{
-          backdropFilter:       scrolled ? 'blur(20px)' : 'none',
-          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
-          background: scrolled ? 'rgba(14,14,16,0.9)' : 'transparent',
-          borderBottom: scrolled ? '1px solid rgba(143,245,255,0.07)' : 'none',
+          backdropFilter:       scrolled ? 'blur(12px) saturate(180%)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(12px) saturate(180%)' : 'none',
+          background:           scrolled ? 'rgba(10, 10, 15, 0.85)' : 'transparent',
+          borderBottom:         scrolled ? '1px solid rgba(96,165,250,0.08)' : 'none',
+          /* slide-down reveal / slide-up hide */
+          transform:            navVisible ? 'translateY(0)' : 'translateY(-110%)',
+          /* smooth transition for hide/show */
+          transition:           'transform 0.4s cubic-bezier(0.2, 0, 0, 1), backdrop-filter 0.4s ease, background 0.4s ease, border-bottom 0.4s ease',
         }}
       >
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div
+          className="max-w-7xl mx-auto px-6 flex items-center justify-between transition-all duration-400"
+          style={{ padding: scrolled ? '10px 24px' : '16px 24px' }}
+        >
 
           {/* ── Left: Hashtag logo + JIMS logo ── */}
           <NavLink to="/" className="flex items-center gap-3 group" aria-label="Home">
@@ -66,6 +93,7 @@ export default function Navbar(): JSX.Element {
               src="/hashtag-logo.png"
               alt="Hashtag Official Logo"
               className="h-10 w-auto object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(143,245,255,0.6)]"
+              style={{ height: scrolled ? '36px' : '40px', transition: 'height 0.4s ease' }}
             />
             <div
               className="h-6 w-px hidden sm:block"
@@ -97,7 +125,7 @@ export default function Navbar(): JSX.Element {
                       <motion.div
                         layoutId="nav-underline"
                         className="absolute bottom-0 left-3 right-3 h-px"
-                        style={{ background: 'linear-gradient(90deg, transparent, #8ff5ff, transparent)' }}
+                        style={{ background: 'linear-gradient(90deg, transparent, #60a5fa, transparent)' }}
                         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                       />
                     )}
@@ -139,7 +167,7 @@ export default function Navbar(): JSX.Element {
             animate="visible"
             exit="exit"
             className="fixed inset-0 z-[99] flex flex-col"
-            style={{ background: 'rgba(14,14,16,0.98)', backdropFilter: 'blur(24px)' }}
+            style={{ background: 'rgba(10,10,15,0.98)', backdropFilter: 'blur(24px)' }}
           >
             <div className="w-full flex flex-col pt-24 px-8 gap-2">
               {NAV_ITEMS.map(({ label, path }, idx) => (
@@ -172,10 +200,7 @@ export default function Navbar(): JSX.Element {
                 custom={NAV_ITEMS.length}
                 className="mt-8"
               >
-                <a
-                  href="mailto:hashtag@jims.edu.in"
-                  className="btn-primary inline-flex"
-                >
+                <a href="mailto:hashtag@jims.edu.in" className="btn-primary inline-flex">
                   <Mail size={16} />
                   Contact Us
                 </a>

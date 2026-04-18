@@ -71,16 +71,16 @@ export default function Alumni(): JSX.Element {
 
           <motion.div
             layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+            className="grid grid-cols-1 md:grid-cols-2 gap-5"
           >
             {filtered.map((a, idx) => (
               <motion.div
                 key={a.name}
                 layout
-                initial={{ opacity: 0, y: 30, scale: 0.95 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: idx * 0.06, duration: 0.5, ease: [0.2, 0, 0, 1] }}
+                transition={{ delay: idx * 0.05, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
                 <AlumniCard3D member={a} />
               </motion.div>

@@ -1,10 +1,71 @@
+import { useEffect, useRef } from 'react'
+
 export default function Footer(): JSX.Element {
+  const displayRef = useRef<HTMLDivElement>(null)
+  const triggered  = useRef(false)
+
+  useEffect(() => {
+    const el = displayRef.current
+    if (!el || triggered.current) return
+
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced) {
+      el.classList.add('revealed')
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting || triggered.current) return
+          triggered.current = true
+          // Small delay so user sees it enter
+          setTimeout(() => el.classList.add('revealed'), 100)
+          observer.unobserve(el)
+        })
+      },
+      { threshold: 0.15 }
+    )
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <footer className="relative border-t mt-20" style={{ borderColor: 'rgba(143,245,255,0.06)' }}>
       {/* Background Glow */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden flex justify-center">
         <div className="absolute top-0 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-primary to-transparent opacity-20" />
         <div className="absolute -top-32 w-[500px] h-[300px] bg-primary/5 rounded-full blur-[100px]" />
+      </div>
+
+      {/* ── Typographic display text reveal ── */}
+      <div
+        className="overflow-hidden border-b"
+        style={{ borderColor: 'rgba(96,165,250,0.06)' }}
+      >
+        <div className="max-w-7xl mx-auto px-6 pt-16 pb-8">
+          <div
+            ref={displayRef}
+            className="footer-display-text"
+            aria-hidden="true"
+            style={{
+              background: 'linear-gradient(135deg, rgba(96,165,250,0.12), rgba(129,140,248,0.08))',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              color: 'transparent',
+              /* Fallback color if background-clip not supported */
+            }}
+          >
+            #HASHTAG
+          </div>
+
+          {/* Subtitle under the display text */}
+          <p className="text-text-faint text-xs font-label tracking-[0.4em] uppercase mt-4">
+            Hashtag Official — Tech Society at JIMS Greater Noida
+          </p>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-16 relative z-10">
@@ -40,10 +101,10 @@ export default function Footer(): JSX.Element {
           <div>
             <h3 className="text-text-primary font-display font-semibold mb-6">Quick Links</h3>
             <ul className="flex flex-col gap-3">
-              <li><a href="/about" className="text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wide">ABOUT US</a></li>
+              <li><a href="/about"  className="text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wide">ABOUT US</a></li>
               <li><a href="/events" className="text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wide">EVENTS</a></li>
-              <li><a href="/team" className="text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wide">TEAM</a></li>
-              <li><a href="/blogs" className="text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wide">BLOGS</a></li>
+              <li><a href="/team"   className="text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wide">TEAM</a></li>
+              <li><a href="/blogs"  className="text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wide">BLOGS</a></li>
             </ul>
           </div>
 
@@ -70,7 +131,7 @@ export default function Footer(): JSX.Element {
             © {new Date().getFullYear()} HASHTAG OFFICIAL. ALL RIGHTS RESERVED.
           </p>
           <div className="text-text-faint text-sm font-body">
-            Designed & Developed by the Hashtag Team
+            Designed &amp; Developed by the Hashtag Team
           </div>
         </div>
       </div>
