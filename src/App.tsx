@@ -13,6 +13,8 @@ import Events from './pages/Events'
 import Team from './pages/Team'
 import Blogs from './pages/Blogs'
 import Alumni from './pages/Alumni'
+import EventDetail from './pages/EventDetail'
+import BlogDetail from './pages/BlogDetail'
 
 import { useSmoothScroll } from './hooks/useSmoothScroll'
 import { useScroll, useSpring } from 'framer-motion'
@@ -38,6 +40,8 @@ function AnimatedRoutes(): JSX.Element {
           <Route path="/team"   element={<Team />} />
           <Route path="/blogs"  element={<Blogs />} />
           <Route path="/alumni" element={<Alumni />} />
+          <Route path="/events/:id" element={<EventDetail />} />
+          <Route path="/blogs/:id" element={<BlogDetail />} />
         </Routes>
       </motion.div>
     </AnimatePresence>

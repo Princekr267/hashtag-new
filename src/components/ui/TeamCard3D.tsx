@@ -1,22 +1,13 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { TeamMember } from '../../constants/data'
 
 /**
- * TeamCard3D — Change 5 & 6
+ * TeamCard3D — Fix 3
  *
- * Change 5:
- * - Uniform size: aspect-ratio 3/4 (no col/row spanning)
- * - Photo fills top 65% with object-fit:cover object-position:center top
- * - 3D tilt on mousemove: perspective(800px) rotateX/Y ±8°
- * - Shine overlay repositions with mouse
- * - transform-style: preserve-3d, will-change: transform
- * - mouseleave resets smoothly with transition: 0.5s ease
- *
- * Change 6:
- * - Social links area: position:relative, z-index:10, pointer-events:auto
- * - Shine overlay is pointer-events:none
- * - Icons 22px, tap target ≥40×40px, high-contrast colors
- * - Anchor tags: href, target=_blank, rel=noopener noreferrer
+ * On hover: card flips 180° around Y axis (CSS 3D flip)
+ * Front: photo + name + role + department (with cursor-tracked 3D tilt on the whole scene)
+ * Back:  dark glass with accent gradient, member name, role, social links, quote icon
+ * Social links fully clickable on both faces.
  */
 
 interface TeamCard3DProps {
@@ -25,244 +16,246 @@ interface TeamCard3DProps {
 }
 
 const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa' }) => {
-  const cardRef  = useRef<HTMLDivElement>(null)
-  const shineRef = useRef<HTMLDivElement>(null)
-  const tiltRef  = useRef<HTMLDivElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isFlipped, setIsFlipped] = useState(false)
 
+  // 3D tilt tracking on the whole card container
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = cardRef.current
-    const shine = shineRef.current
-    const tilt = tiltRef.current
-    if (!card || !tilt) return
-
-    const rect = card.getBoundingClientRect()
+    const el = containerRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
     const cx   = rect.left + rect.width  / 2
     const cy   = rect.top  + rect.height / 2
     const mx   = e.clientX - cx
     const my   = e.clientY - cy
+    const rotX = (-my / (rect.height / 2)) * 6
+    const rotY = ( mx / (rect.width  / 2)) * 6
+    el.style.transform = `rotateX(${rotX}deg) rotateY(${isFlipped ? 180 + rotY : rotY}deg)`
+  }
 
-    const rotX = (-my / (rect.height / 2)) * 8
-    const rotY = ( mx / (rect.width  / 2)) * 8
-
-    tilt.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`
-
-    if (shine) {
-      const pctX = ((e.clientX - rect.left) / rect.width)  * 100
-      const pctY = ((e.clientY - rect.top)  / rect.height) * 100
-      shine.style.background = `radial-gradient(circle at ${pctX}% ${pctY}%, rgba(255,255,255,0.15) 0%, transparent 60%)`
-    }
+  const handleMouseEnter = () => {
+    setIsFlipped(true)
+    const el = containerRef.current
+    if (el) el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
   }
 
   const handleMouseLeave = () => {
-    const tilt  = tiltRef.current
-    const shine = shineRef.current
-    if (tilt)  tilt.style.transform  = 'rotateX(0deg) rotateY(0deg)'
-    if (shine) shine.style.background = 'transparent'
+    setIsFlipped(false)
+    const el = containerRef.current
+    if (el) {
+      el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
+      el.style.transform  = 'rotateX(0deg) rotateY(0deg)'
+    }
   }
 
   return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{
-        perspective: '800px',
-        width: '100%',
-        aspectRatio: '3 / 4',
-      }}
-    >
-      {/* Tilt wrapper */}
+    <>
       <div
-        ref={tiltRef}
-        style={{
-          width: '100%',
-          height: '100%',
-          transformStyle: 'preserve-3d',
-          willChange: 'transform',
-          transition: 'transform 0.5s ease',
-          borderRadius: '20px',
-          position: 'relative',
-          overflow: 'hidden',
-          background: '#0a0a0a',
-          border: `1px solid rgba(255,255,255,0.07)`,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.boxShadow = `0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px ${accentColor}30`
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.45)'
-        }}
+        style={{ perspective: '900px', width: '100%', aspectRatio: '3 / 4' }}
+        onClick={() => { if ('ontouchstart' in window) setIsFlipped(f => !f) }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        {/* ── Photo area — top 65% ─────────────────────────── */}
         <div
+          ref={containerRef}
+          onMouseMove={handleMouseMove}
           style={{
-            width: '100%',
-            height: '65%',
-            overflow: 'hidden',
-            borderRadius: '20px 20px 0 0',
-            position: 'relative',
-            flexShrink: 0,
+            position: 'relative', width: '100%', height: '100%',
+            transformStyle: 'preserve-3d', willChange: 'transform',
+            transform: isFlipped ? 'rotateX(0deg) rotateY(180deg)' : 'rotateX(0deg) rotateY(0deg)',
+            transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
-          <img
-            src={member.avatarUrl}
-            alt={member.name}
-            loading="lazy"
-            decoding="async"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center top',
-              display: 'block',
-              transition: 'transform 0.7s ease',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.06)' }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)' }}
-            onError={e => {
-              const img = e.currentTarget
-              img.onerror = null
-              img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(member.name)}&backgroundColor=071428&textColor=${accentColor.replace('#', '')}`
-            }}
-          />
 
-          {/* Role badge */}
-          <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 5 }}>
-            <span
-              style={{
-                display: 'inline-block',
-                padding: '2px 10px',
-                borderRadius: '999px',
-                fontSize: '9px',
-                fontWeight: 700,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                backdropFilter: 'blur(8px)',
-                background: `${accentColor}20`,
-                color: accentColor,
-                border: `1px solid ${accentColor}40`,
-              }}
-            >
-              {member.title}
-            </span>
-          </div>
-
-          {/* Gradient fade to card bottom */}
+          {/* ── FRONT FACE ──────────────────────────────────── */}
           <div
             style={{
-              position: 'absolute',
-              bottom: 0, left: 0, right: 0,
-              height: '60px',
-              background: 'linear-gradient(to bottom, transparent, #0a0a0a)',
-              pointerEvents: 'none',
+              position: 'absolute', inset: 0,
+              backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+              borderRadius: '20px', overflow: 'hidden',
+              background: '#0a0a0a',
+              border: `1px solid rgba(255,255,255,0.07)`,
+              boxShadow: `0 8px 32px rgba(0,0,0,0.45)`,
             }}
-          />
-        </div>
+          >
+            {/* Photo — top 65% */}
+            <div style={{ height: '65%', overflow: 'hidden', position: 'relative' }}>
+              <img
+                src={member.avatarUrl}
+                alt={member.name}
+                loading="lazy"
+                decoding="async"
+                style={{
+                  width: '100%', height: '100%',
+                  objectFit: 'cover', objectPosition: 'center top',
+                  display: 'block',
+                  transition: 'transform 0.6s ease',
+                }}
+              />
+              {/* Title badge */}
+              <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 5 }}>
+                <span style={{
+                  display: 'inline-block', padding: '2px 10px',
+                  borderRadius: '999px', fontSize: '9px', fontWeight: 700,
+                  letterSpacing: '0.15em', textTransform: 'uppercase',
+                  backdropFilter: 'blur(8px)',
+                  background: `${accentColor}22`, color: accentColor,
+                  border: `1px solid ${accentColor}45`,
+                }}>
+                  {member.title}
+                </span>
+              </div>
+              {/* Fade */}
+              <div style={{
+                position: 'absolute', bottom: 0, left: 0, right: 0, height: '64px',
+                background: 'linear-gradient(to bottom, transparent, #0a0a0a)',
+                pointerEvents: 'none',
+              }} />
+            </div>
 
-        {/* ── Info area ────────────────────────────────────── */}
-        <div
-          style={{
-            padding: '12px 16px',
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            height: '35%',
-          }}
-        >
-          <div>
-            <h3
-              style={{
-                fontFamily: 'var(--font-display, Inter, sans-serif)',
-                fontWeight: 700,
-                fontSize: 'clamp(0.88rem, 2.5vw, 1rem)',
-                color: 'white',
-                marginBottom: '2px',
-                lineHeight: 1.3,
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {member.name}
-            </h3>
-            <p
-              style={{
-                fontSize: '9px',
-                fontWeight: 600,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                color: 'rgba(148,163,184,0.7)',
-              }}
-            >
-              {member.department}
+            {/* Info — bottom 35% */}
+            <div style={{
+              height: '35%', padding: '12px 16px',
+              display: 'flex', flexDirection: 'column', justifyContent: 'center',
+            }}>
+              <h3 style={{
+                fontWeight: 700, fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
+                color: 'white', lineHeight: 1.3, margin: 0,
+                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+              }}>
+                {member.name}
+              </h3>
+              <p style={{
+                fontSize: '9px', fontWeight: 600, letterSpacing: '0.18em',
+                textTransform: 'uppercase', color: `${accentColor}bb`, marginTop: '4px',
+              }}>
+                {member.department}
+              </p>
+              {/* Hover hint */}
+              <p style={{
+                fontSize: '9px', color: 'rgba(255,255,255,0.2)', marginTop: '8px',
+                letterSpacing: '0.12em', textTransform: 'uppercase',
+              }}>
+                Hover to flip ✦
+              </p>
+            </div>
+
+            {/* Top glow edge */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+              background: `linear-gradient(90deg, transparent, ${accentColor}50, transparent)`,
+            }} />
+          </div>
+
+          {/* ── BACK FACE ───────────────────────────────────── */}
+          <div
+            style={{
+              position: 'absolute', inset: 0,
+              backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+              borderRadius: '20px', overflow: 'hidden',
+              transform: 'rotateY(180deg)',
+              background: `linear-gradient(145deg, #060d1a 0%, #0a1225 100%)`,
+              border: `1px solid ${accentColor}35`,
+              boxShadow: `0 0 60px ${accentColor}15, inset 0 0 40px ${accentColor}06`,
+              display: 'flex', flexDirection: 'column',
+              alignItems: 'center', justifyContent: 'center',
+              gap: '16px', padding: '24px',
+            }}
+          >
+            {/* Dot grid */}
+            <div style={{
+              position: 'absolute', inset: 0, borderRadius: '20px',
+              backgroundImage: `radial-gradient(${accentColor} 1px, transparent 1px)`,
+              backgroundSize: '20px 20px', opacity: 0.05, pointerEvents: 'none',
+            }} />
+            {/* Top line */}
+            <div style={{
+              position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+              background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
+            }} />
+
+            {/* Avatar circle */}
+            <div style={{
+              width: '80px', height: '80px', borderRadius: '50%',
+              overflow: 'hidden', border: `2px solid ${accentColor}50`,
+              boxShadow: `0 0 0 4px ${accentColor}15`,
+              flexShrink: 0,
+            }}>
+              <img
+                src={member.avatarUrl}
+                alt={member.name}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                onError={e => {
+                  const img = e.currentTarget
+                  img.onerror = null
+                  img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(member.name)}&backgroundColor=071428&textColor=${accentColor.replace('#', '')}`
+                }}
+              />
+            </div>
+
+            {/* Name + role */}
+            <div style={{ textAlign: 'center', position: 'relative', zIndex: 2 }}>
+              <h3 style={{
+                fontWeight: 700, fontSize: '1.05rem', color: 'white',
+                margin: '0 0 4px 0', lineHeight: 1.3,
+              }}>
+                {member.name}
+              </h3>
+              <p style={{
+                fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em',
+                textTransform: 'uppercase', color: accentColor, margin: 0,
+              }}>
+                {member.title}
+              </p>
+            </div>
+
+            {/* Divider */}
+            <div style={{
+              width: '40px', height: '1px',
+              background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
+            }} />
+
+            {/* Social links */}
+            <div style={{
+              display: 'flex', gap: '10px', position: 'relative', zIndex: 10,
+              pointerEvents: 'auto',
+            }}>
+              {member.social?.github && (
+                <BackSocialBtn href={member.social.github} label="GitHub" accent={accentColor}>
+                  <GitHubIcon />
+                </BackSocialBtn>
+              )}
+              {member.social?.linkedin && (
+                <BackSocialBtn href={member.social.linkedin} label="LinkedIn" accent={accentColor}>
+                  <LinkedInIcon />
+                </BackSocialBtn>
+              )}
+              {member.social?.instagram && (
+                <BackSocialBtn href={member.social.instagram} label="Instagram" accent={accentColor}>
+                  <InstagramIcon />
+                </BackSocialBtn>
+              )}
+            </div>
+
+            {/* Bottom label */}
+            <p style={{
+              fontSize: '8px', fontWeight: 600, letterSpacing: '0.3em',
+              color: 'rgba(255,255,255,0.15)', textTransform: 'uppercase',
+              position: 'absolute', bottom: '14px', margin: 0,
+            }}>
+              HASHTAG OFFICIAL
             </p>
           </div>
 
-          {/* Change 6 — Social icons: fully clickable, correct z-index */}
-          <div
-            style={{
-              display: 'flex',
-              gap: '8px',
-              position: 'relative',
-              zIndex: 10,
-              pointerEvents: 'auto',
-            }}
-          >
-            {member.social?.github && (
-              <SocialBtn href={member.social.github} label="GitHub" accent={accentColor}>
-                <GitHubIcon />
-              </SocialBtn>
-            )}
-            {member.social?.linkedin && (
-              <SocialBtn href={member.social.linkedin} label="LinkedIn" accent={accentColor}>
-                <LinkedInIcon />
-              </SocialBtn>
-            )}
-            {member.social?.instagram && (
-              <SocialBtn href={member.social.instagram} label="Instagram" accent={accentColor}>
-                <InstagramIcon />
-              </SocialBtn>
-            )}
-          </div>
         </div>
-
-        {/* Top accent glow line */}
-        <div
-          style={{
-            position: 'absolute', top: 0, left: 0, right: 0,
-            height: '1px',
-            background: `linear-gradient(90deg, transparent, ${accentColor}60, transparent)`,
-            opacity: 0,
-            transition: 'opacity 0.4s ease',
-          }}
-          className="card-top-glow"
-        />
-
-        {/* Shine overlay — pointer-events:none so clicks pass through (Change 6) */}
-        <div
-          ref={shineRef}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            borderRadius: '20px',
-            pointerEvents: 'none',
-            zIndex: 8,
-            transition: 'background 0.15s ease',
-          }}
-        />
       </div>
-    </div>
+    </>
   )
 }
 
-// ── Social button — Change 6 ─────────────────────────────────────
-const SocialBtn: React.FC<{
-  href: string
-  label: string
-  accent: string
-  children: React.ReactNode
+// ── Back-face social button ───────────────────────────────────────
+const BackSocialBtn: React.FC<{
+  href: string; label: string; accent: string; children: React.ReactNode
 }> = ({ href, label, accent, children }) => (
   <a
     href={href}
@@ -271,54 +264,42 @@ const SocialBtn: React.FC<{
     aria-label={label}
     onClick={e => e.stopPropagation()}
     style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '40px',
-      height: '40px',
-      borderRadius: '50%',
-      background: `${accent}14`,
-      color: accent,
-      border: `1px solid ${accent}35`,
-      transition: 'background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease',
-      flexShrink: 0,
-      position: 'relative',
-      zIndex: 10,
-      pointerEvents: 'auto',
-      cursor: 'pointer',
+      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+      width: '40px', height: '40px', borderRadius: '50%',
+      background: `${accent}18`, color: accent,
+      border: `1px solid ${accent}40`,
+      transition: 'all 0.2s ease',
+      cursor: 'pointer', pointerEvents: 'auto',
     }}
     onMouseEnter={e => {
-      const el = e.currentTarget
-      el.style.background  = `${accent}28`
-      el.style.boxShadow   = `0 0 14px ${accent}55`
-      el.style.transform   = 'scale(1.12)'
+      e.currentTarget.style.background = accent
+      e.currentTarget.style.color      = '#000'
+      e.currentTarget.style.transform  = 'scale(1.1)'
     }}
     onMouseLeave={e => {
-      const el = e.currentTarget
-      el.style.background  = `${accent}14`
-      el.style.boxShadow   = 'none'
-      el.style.transform   = 'scale(1)'
+      e.currentTarget.style.background = `${accent}18`
+      e.currentTarget.style.color      = accent
+      e.currentTarget.style.transform  = 'scale(1)'
     }}
   >
     {children}
   </a>
 )
 
-// ── Icons 22×22 ─────────────────────────────────────────────────
 const GitHubIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
   </svg>
 )
 const LinkedInIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
     <rect x="2" y="9" width="4" height="12" />
     <circle cx="4" cy="4" r="2" />
   </svg>
 )
 const InstagramIcon = () => (
-  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
     <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />

@@ -9,7 +9,6 @@ import CosmosHero from '../components/visuals/CosmosHero'
 import AmbientOrbs from '../components/ui/AmbientOrbs'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
 import { STATS, MARQUEE_EVENTS } from '../constants/data'
-import { useScrambleText } from '../hooks/useScrambleText'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -80,26 +79,44 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   )
 }
 
-// ── Hero headline with scramble — resets on every route entry ─────
-// We use useEffect to track mount count so the hook key resets
-import { useState as _useState } from 'react'
-function ScrambleHeading() {
-  // remountKey changes on every mount, forcing useScrambleText to restart
-  const [remountKey] = _useState(() => Date.now())
-  const line1 = useScrambleText('Explore the cosmos', { staggerMs: 28, iterations: 8, initialDelay: 400 })
-  const line2 = useScrambleText('of technology',      { staggerMs: 28, iterations: 8, initialDelay: 700 })
+function BlurHeading() {
+  const line1 = 'Explore the cosmos'
+  const line2 = 'of technology'
+
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    },
+  }
+
+  const item = {
+    hidden: { opacity: 0, y: 30, filter: 'blur(8px)', scale: 0.95 },
+    show: { opacity: 1, y: 0, filter: 'blur(0px)', scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+  }
 
   return (
     <motion.h1
-      key={remountKey}
       className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3, delay: 0.25 }}
-      style={{ willChange: 'opacity' }}
+      variants={container}
+      initial="hidden"
+      animate="show"
     >
-      <span className="block">{line1}</span>
-      <span className="block">{line2}</span>
+      <span className="block" style={{ whiteSpace: 'pre', minHeight: '1em' }}>
+        {line1.split(' ').map((word, i) => (
+          <motion.span key={i} variants={item} className="inline-block mr-[0.25em]">
+            {word}
+          </motion.span>
+        ))}
+      </span>
+      <span className="block" style={{ whiteSpace: 'pre', minHeight: '1em' }}>
+        {line2.split(' ').map((word, i) => (
+          <motion.span key={i} variants={item} className="inline-block mr-[0.25em]">
+            {word}
+          </motion.span>
+        ))}
+      </span>
     </motion.h1>
   )
 }
@@ -156,57 +173,92 @@ export default function Home(): JSX.Element {
         </div>
 
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10 px-4">
-          <div className="flex flex-col items-center gap-6 max-w-5xl">
+          {/* Subtle vignette behind text for contrast */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 80%)',
+            }}
+          />
+
+          <div className="flex flex-col items-center gap-5 max-w-5xl relative z-10">
+            {/* Eyebrow — Change 4A */}
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
+              initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.15 }}
+              transition={{ duration: 0.6, delay: 0, ease: 'easeOut' }}
+              style={{ animationFillMode: 'both' }}
             >
-              <span className="text-[10px] md:text-xs font-label font-bold tracking-[0.4em] text-blue-500 uppercase px-4 py-1.5 rounded-full border border-blue-500/20 bg-blue-500/5">
-                TECH SOCIETY
-              </span>
+              <div className="flex items-center gap-3">
+                <span
+                  className="font-label font-bold tracking-[0.4em] uppercase"
+                  style={{
+                    fontSize: '0.75rem',
+                    color: 'var(--tertiary)',
+                    letterSpacing: '0.15em',
+                  }}
+                >
+                  JIMS Greater Noida
+                </span>
+                <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '10px' }}>✦</span>
+                <span
+                  className="font-label font-bold tracking-[0.4em] uppercase px-3 py-1 rounded-full border"
+                  style={{
+                    fontSize: '0.7rem',
+                    color: 'var(--primary)',
+                    borderColor: 'rgba(96,165,250,0.25)',
+                    background: 'rgba(96,165,250,0.07)',
+                    letterSpacing: '0.15em',
+                  }}
+                >
+                  Tech Society
+                </span>
+              </div>
             </motion.div>
 
-            {/* Scramble headline */}
-            <ScrambleHeading />
+            {/* Main headline with modern blur reveal — Change 4B */}
+            <BlurHeading />
 
+            {/* Subheadline — Change 4A actual description */}
             <motion.p
-              className="text-blue-200/50 text-base md:text-xl leading-relaxed max-w-2xl font-body italic"
-              initial={{ opacity: 0, y: 20 }}
+              className="font-body leading-relaxed max-w-[560px]"
+              style={{
+                fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
+                color: 'rgba(148,163,196,0.85)',
+                fontWeight: 400,
+              }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9, duration: 0.6 }}
+              transition={{ delay: 0.5, duration: 0.7, ease: 'easeOut' }}
             >
-              Where innovation meets the infinite
+              JIMS Greater Noida's premier technical society — where builders,
+              designers, and dreamers turn ideas into real-world impact through
+              hackathons, workshops, and cross-disciplinary collaboration.
             </motion.p>
 
+            {/* CTA row */}
             <motion.div
-              className="mt-6"
+              className="mt-4 flex flex-col sm:flex-row items-center gap-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.3, duration: 1 }}
+              transition={{ delay: 1.0, duration: 0.8 }}
             >
-              {/* CTA with pulsing glow — Change 2 */}
-              <style>{`
-                @keyframes ctaGlow {
-                  0%, 100% { box-shadow: 0 0 0px rgba(96,165,250,0); }
-                  50%       { box-shadow: 0 0 18px rgba(96,165,250,0.4); }
-                }
-                .cta-glow-link {
-                  animation: ctaGlow 3s ease-in-out infinite;
-                  will-change: box-shadow;
-                  border-radius: 999px;
-                }
-                @media (prefers-reduced-motion: reduce) {
-                  .cta-glow-link { animation: none !important; }
-                }
-              `}</style>
+              <MagneticButton>
+                <Link
+                  to="/events"
+                  className="btn-primary flex-shrink-0 text-sm"
+                  style={{ padding: '13px 32px' }}
+                >
+                  Explore Events
+                </Link>
+              </MagneticButton>
               <Link
-                to="/events"
-                className="cta-glow-link text-white/40 hover:text-white transition-colors text-xs font-label tracking-[0.3em] uppercase flex items-center gap-4"
+                to="/about"
+                className="text-white/40 hover:text-white transition-colors text-xs font-label tracking-[0.3em] uppercase flex items-center gap-3"
               >
-                <div className="w-8 h-px bg-white/10" />
-                ENTER SOCIETY
-                <div className="w-8 h-px bg-white/10" />
+                <div className="w-6 h-px bg-white/15" />
+                Our Story
+                <div className="w-6 h-px bg-white/15" />
               </Link>
             </motion.div>
           </div>
@@ -232,8 +284,8 @@ export default function Home(): JSX.Element {
             <h2 data-reveal className="text-4xl md:text-6xl font-display font-bold">
               What We <span className="text-gradient-green">Build</span>
             </h2>
-            <Link to="/about" className="hidden md:flex items-center gap-2 text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wider">
-              Learn more <ArrowRight size={14} />
+            <Link to="/about" className="hidden md:flex items-center gap-[8px] text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wider">
+              <span className="leading-none">Learn more</span> <ArrowRight size={14} className="flex-shrink-0" />
             </Link>
           </div>
 
@@ -249,29 +301,30 @@ export default function Home(): JSX.Element {
               >
                 <InteractiveCard3D accentColor={f.accent} className="h-full">
                   <div className="p-10 flex flex-col gap-6 h-full">
-                    <div className="flex items-center justify-between">
-                      <span
-                        className="text-4xl font-mono-custom"
-                        style={{ color: f.accent, textShadow: `0 0 20px ${f.accent}66` }}
-                      >
-                        {f.icon}
-                      </span>
-                      <span
-                        className="text-[10px] font-label tracking-widest px-2 py-1 border rounded"
-                        style={{ color: `${f.accent}99`, borderColor: `${f.accent}25` }}
-                      >
-                        {f.tag}
-                      </span>
-                    </div>
-
-                    <div>
-                      <h3
-                        className="text-2xl font-display font-bold mb-3"
-                        style={{ color: f.accent }}
-                      >
-                        {f.title}
-                      </h3>
-                      <p className="text-text-muted leading-relaxed text-sm font-body">{f.desc}</p>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="text-4xl font-mono-custom flex-shrink-0"
+                            style={{ color: f.accent, textShadow: `0 0 20px ${f.accent}66` }}
+                          >
+                            {f.icon}
+                          </span>
+                          <h3
+                            className="text-2xl font-display font-bold m-0"
+                            style={{ color: f.accent }}
+                          >
+                            {f.title}
+                          </h3>
+                        </div>
+                        <span
+                          className="text-[10px] font-label tracking-widest px-2 py-1 border rounded flex-shrink-0 mt-1"
+                          style={{ color: `${f.accent}99`, borderColor: `${f.accent}25` }}
+                        >
+                          {f.tag}
+                        </span>
+                      </div>
+                      <p className="text-text-muted leading-relaxed text-sm font-body mt-2">{f.desc}</p>
                     </div>
 
                     <div
@@ -426,8 +479,8 @@ export default function Home(): JSX.Element {
               there's a place for you.
             </p>
             <MagneticButton>
-              <Link to="/about" className="btn-primary flex-shrink-0">
-                Our Story <ArrowRight size={15} />
+              <Link to="/about" className="btn-primary flex-shrink-0 flex items-center gap-[8px] justify-center">
+                <span className="leading-none">Our Story</span> <ArrowRight size={15} className="flex-shrink-0" />
               </Link>
             </MagneticButton>
           </motion.div>

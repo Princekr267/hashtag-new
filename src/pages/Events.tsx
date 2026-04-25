@@ -1,13 +1,63 @@
-import { useState } from 'react'
+import React, { useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ExternalLink } from 'lucide-react'
-import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
+import { Link } from 'react-router-dom'
 import { EVENTS, type Event } from '../constants/data'
-import InteractiveCard3D from '../components/ui/InteractiveCard3D'
 import CountdownTimer from '../components/ui/CountdownTimer'
 
 const STATUS = ['All', 'upcoming', 'past'] as const
 type StatusFilter = typeof STATUS[number]
+
+// ── Change 5: Magnetic Register Button ────────────────────────
+function MagneticRegisterBtn({ href, children }: { href: string; children: React.ReactNode }) {
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLSpanElement>(null)
+  const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches
+
+  const resetBtn = useCallback(() => {
+    const el = wrapRef.current
+    const inner = innerRef.current
+    if (!el || !inner) return
+    el.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+    el.style.transform = 'translate(0px, 0px)'
+    inner.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+    inner.style.transform = 'translate(0px, 0px)'
+  }, [])
+
+  const onMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouchDevice) return
+    const el = wrapRef.current
+    const inner = innerRef.current
+    if (!el || !inner) return
+    const rect = el.getBoundingClientRect()
+    const cx = rect.left + rect.width  / 2
+    const cy = rect.top  + rect.height / 2
+    const dx = e.clientX - cx
+    const dy = e.clientY - cy
+    const dist = Math.sqrt(dx * dx + dy * dy)
+    if (dist > 80) { resetBtn(); return }
+    el.style.transition = 'transform 0.15s ease-out'
+    el.style.transform = `translate(${dx * 0.35}px, ${dy * 0.35}px)`
+    inner.style.transition = 'transform 0.15s ease-out'
+    inner.style.transform = `translate(${dx * 0.15}px, ${dy * 0.15}px)`
+  }, [isTouchDevice, resetBtn])
+
+  return (
+    <div ref={wrapRef} style={{ display: 'inline-block' }} onMouseMove={onMove} onMouseLeave={resetBtn}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noreferrer"
+        className="btn-primary inline-flex"
+        style={{ padding: '10px 20px', fontSize: '0.75rem' }}
+      >
+        <span ref={innerRef} style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', pointerEvents: 'none' }}>
+          {children}
+        </span>
+      </a>
+    </div>
+  )
+}
 
 // ── Polaroid tilt seeded by index ─────────────────────────────
 function getPolaroidRotation(idx: number): number {
@@ -16,7 +66,7 @@ function getPolaroidRotation(idx: number): number {
 }
 
 // ── Event card — past events get polaroid treatment ───────────
-function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
+function EventCard({ event, idx, onClick }: { event: Event; idx: number; onClick: () => void }): JSX.Element {
   const isPast      = event.status === 'past'
   const rotation    = getPolaroidRotation(idx)
 
@@ -30,7 +80,27 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
       className={`p-4 ${isPast ? 'polaroid-card' : ''}`}
       style={isPast ? { transform: `rotate(${rotation}deg)`, zIndex: 1 } : undefined}
     >
-      <InteractiveCard3D accentColor={event.gradientFrom} className="h-full">
+      <Link
+        className={`h-full block ${isPast ? 'cursor-pointer' : ''}`}
+        to={`/events/${event.id}`}
+        style={{
+          background: 'rgba(10,14,24,0.8)',
+          border: `1px solid ${event.gradientFrom}20`,
+          borderRadius: '16px',
+          overflow: 'hidden',
+          transition: 'all 0.3s ease',
+        }}
+        onMouseEnter={e => {
+          e.currentTarget.style.boxShadow = `0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px ${event.gradientFrom}30`
+          e.currentTarget.style.transform = 'translateY(-3px)'
+          e.currentTarget.style.background = `radial-gradient(circle at 50% 100%, ${event.gradientFrom}15, rgba(10,14,24,0.8) 70%)`
+        }}
+        onMouseLeave={e => {
+          e.currentTarget.style.boxShadow = 'none'
+          e.currentTarget.style.transform = 'translateY(0)'
+          e.currentTarget.style.background = 'rgba(10,14,24,0.8)'
+        }}
+      >
         {/* Gradient top accent strip */}
         <div
           className="h-1 w-full"
@@ -72,28 +142,22 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
           {/* Footer */}
           <div className="mt-auto pt-4 flex items-center justify-between">
             {event.registerUrl && event.status === 'upcoming' && (
-              <a
-                href={event.registerUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-primary inline-flex self-start text-xs"
-                style={{ padding: '10px 20px' }}
-              >
-                Register Now <ExternalLink size={13} />
-              </a>
+              <MagneticRegisterBtn href={event.registerUrl}>
+                <span className="leading-none">Register Now</span> <ExternalLink size={13} className="flex-shrink-0" />
+              </MagneticRegisterBtn>
             )}
             {event.status === 'past' && (
               <div
-                className="flex items-center gap-2 text-xs font-label"
+                className="flex items-center gap-[8px] text-xs font-label"
                 style={{ color: event.gradientFrom + 'aa' }}
               >
-                <span>Completed</span>
-                <ArrowRight size={12} />
+                <span className="leading-none">Completed</span>
+                <ArrowRight size={12} className="flex-shrink-0" />
               </div>
             )}
           </div>
         </div>
-      </InteractiveCard3D>
+      </Link>
     </motion.div>
   )
 }
@@ -101,8 +165,8 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
 // ── Featured upcoming event card with animated gradient border ─
 function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
   return (
-    <div className="event-gradient-border">
-      <div className="event-gradient-inner surface-card p-10">
+    <Link to={`/events/${event.id}`} className="event-gradient-border block">
+      <div className="event-gradient-inner surface-card p-10 cursor-pointer">
         <div className="flex flex-wrap items-start justify-between gap-6 mb-6">
           <div>
             <span className="pill pill-live inline-flex mb-4">LIVE SOON</span>
@@ -122,17 +186,12 @@ function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
         </p>
 
         {event.registerUrl && (
-          <a
-            href={event.registerUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-primary inline-flex"
-          >
-            Register Now <ExternalLink size={15} />
-          </a>
+          <MagneticRegisterBtn href={event.registerUrl}>
+            <span className="leading-none">Register Now</span> <ExternalLink size={15} className="flex-shrink-0" />
+          </MagneticRegisterBtn>
         )}
       </div>
-    </div>
+    </Link>
   )
 }
 
@@ -164,9 +223,9 @@ export default function Events(): JSX.Element {
             </p>
           </motion.div>
 
-          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
-            <SubpageHeroVisual type="gyro" />
-          </div>
+          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block pointer-events-none" style={{
+            background: 'radial-gradient(ellipse 70% 80% at 80% 40%, rgba(96,165,250,0.06), transparent 70%)',
+          }} />
         </div>
       </section>
 
@@ -227,7 +286,7 @@ export default function Events(): JSX.Element {
                     position: 'relative',
                   }}
                 >
-                  <EventCard event={event} idx={idx} />
+                  <EventCard event={event} idx={idx} onClick={() => {}} />
                 </div>
               ))}
             </AnimatePresence>
@@ -240,7 +299,6 @@ export default function Events(): JSX.Element {
           )}
         </div>
       </section>
-
     </div>
   )
 }

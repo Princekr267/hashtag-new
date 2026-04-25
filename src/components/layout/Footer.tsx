@@ -112,13 +112,13 @@ export default function Footer(): JSX.Element {
           <div>
             <h3 className="text-text-primary font-display font-semibold mb-6">Contact</h3>
             <ul className="flex flex-col gap-3">
-              <li className="text-text-muted text-sm flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                JIMS, Greater Noida
+              <li className="text-text-muted text-sm flex items-center gap-[8px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                <span className="leading-none">JIMS, Greater Noida</span>
               </li>
-              <li className="text-text-muted text-sm flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                contact@hashtagofficial.in
+              <li className="text-text-muted text-sm flex items-center gap-[8px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
+                <span className="leading-none">contact@hashtagofficial.in</span>
               </li>
             </ul>
           </div>

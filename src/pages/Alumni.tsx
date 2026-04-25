@@ -1,15 +1,14 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 import AlumniCard3D from '../components/ui/AlumniCard3D'
 
 const ALUMNI = [
-  { name: 'Harsh Nainwaya',  batch: '2024', role: 'SDE Intern @ Microsoft', quote: 'Hashtag gave me my first real product experience.', photo: '/Photos/Harsh_Nainwaya.jpg', accent: '#8ff5ff' },
-  { name: 'Mayank',          batch: '2024', role: 'Full Stack Developer',     quote: 'The community here is unmatched — real builders.',    photo: '/Photos/Mayank.jpg',         accent: '#00fc40' },
-  { name: 'Nikhil',          batch: '2023', role: 'UX Designer @ Startup',    quote: 'Design thinking at Hashtag changed my career.',       photo: '/Photos/Nikhil.jpg',         accent: '#ac89ff' },
-  { name: 'Neelesh',         batch: '2024', role: 'Backend Engineer',          quote: 'CodeTrek pushed me beyond my comfort zone every time.', photo: '/Photos/Neelesh.png',       accent: '#00fc40' },
-  { name: 'Tanuja',          batch: '2023', role: 'Product Manager Intern',    quote: 'IdeaUtsav was where I found my passion for product.', photo: '/Photos/Tanuja.jpg',         accent: '#ff6b9b' },
-  { name: 'Rishabh',         batch: '2024', role: 'Data Science Intern',       quote: 'Hashtag taught me to build, not just study.',         photo: '/Photos/Rishabh.png',        accent: '#8ff5ff' },
+  { name: 'Harsh Nainwaya',  batch: '2024', role: 'SDE Intern @ Microsoft', quote: 'Hashtag gave me my first real product experience.', photo: '/Photos/Harsh_Nainwaya.jpg', accent: '#8ff5ff', email: 'harsh@example.com', linkedin: 'https://linkedin.com/in/harsh' },
+  { name: 'Mayank',          batch: '2024', role: 'Full Stack Developer',     quote: 'The community here is unmatched — real builders.',    photo: '/Photos/Mayank.jpg',         accent: '#00fc40', email: 'mayank@example.com', linkedin: 'https://linkedin.com/in/mayank' },
+  { name: 'Nikhil',          batch: '2023', role: 'UX Designer @ Startup',    quote: 'Design thinking at Hashtag changed my career.',       photo: '/Photos/Nikhil.jpg',         accent: '#ac89ff', email: 'nikhil@example.com', linkedin: 'https://linkedin.com/in/nikhil' },
+  { name: 'Neelesh',         batch: '2024', role: 'Backend Engineer',          quote: 'CodeTrek pushed me beyond my comfort zone every time.', photo: '/Photos/Neelesh.png',       accent: '#00fc40', email: 'neelesh@example.com', linkedin: 'https://linkedin.com/in/neelesh' },
+  { name: 'Tanuja',          batch: '2023', role: 'Product Manager Intern',    quote: 'IdeaUtsav was where I found my passion for product.', photo: '/Photos/Tanuja.jpg',         accent: '#ff6b9b', email: 'tanuja@example.com', linkedin: 'https://linkedin.com/in/tanuja' },
+  { name: 'Rishabh',         batch: '2024', role: 'Data Science Intern',       quote: 'Hashtag taught me to build, not just study.',         photo: '/Photos/Rishabh.png',        accent: '#8ff5ff', email: 'rishabh@example.com', linkedin: 'https://linkedin.com/in/rishabh' },
 ]
 
 const BATCHES = ['All', '2023', '2024'] as const
@@ -43,9 +42,10 @@ export default function Alumni(): JSX.Element {
             </p>
           </motion.div>
 
-          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
-            <SubpageHeroVisual type="rings" />
-          </div>
+          <div
+            className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse 70% 80% at 80% 40%, rgba(96,165,250,0.06), transparent 70%)' }}
+          />
         </div>
       </section>
 
@@ -71,7 +71,7 @@ export default function Alumni(): JSX.Element {
 
           <motion.div
             layout
-            className="grid grid-cols-1 md:grid-cols-2 gap-5"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
             {filtered.map((a, idx) => (
               <motion.div

@@ -1,62 +1,10 @@
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
-import InteractiveCard3D from '../components/ui/InteractiveCard3D'
-
-const BLOGS = [
-  {
-    id: 'why-every-cs-student',
-    title: 'Why Every CS Student Should Attend Hackathons',
-    excerpt: "Hackathons aren't just about building things in 24 hours — they're about growth, networking, and learning to ship under pressure. Here's why you should start attending.",
-    tag: 'Career',
-    readTime: '5 min read',
-    accent: '#8ff5ff',
-    date: 'March 2025',
-    featured: true,
-  },
-  {
-    id: 'design-thinking',
-    title: 'Design Thinking for Engineers',
-    excerpt: 'Technical skills get you hired. Design thinking makes you irreplaceable. A brief guide to how Hashtag approaches product thinking.',
-    tag: 'Design',
-    readTime: '4 min read',
-    accent: '#ac89ff',
-    date: 'Feb 2025',
-    featured: false,
-  },
-  {
-    id: 'roadmap-web-dev',
-    title: 'The 2025 Web Dev Roadmap',
-    excerpt: 'From HTML basics to full-stack deployment — a straight path curated by the Hashtag Technical team.',
-    tag: 'Development',
-    readTime: '7 min read',
-    accent: '#00fc40',
-    date: 'Jan 2025',
-    featured: false,
-  },
-  {
-    id: 'career-in-ux',
-    title: 'Breaking Into UX Without a Design Degree',
-    excerpt: "Portfolio over degree. Here's how Hashtag's Graphics team thinks about building a UX career from zero.",
-    tag: 'Career',
-    readTime: '6 min read',
-    accent: '#ff6b9b',
-    date: 'Dec 2024',
-    featured: false,
-  },
-  {
-    id: 'open-source',
-    title: 'How to Make Your First Open Source Contribution',
-    excerpt: 'Step-by-step walkthrough to contributing to GitHub repos, getting your first PR merged, and building a public portfolio.',
-    tag: 'Development',
-    readTime: '8 min read',
-    accent: '#00fc40',
-    date: 'Nov 2024',
-    featured: false,
-  },
-]
+import { BLOGS } from '../constants/data'
+import { Link } from 'react-router-dom'
 
 export default function Blogs(): JSX.Element {
+  
   const featured = BLOGS.find((b) => b.featured)!
   const others   = BLOGS.filter((b) => !b.featured)
 
@@ -80,9 +28,9 @@ export default function Blogs(): JSX.Element {
             </p>
           </motion.div>
 
-          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
-            <SubpageHeroVisual type="gyro" />
-          </div>
+          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block pointer-events-none" style={{
+            background: 'radial-gradient(ellipse 70% 80% at 80% 40%, rgba(129,140,248,0.06), transparent 70%)',
+          }} />
         </div>
       </section>
 
@@ -96,10 +44,13 @@ export default function Blogs(): JSX.Element {
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="p-[1px] rounded-3xl group"
-            style={{ background: `linear-gradient(135deg, ${featured.accent}70, transparent 60%, ${featured.accent}20)` }}
+            className="p-[1px] rounded-3xl group cursor-pointer hover:shadow-2xl transition-shadow"
+            style={{ 
+              background: `linear-gradient(135deg, ${featured.accent}70, transparent 60%, ${featured.accent}20)`,
+              boxShadow: `0 10px 40px ${featured.accent}15`
+            }}
           >
-            <div className="w-full bg-bg-container rounded-3xl h-full transition-all duration-500 group-hover:bg-[#060d1c]">
+            <Link to={`/blogs/${featured.id}`} className="w-full block bg-bg-container rounded-3xl h-full transition-all duration-500 group-hover:bg-[#060d1c]">
               <div className="p-12 flex flex-col md:flex-row md:items-end justify-between gap-8 h-full relative overflow-hidden">
                 {/* Neon corner accent */}
                 <div
@@ -136,13 +87,13 @@ export default function Blogs(): JSX.Element {
                   </p>
                 </div>
                 <button
-                  className="btn-ghost flex items-center gap-2 self-end flex-shrink-0 relative z-10 hover:-translate-y-1 transition-transform"
+                  className="btn-ghost flex items-center gap-[8px] self-end flex-shrink-0 relative z-10 hover:-translate-y-1 transition-transform"
                   style={{ color: featured.accent, borderColor: `${featured.accent}50` }}
                 >
-                  Read More <ArrowRight size={14} />
+                  <span className="leading-none">Read More</span> <ArrowRight size={14} className="flex-shrink-0" />
                 </button>
               </div>
-            </div>
+            </Link>
           </motion.div>
         </div>
       </section>
@@ -166,8 +117,25 @@ export default function Blogs(): JSX.Element {
                 transition={{ delay: idx * 0.1, duration: 0.5, ease: [0.2, 0, 0, 1] }}
                 className="h-full"
               >
-                <InteractiveCard3D accentColor={blog.accent} className="h-full">
+                <Link
+                  className="blog-post-card h-full block cursor-pointer group transition-all duration-300 hover:-translate-y-1"
+                  to={`/blogs/${blog.id}`}
+                  style={{
+                    background: 'rgba(10,14,24,0.85)',
+                    border: `1px solid ${blog.accent}22`,
+                    borderRadius: '16px',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.boxShadow = `0 8px 30px rgba(0,0,0,0.5), inset 0 0 0 1px ${blog.accent}40`
+                    e.currentTarget.style.background = `radial-gradient(circle at 50% 0%, ${blog.accent}15, rgba(10,14,24,0.85) 60%)`
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.boxShadow = 'none'
+                    e.currentTarget.style.background = 'rgba(10,14,24,0.85)'
+                  }}
+                >
                   <div className="p-8 flex flex-col h-full">
+                    {/* Accent bar */}
                     <div
                       className="h-0.5 w-12 mb-6"
                       style={{ background: `linear-gradient(90deg, ${blog.accent}, transparent)` }}
@@ -175,7 +143,7 @@ export default function Blogs(): JSX.Element {
                     <span className="text-xs font-label tracking-widest mb-3 block" style={{ color: blog.accent }}>
                       {blog.tag.toUpperCase()} · {blog.date}
                     </span>
-                    <h3 className="text-xl font-display font-bold text-text-primary mb-3 leading-tight">
+                    <h3 className="blog-title text-xl font-display font-bold text-text-primary mb-3 leading-tight">
                       {blog.title}
                     </h3>
                     <p className="text-text-muted text-sm font-body leading-relaxed mb-6 flex-grow">
@@ -183,19 +151,28 @@ export default function Blogs(): JSX.Element {
                     </p>
                     <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
                       <span className="text-text-faint text-xs font-label">{blog.readTime}</span>
-                      <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                        <ArrowRight size={16} style={{ color: blog.accent }} />
+                      <div className="flex items-center gap-[8px]">
+                        <span
+                          className="text-xs font-label tracking-widest blog-arrow"
+                          style={{ color: blog.accent }}
+                        >
+                          Read More
+                        </span>
+                        <div
+                          className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center blog-arrow"
+                          style={{ color: blog.accent }}
+                        >
+                          <ArrowRight size={15} className="flex-shrink-0" />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </InteractiveCard3D>
+                </Link>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-
-
     </div>
   )
 }

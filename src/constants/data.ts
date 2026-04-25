@@ -428,6 +428,72 @@ export const EVENTS: Event[] = [
   },
 ]
 
+// ── Blogs Data ────────────────────────────────────────────────
+export interface Blog {
+  id: string
+  title: string
+  excerpt: string
+  tag: string
+  readTime: string
+  accent: string
+  date: string
+  featured: boolean
+}
+
+export const BLOGS: Blog[] = [
+  {
+    id: 'why-every-cs-student',
+    title: 'Why Every CS Student Should Attend Hackathons',
+    excerpt: "Hackathons aren't just about building things in 24 hours — they're about growth, networking, and learning to ship under pressure. Here's why you should start attending.",
+    tag: 'Career',
+    readTime: '5 min read',
+    accent: '#8ff5ff',
+    date: 'March 2025',
+    featured: true,
+  },
+  {
+    id: 'design-thinking',
+    title: 'Design Thinking for Engineers',
+    excerpt: 'Technical skills get you hired. Design thinking makes you irreplaceable. A brief guide to how Hashtag approaches product thinking.',
+    tag: 'Design',
+    readTime: '4 min read',
+    accent: '#ac89ff',
+    date: 'Feb 2025',
+    featured: false,
+  },
+  {
+    id: 'roadmap-web-dev',
+    title: 'The 2025 Web Dev Roadmap',
+    excerpt: 'From HTML basics to full-stack deployment — a straight path curated by the Hashtag Technical team.',
+    tag: 'Development',
+    readTime: '7 min read',
+    accent: '#00fc40',
+    date: 'Jan 2025',
+    featured: false,
+  },
+  {
+    id: 'career-in-ux',
+    title: 'Breaking Into UX Without a Design Degree',
+    excerpt: "Portfolio over degree. Here's how Hashtag's Graphics team thinks about building a UX career from zero.",
+    tag: 'Career',
+    readTime: '6 min read',
+    accent: '#ff6b9b',
+    date: 'Dec 2024',
+    featured: false,
+  },
+  {
+    id: 'open-source',
+    title: 'How to Make Your First Open Source Contribution',
+    excerpt: 'Step-by-step walkthrough to contributing to GitHub repos, getting your first PR merged, and building a public portfolio.',
+    tag: 'Development',
+    readTime: '8 min read',
+    accent: '#00fc40',
+    date: 'Nov 2024',
+    featured: false,
+  },
+]
+
+
 // ── Stats ──────────────────────────────────────────────────────
 export const STATS: Stat[] = [
   { value: 50, suffix: '+', label: 'Members' },

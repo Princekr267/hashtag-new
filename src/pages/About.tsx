@@ -3,8 +3,6 @@ import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import FlipCard from '../components/ui/FlipCard'
-import WordReveal from '../components/ui/WordReveal'
-import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 import { MILESTONES } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -44,105 +42,132 @@ const VALUES = [
   },
 ]
 
-// Change 3: Editorial-style Mission/Vision card component
-function EditorialCard({
+// Fix 2: Premium Mission/Vision card — glass surface, gradient mesh, glowing icon, readable text
+function MissionVisionCard({
   type,
   heading,
   body,
   accentColor,
+  icon,
 }: {
   type: 'MISSION' | 'VISION'
   heading: string
   body: string
   accentColor: string
+  icon: string
 }) {
   return (
     <div
-      className="relative p-10 md:p-12"
+      className="relative overflow-hidden h-full"
       style={{
-        background: 'rgba(10,14,24,0.7)',
-        border: `1px solid ${accentColor}14`,
-        borderRadius: '20px',
-        overflow: 'hidden',
-        transition: 'transform 0.35s cubic-bezier(0.16,1,0.3,1), box-shadow 0.35s cubic-bezier(0.16,1,0.3,1)',
+        background: `linear-gradient(135deg, rgba(10,14,24,0.95) 0%, rgba(6,10,20,0.98) 100%)`,
+        border: `1px solid ${accentColor}28`,
+        borderRadius: '24px',
+        padding: '40px',
+        minHeight: '320px',
+        transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)',
         cursor: 'default',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
       }}
       onMouseEnter={e => {
-        const el = e.currentTarget
-        el.style.transform = 'translateY(-4px)'
-        el.style.boxShadow = `0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px ${accentColor}22`
+        e.currentTarget.style.transform = 'translateY(-6px)'
+        e.currentTarget.style.boxShadow = `0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px ${accentColor}40, inset 0 1px 0 rgba(255,255,255,0.05)`
       }}
       onMouseLeave={e => {
-        const el = e.currentTarget
-        el.style.transform = 'translateY(0)'
-        el.style.boxShadow = 'none'
+        e.currentTarget.style.transform = 'translateY(0)'
+        e.currentTarget.style.boxShadow = `0 0 0 1px ${accentColor}14`
       }}
     >
-      {/* Decorative oversized quote mark — top right */}
-      <span
-        aria-hidden="true"
-        style={{
-          position: 'absolute',
-          top: '-10px',
-          right: '24px',
-          fontSize: '8rem',
-          lineHeight: 1,
-          color: accentColor,
-          opacity: 0.10,
-          fontFamily: 'Georgia, serif',
-          fontWeight: 900,
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }}
-      >
-        "
-      </span>
+      {/* Mesh gradient background glow */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `radial-gradient(ellipse 80% 60% at 10% 0%, ${accentColor}12, transparent 70%)`,
+        borderRadius: '24px',
+      }} />
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `radial-gradient(ellipse 60% 50% at 90% 100%, ${accentColor}08, transparent 70%)`,
+        borderRadius: '24px',
+      }} />
 
-      {/* Badge label */}
-      <div className="mb-6">
-        <span
-          className="inline-block px-4 py-1.5 rounded-full text-xs font-label font-bold tracking-[0.3em] uppercase"
-          style={{
-            background: `${accentColor}16`,
-            color: accentColor,
-            border: `1px solid ${accentColor}30`,
-          }}
-        >
-          Our {type === 'MISSION' ? 'Mission' : 'Vision'}
+      {/* Top glowing line */}
+      <div style={{
+        position: 'absolute', top: 0, left: '10%', right: '10%',
+        height: '1px',
+        background: `linear-gradient(90deg, transparent, ${accentColor}70, transparent)`,
+      }} />
+
+      {/* Icon + Badge row */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
+        {/* Large glowing icon */}
+        <div style={{
+          width: '56px', height: '56px',
+          borderRadius: '16px',
+          background: `linear-gradient(135deg, ${accentColor}25, ${accentColor}10)`,
+          border: `1px solid ${accentColor}40`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '24px',
+          boxShadow: `0 0 30px ${accentColor}25, inset 0 1px 0 rgba(255,255,255,0.1)`,
+          flexShrink: 0,
+        }}>
+          {icon}
+        </div>
+
+        {/* Type badge */}
+        <span style={{
+          padding: '5px 14px',
+          borderRadius: '999px',
+          fontSize: '10px',
+          fontWeight: 700,
+          letterSpacing: '0.25em',
+          textTransform: 'uppercase',
+          background: `${accentColor}14`,
+          color: accentColor,
+          border: `1px solid ${accentColor}35`,
+        }}>
+          {type === 'MISSION' ? 'Our Mission' : 'Our Vision'}
         </span>
       </div>
 
       {/* Heading */}
-      <h2
-        className="font-display font-semibold mb-5 text-text-primary"
-        style={{
-          fontSize: 'clamp(1.4rem, 3vw, 2rem)',
-          lineHeight: 1.4,
-        }}
-      >
+      <h2 style={{
+        fontFamily: 'var(--font-display, Inter, sans-serif)',
+        fontWeight: 800,
+        fontSize: 'clamp(1.5rem, 3.5vw, 2.2rem)',
+        lineHeight: 1.2,
+        color: '#fff',
+        margin: 0,
+        position: 'relative',
+        zIndex: 2,
+      }}>
         {heading}
       </h2>
 
-      {/* Body text */}
-      <WordReveal className="text-text-muted font-body leading-relaxed" staggerMs={35}>
-        {body}
-      </WordReveal>
+      {/* Divider */}
+      <div style={{
+        height: '1px',
+        background: `linear-gradient(90deg, ${accentColor}50, transparent)`,
+        position: 'relative', zIndex: 2, flexShrink: 0,
+      }} />
 
-      {/* Bottom colored accent bar */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: '3px',
-          background: `linear-gradient(90deg, ${accentColor}, transparent)`,
-          borderRadius: '0 0 20px 20px',
-        }}
-      />
+      {/* Body */}
+      <p style={{
+        fontSize: '15px',
+        lineHeight: 1.75,
+        color: 'rgba(148,163,196,0.85)',
+        margin: 0,
+        position: 'relative',
+        zIndex: 2,
+        flex: 1,
+      }}>
+        {body}
+      </p>
     </div>
   )
 }
+
 
 export default function About(): JSX.Element {
   const timelineWrap   = useRef<HTMLDivElement>(null)
@@ -268,9 +293,9 @@ export default function About(): JSX.Element {
             </p>
           </motion.div>
 
-          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
-            <SubpageHeroVisual type="rings" />
-          </div>
+          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block pointer-events-none" style={{
+            background: 'radial-gradient(ellipse 70% 80% at 80% 40%, rgba(56,189,248,0.06), transparent 70%)',
+          }} />
 
           <div
             className="h-px w-full mt-16"
@@ -279,37 +304,38 @@ export default function About(): JSX.Element {
         </div>
       </section>
 
-      {/* ── MISSION / VISION — Change 3: Editorial cards ─────────── */}
+      {/* ── MISSION / VISION ─────────────────────────────────── */}
       <section className="section-sm px-6">
-        <div className="max-w-7xl mx-auto flex flex-col gap-6">
-          {/* 60/40 asymmetric layout on desktop */}
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            {/* Mission — 3/5 width */}
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Mission — left */}
             <motion.div
-              className="lg:col-span-3"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+              className="h-full"
             >
-              <EditorialCard
+              <MissionVisionCard
                 type="MISSION"
+                icon="🎯"
                 heading="Bridge the Gap"
                 body="To bridge the gap between academic learning and industry reality by giving students hands-on experience, real mentorship, and a tribe that pushes them forward."
                 accentColor="#38bdf8"
               />
             </motion.div>
 
-            {/* Vision — 2/5 width */}
+            {/* Vision — right */}
             <motion.div
-              className="lg:col-span-2"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+              className="h-full"
             >
-              <EditorialCard
+              <MissionVisionCard
                 type="VISION"
+                icon="🚀"
                 heading="Shape Tomorrow's Leaders"
                 body="To cultivate a generation of technically proficient, creatively bold, and ethically grounded leaders who define the future of technology in India."
                 accentColor="#818cf8"

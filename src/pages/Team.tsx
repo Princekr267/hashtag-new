@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TEAM, DEPARTMENTS, type Department } from '../constants/data'
-import SubpageHeroVisual from '../components/visuals/SubpageHeroVisual'
 import TeamCard3D from '../components/ui/TeamCard3D'
 import { useCursorSpotlight } from '../hooks/useCursorSpotlight'
 
@@ -25,8 +24,8 @@ export default function Team(): JSX.Element {
     : TEAM.filter((m) => m.department === active)
 
   const leadershipFirst = [...filtered].sort((a, b) => {
-    if (a.department === 'Leadership') return -1
-    if (b.department === 'Leadership') return 1
+    if (a.department === 'Leadership') return 1
+    if (b.department === 'Leadership') return -1
     return 0
   })
 
@@ -59,10 +58,10 @@ export default function Team(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* Background Visual */}
-          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block">
-            <SubpageHeroVisual type="rings" />
-          </div>
+          {/* Decorative gradient orb — no 3D dependency */}
+          <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block pointer-events-none" style={{
+            background: 'radial-gradient(ellipse 70% 80% at 80% 50%, rgba(96,165,250,0.06), transparent 70%)',
+          }} />
         </div>
 
         {/* ── Filter tabs ─────────────────────────────────────── */}

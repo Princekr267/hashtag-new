@@ -1,16 +1,5 @@
-import React from 'react'
-
-/**
- * AlumniCard — Change 7
- *
- * Horizontal flex-row layout:
- * - Left: 80×80 circle photo (object-fit: cover)
- * - Right: Name (16px/600), batch badge, role/company (muted 14px)
- * - Bottom: Email + LinkedIn pill buttons (outlined, hover fills)
- * - Card: white bg → replaced with dark surface for site consistency
- *   border-radius 12px, padding 1rem, subtle border
- * - Hover: translateY(-3px) + shadow increase
- */
+import React, { useRef, useState, useEffect } from 'react'
+import { motion, useSpring, useTransform, AnimatePresence } from 'framer-motion'
 
 interface AlumniMember {
   name: string
@@ -28,181 +17,222 @@ interface AlumniCardProps {
 }
 
 const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
-  const { name, batch, role, photo, accent, email, linkedin } = member
+  const { name, batch, role, quote, photo, accent } = member
+  const containerRef = useRef<HTMLDivElement>(null)
+  
+  // Spring-based 3D rotation
+  const x = useSpring(0, { stiffness: 100, damping: 20 })
+  const y = useSpring(0, { stiffness: 100, damping: 20 })
+  
+  const rotateX = useTransform(y, [-0.5, 0.5], [10, -10])
+  const rotateY = useTransform(x, [-0.5, 0.5], [-10, 10])
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = containerRef.current?.getBoundingClientRect()
+    if (!rect) return
+    const px = (e.clientX - rect.left) / rect.width - 0.5
+    const py = (e.clientY - rect.top) / rect.height - 0.5
+    x.set(px)
+    y.set(py)
+  }
+
+  const handleMouseLeave = () => {
+    x.set(0)
+    y.set(0)
+  }
 
   return (
-    <div
+    <motion.div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      // Idle floating animation
+      animate={{ 
+        y: [0, -8, 0],
+        transition: { 
+          duration: 4 + Math.random() * 2, 
+          repeat: Infinity, 
+          ease: "easeInOut" 
+        } 
+      }}
       style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'flex-start',
-        gap: '16px',
-        padding: '16px',
-        borderRadius: '12px',
-        background: 'rgba(10,14,24,0.8)',
-        border: '1px solid rgba(255,255,255,0.07)',
-        transition: 'transform 0.3s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s cubic-bezier(0.16,1,0.3,1)',
-        willChange: 'transform',
-        cursor: 'default',
+        rotateX,
+        rotateY,
+        transformStyle: 'preserve-3d',
+        perspective: 1200,
       }}
-      onMouseEnter={e => {
-        const el = e.currentTarget
-        el.style.transform  = 'translateY(-3px)'
-        el.style.boxShadow  = `0 14px 40px rgba(0,0,0,0.5), 0 0 0 1px ${accent}22`
-      }}
-      onMouseLeave={e => {
-        const el = e.currentTarget
-        el.style.transform  = 'translateY(0)'
-        el.style.boxShadow  = 'none'
-      }}
+      className="relative w-full group"
     >
-      {/* ── Photo ─────────────────────────────────── */}
-      <div style={{ flexShrink: 0 }}>
-        <div
+      <div 
+        className="relative overflow-hidden rounded-[24px] p-8 md:p-10 flex flex-col items-center text-center gap-6"
+        style={{
+          background: 'linear-gradient(165deg, rgba(15,23,42,0.9) 0%, rgba(8,12,24,0.98) 100%)',
+          border: '1px solid rgba(255,255,255,0.06)',
+          boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
+          minHeight: '440px',
+        }}
+      >
+        {/* Animated Mesh Background */}
+        <div 
+          className="absolute inset-0 opacity-20 pointer-events-none"
           style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: '50%',
-            overflow: 'hidden',
-            border: `2px solid ${accent}35`,
-            flexShrink: 0,
+            background: `radial-gradient(circle at 50% 0%, ${accent}30 0%, transparent 70%)`,
           }}
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.1, 1],
+            opacity: [0.1, 0.15, 0.1]
+          }}
+          transition={{ duration: 10, repeat: Infinity }}
+          className="absolute -top-24 -right-24 w-64 h-64 blur-[80px] rounded-full pointer-events-none"
+          style={{ background: accent }}
+        />
+
+        {/* Noise Overlay */}
+        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+
+        {/* Dynamic Glowing Border */}
+        <div 
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+          style={{
+            boxShadow: `inset 0 0 0 1.5px ${accent}40`,
+            borderRadius: '24px'
+          }}
+        />
+
+        {/* ── Photo ── */}
+        <motion.div 
+          style={{ transform: 'translateZ(60px)' }}
+          className="relative"
         >
-          <img
-            src={photo}
-            alt={name}
-            loading="lazy"
-            decoding="async"
-            width={80}
-            height={80}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: 'center top',
-              display: 'block',
+          <div
+            className="w-28 h-28 rounded-full p-1 relative z-10"
+            style={{ 
+              background: `linear-gradient(135deg, ${accent}, transparent)`,
+              boxShadow: `0 15px 30px -5px ${accent}30`
             }}
-            onError={e => {
-              const img = e.currentTarget
-              img.onerror = null
-              img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=071428&textColor=${accent.replace('#', '')}`
-            }}
-          />
-        </div>
-      </div>
-
-      {/* ── Info ──────────────────────────────────── */}
-      <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-        {/* Name */}
-        <p style={{
-          fontSize: '16px',
-          fontWeight: 600,
-          color: 'rgba(255,255,255,0.9)',
-          margin: 0,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}>
-          {name}
-        </p>
-
-        {/* Batch badge */}
-        <div>
-          <span style={{
-            display: 'inline-block',
-            padding: '1px 8px',
-            borderRadius: '999px',
-            fontSize: '10px',
-            fontWeight: 700,
-            letterSpacing: '0.1em',
-            background: `${accent}18`,
-            color: accent,
-            border: `1px solid ${accent}30`,
-          }}>
-            Batch {batch}
-          </span>
-        </div>
-
-        {/* Role / Company */}
-        <p style={{
-          fontSize: '13px',
-          color: 'rgba(148,163,184,0.75)',
-          margin: 0,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
-        }}>
-          {role}
-        </p>
-
-        {/* Action buttons — only shown if data exists */}
-        {(email || linkedin) && (
-          <div style={{ display: 'flex', gap: '8px', marginTop: '8px', flexWrap: 'wrap' }}>
-            {email && (
-              <PillButton href={`mailto:${email}`} accent={accent}>
-                <EnvelopeIcon /> Email
-              </PillButton>
-            )}
-            {linkedin && (
-              <PillButton href={linkedin} accent={accent}>
-                <LinkedInIcon /> LinkedIn
-              </PillButton>
-            )}
+          >
+            <div className="w-full h-full rounded-full overflow-hidden border-2 border-[#080c18]">
+              <img
+                src={photo}
+                alt={name}
+                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                onError={e => {
+                  e.currentTarget.src = `https://api.dicebear.com/7.x/initials/svg?seed=${name}&backgroundColor=0f172a&textColor=${accent.replace('#', '')}`
+                }}
+              />
+            </div>
           </div>
-        )}
+          {/* Pulse effect */}
+          <motion.div 
+            animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity }}
+            className="absolute inset-0 rounded-full blur-xl pointer-events-none"
+            style={{ background: accent }}
+          />
+        </motion.div>
+
+        {/* ── Info ── */}
+        <div style={{ transform: 'translateZ(40px)' }} className="relative z-20 flex flex-col gap-3">
+          <h3 className="text-2xl font-display font-bold text-white tracking-tight">
+            {name}
+          </h3>
+          <div className="flex items-center justify-center gap-3">
+            <span 
+              className="text-[10px] font-label font-bold tracking-[0.2em] px-2.5 py-1 rounded-full border"
+              style={{ color: accent, borderColor: `${accent}40`, background: `${accent}10` }}
+            >
+              BATCH {batch}
+            </span>
+          </div>
+          <p className="text-primary/90 font-label text-sm font-semibold tracking-wide uppercase">
+            {role}
+          </p>
+        </div>
+
+        {/* ── Quote Section ── */}
+        <div style={{ transform: 'translateZ(30px)' }} className="relative z-20 max-w-[240px]">
+          <p className="text-text-muted/80 text-sm italic font-body leading-relaxed line-clamp-3">
+            "{quote}"
+          </p>
+        </div>
+
+        {/* ── Magnetic Action Buttons ── */}
+        <div 
+          style={{ transform: 'translateZ(50px)' }} 
+          className="mt-auto flex items-center gap-4 py-2"
+        >
+          <MagneticIconButton href="#" ariaLabel="Email" accent={accent}>
+            <EnvelopeIcon />
+          </MagneticIconButton>
+          <MagneticIconButton href="#" ariaLabel="LinkedIn" accent={accent}>
+            <LinkedInIcon />
+          </MagneticIconButton>
+        </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
-// ── Pill button — outlined, fills on hover ───────────────────────
-const PillButton: React.FC<{ href: string; accent: string; children: React.ReactNode }> = ({
-  href, accent, children,
-}) => (
-  <a
-    href={href}
-    target={href.startsWith('mailto:') ? undefined : '_blank'}
-    rel="noopener noreferrer"
-    style={{
-      display: 'inline-flex',
-      alignItems: 'center',
-      gap: '5px',
-      padding: '5px 13px',
-      borderRadius: '999px',
-      fontSize: '12px',
-      fontWeight: 600,
-      letterSpacing: '0.03em',
-      color: accent,
-      border: `1px solid ${accent}`,
-      background: 'transparent',
-      textDecoration: 'none',
-      transition: 'background 0.2s ease, color 0.2s ease',
-      cursor: 'pointer',
-    }}
-    onMouseEnter={e => {
-      const el = e.currentTarget
-      el.style.background = accent
-      el.style.color      = '#fff'
-    }}
-    onMouseLeave={e => {
-      const el = e.currentTarget
-      el.style.background = 'transparent'
-      el.style.color      = accent
-    }}
-  >
-    {children}
-  </a>
-)
+const MagneticIconButton: React.FC<{ href: string; ariaLabel: string; accent: string; children: React.ReactNode }> = ({
+  href, ariaLabel, accent, children,
+}) => {
+  const ref = useRef<HTMLAnchorElement>(null)
+  const mx = useSpring(0, { stiffness: 200, damping: 15 })
+  const my = useSpring(0, { stiffness: 200, damping: 15 })
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const rect = ref.current?.getBoundingClientRect()
+    if (!rect) return
+    const dx = e.clientX - (rect.left + rect.width / 2)
+    const dy = e.clientY - (rect.top + rect.height / 2)
+    mx.set(dx * 0.4)
+    my.set(dy * 0.4)
+  }
+
+  const handleMouseLeave = () => {
+    mx.set(0)
+    my.set(0)
+  }
+
+  return (
+    <motion.a
+      ref={ref}
+      href={href}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="w-12 h-12 rounded-full border flex items-center justify-center transition-colors duration-300 group/btn overflow-hidden relative"
+      style={{ 
+        borderColor: `${accent}30`, 
+        background: 'rgba(255,255,255,0.02)',
+        x: mx,
+        y: my
+      }}
+    >
+      <div 
+        className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"
+        style={{ background: accent }}
+      />
+      <div className="relative z-10 transition-colors duration-300 group-hover/btn:text-white" style={{ color: accent }}>
+        {children}
+      </div>
+    </motion.a>
+  )
+}
 
 const EnvelopeIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="4" width="20" height="16" rx="2" />
     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
   </svg>
 )
 
 const LinkedInIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
     <rect x="2" y="9" width="4" height="12" />
     <circle cx="4" cy="4" r="2" />
@@ -210,3 +240,4 @@ const LinkedInIcon = () => (
 )
 
 export default AlumniCard
+

@@ -725,3 +725,150 @@ h1, h2, h3, h4, h5, h6 {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   CHANGE 1 — FULL MOBILE OPTIMIZATION
+   ══════════════════════════════════════════════════════════════ */
+
+/* 1A — overflow-x guard (body already has it, belt + suspenders) */
+html, body { overflow-x: hidden; }
+
+/* 1B — last content section before footer: no extra gap */
+main > *:last-child { margin-bottom: 0 !important; }
+
+/* All images get safe defaults */
+img { max-width: 100%; height: auto; }
+
+/* Buttons minimum tap target */
+.btn-primary, .btn-ghost {
+  min-height: 44px;
+}
+
+/* Section padding scales on mobile */
+@media (max-width: 768px) {
+  .section    { padding: 48px 0; }
+  .section-sm { padding: 32px 0; }
+
+  /* Containers should pad themselves instead of relying on px-6 alone */
+  .max-w-7xl.mx-auto { padding-left: 1rem; padding-right: 1rem; }
+
+  /* 1C — Headings never touch screen edge */
+  h1, h2, h3,
+  .hero-heading,
+  .page-title,
+  .section-title { padding-left: 1rem; padding-right: 1rem; }
+
+  /* 1D — Hero display text scales */
+  .text-4xl  { font-size: clamp(1.5rem, 7vw, 2.25rem) !important; }
+  .text-5xl  { font-size: clamp(1.75rem, 8vw, 3rem)   !important; }
+  .text-6xl  { font-size: clamp(2rem, 9vw, 3.75rem)   !important; }
+  .text-7xl  { font-size: clamp(2.2rem, 10vw, 4.5rem) !important; }
+  .text-8xl  { font-size: clamp(2.5rem, 11vw, 6rem)   !important; }
+
+  /* Grid layouts wrap on mobile */
+  .grid.grid-cols-3 { grid-template-columns: repeat(1, 1fr); }
+  .grid.grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+
+  /* 1E — ensure flex rows wrap */
+  .flex-row-tight { flex-wrap: wrap; }
+
+  /* Team grid: exactly 2 columns on mobile */
+  .team-spotlight-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  /* Alumni grid: 1 column on mobile (horizontal cards) */
+  .alumni-grid { grid-template-columns: 1fr !important; }
+
+  /* Stat section: 2-col on mobile */
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* nav filter pills wrap */
+  .filter-pills { flex-wrap: wrap; gap: 8px; }
+
+  /* Buttons full-width on mobile where stacked */
+  .btn-stack-mobile .btn-primary,
+  .btn-stack-mobile .btn-ghost { width: 100%; justify-content: center; }
+}
+
+/* Very small screens (≤ 380px) — team grid stays 2 col but smaller font */
+@media (max-width: 380px) {
+  .team-spotlight-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+}
+
+/* Blog card hover — Change 2 (base styles, JS-triggered via group hover) */
+.blog-post-card {
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s ease;
+  overflow: hidden;
+  border-bottom: 2px solid transparent;
+}
+
+.blog-post-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+  border-bottom-color: var(--primary);
+}
+
+.blog-post-card .blog-thumb-wrap {
+  overflow: hidden;
+}
+
+.blog-post-card .blog-thumb-img {
+  transition: transform 0.5s ease;
+}
+
+.blog-post-card:hover .blog-thumb-img {
+  transform: scale(1.06);
+}
+
+.blog-post-card .blog-title {
+  transition: color 0.25s ease;
+}
+
+.blog-post-card:hover .blog-title {
+  color: var(--primary);
+}
+
+.blog-post-card .blog-arrow {
+  transition: transform 0.25s ease;
+  display: inline-flex;
+}
+
+.blog-post-card:hover .blog-arrow {
+  transform: translateX(4px);
+}
+
+/* Magnetic button wrapper */
+.magnetic-btn-wrap {
+  display: inline-block;
+  position: relative;
+}
+
+.magnetic-btn-inner {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* == CHANGE 3B � Team card mobile typography == */
+@media (max-width: 768px) {
+  .team-card-name { font-size: 14px !important; }
+  .team-card-role { font-size: 12px !important; }
+}
+
+/* == CHANGE 4 � Hero entrance keyframes == */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-eyebrow  { animation: heroFadeUp 0.6s ease-out 0ms    both; }
+.hero-headline { animation: heroFadeUp 0.7s ease-out 150ms  both; }
+.hero-sub      { animation: heroFadeUp 0.7s ease-out 500ms  both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow, .hero-headline, .hero-sub {
+    animation: none !important; opacity: 1 !important; transform: none !important;
+  }
+}
