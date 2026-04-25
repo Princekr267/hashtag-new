@@ -1,12 +1,22 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
 
 export function useSmoothScroll(): void {
+  const { pathname } = useLocation()
+  const lenisRef = useRef<Lenis | null>(null)
+
   useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual'
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     })
+    
+    lenisRef.current = lenis
 
     let rafId: number
     function raf(time: number) {
@@ -37,6 +47,33 @@ export function useSmoothScroll(): void {
       document.removeEventListener('click', handleClick)
       cancelAnimationFrame(rafId)
       lenis.destroy()
+      lenisRef.current = null
     }
   }, [])
+
+  // Reset scroll on route change
+  useEffect(() => {
+    if (!lenisRef.current) return
+
+    // Stop Lenis to halt any ongoing momentum
+    lenisRef.current.stop()
+    
+    // Immediate jump
+    lenisRef.current.scrollTo(0, { immediate: true })
+    window.scrollTo(0, 0)
+
+    // Wait a tiny frame for React to mount new route, then restart Lenis
+    const timer = setTimeout(() => {
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(0, { immediate: true })
+        lenisRef.current.start()
+      }
+      window.scrollTo(0, 0)
+    }, 50)
+
+    return () => {
+      clearTimeout(timer)
+      if (lenisRef.current) lenisRef.current.start()
+    }
+  }, [pathname])
 }

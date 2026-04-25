@@ -31,6 +31,9 @@
   --text-faint:       #4e5f82;
   --outline:          #1b3261;
   --outline-var:      #14254b;
+
+  /* Change 9: scroll position var for orb parallax */
+  --scroll-y: 0;
 }
 
 /* ── Base Reset ──────────────────────────────────────────────── */
@@ -43,8 +46,12 @@ body {
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
   overflow-x: hidden;
+  /* Change 9e: font rendering */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Change 9b: prevent rubber-band jank */
+  overscroll-behavior: none;
 }
 
 @media (pointer: coarse) {
@@ -117,10 +124,18 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Glass / Surface ─────────────────────────────────────────── */
 .glass {
-  background: rgba(7, 20, 40, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(96, 165, 250, 0.08);
+  background: rgba(7, 20, 40, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-premium {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
 }
 
 .surface-card {
@@ -145,11 +160,22 @@ h1, h2, h3, h4, h5, h6 {
 .section-sm { padding: 60px 0;  position: relative; }
 
 /* ── Scrollbar ───────────────────────────────────────────────── */
-::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg-base); }
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #60a5fa, #818cf8);
-  border-radius: 2px;
+  background: linear-gradient(180deg, var(--primary), var(--secondary));
+  border-radius: 4px;
+}
+
+/* ── Scroll Progress Bar ─────────────────────────────────────── */
+#scroll-progress {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--primary);
+  transform-origin: 0%;
+  z-index: 99999;
+  box-shadow: 0 0 15px var(--primary);
 }
 
 /* ── Selection ───────────────────────────────────────────────── */
@@ -383,3 +409,473 @@ h1, h2, h3, h4, h5, h6 {
 .dept-content    { --dept-color: #fbbf24; }
 .dept-social     { --dept-color: #60a5fa; }
 .dept-member     { --dept-color: #94a3c4; }
+
+/* ══════════════════════════════════════════════════════════════
+   AMBIENT ORB DRIFT KEYFRAMES
+   ══════════════════════════════════════════════════════════════ */
+@keyframes orbDrift1 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  33%       { transform: translate(60px, -40px) scale(1.08); }
+  66%       { transform: translate(-30px, 50px) scale(0.95); }
+}
+@keyframes orbDrift2 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  25%       { transform: translate(-80px, 30px) scale(1.05); }
+  50%       { transform: translate(40px, -60px) scale(0.92); }
+  75%       { transform: translate(70px, 20px) scale(1.1); }
+}
+@keyframes orbDrift3 {
+  0%, 100% { transform: translate(0px, 0px) rotate(0deg); }
+  50%       { transform: translate(-50px, -70px) rotate(180deg); }
+}
+@keyframes orbDrift4 {
+  0%, 100% { transform: translate(0px, 0px) scale(1); }
+  40%       { transform: translate(90px, -30px) scale(1.15); }
+  80%       { transform: translate(-40px, 60px) scale(0.88); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CURTAIN PAGE TRANSITION
+   ══════════════════════════════════════════════════════════════ */
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  pointer-events: none;
+  transform-origin: left;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL REVEAL — data-reveal system
+   ══════════════════════════════════════════════════════════════ */
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(32px);
+  /* Non-animated fallback: content is at final position if JS fails
+     because 'reveal-hidden' is only added after JS runs */
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s cubic-bezier(0.2, 0, 0, 1),
+              transform 0.7s cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CUSTOM CURSOR ENHANCEMENT
+   ══════════════════════════════════════════════════════════════ */
+.cursor-ring-blend {
+  mix-blend-mode: difference;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COUNTDOWN TIMER PULSE
+   ══════════════════════════════════════════════════════════════ */
+@keyframes countdownPulse {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.12); color: #38bdf8; }
+  100% { transform: scale(1); }
+}
+
+.countdown-digit { display: inline-block; }
+
+.countdown-pulse {
+  animation: countdownPulse 0.4s ease;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TEAM CARD FLOAT ANIMATION
+   ══════════════════════════════════════════════════════════════ */
+@keyframes teamFloat {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-7px); }
+}
+
+.team-float {
+  animation: teamFloat 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TEAM SPOTLIGHT EFFECT (cursor-driven via CSS vars)
+   ══════════════════════════════════════════════════════════════ */
+.team-spotlight-grid {
+  --mouse-x: -999px;
+  --mouse-y: -999px;
+}
+
+.team-spotlight-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.team-spotlight-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    200px circle at var(--mouse-x) var(--mouse-y),
+    rgba(96, 165, 250, 0.12) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.team-spotlight-grid:hover .team-spotlight-card::before {
+  opacity: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   LEADER CARD — ANIMATED HALO RING
+   ══════════════════════════════════════════════════════════════ */
+.leader-halo {
+  position: relative;
+}
+
+.leader-halo::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: conic-gradient(
+    from 0deg,
+    #60a5fa,
+    #818cf8,
+    #38bdf8,
+    #60a5fa
+  );
+  animation: gradientBorderSpin 4s linear infinite;
+  z-index: 0;
+  border-radius: 28px;
+}
+
+.leader-halo > * {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes gradientBorderSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   POLAROID CARD (past events)
+   ══════════════════════════════════════════════════════════════ */
+.polaroid-card {
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1),
+              box-shadow 0.35s ease,
+              z-index 0s;
+  will-change: transform;
+}
+
+.polaroid-card:hover {
+  transform: rotate(0deg) scale(1.05) !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(96,165,250,0.2) !important;
+  z-index: 10 !important;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FOOTER DISPLAY TEXT REVEAL
+   ══════════════════════════════════════════════════════════════ */
+.footer-display-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(3.5rem, 10vw, 9rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 1s cubic-bezier(0.2, 0, 0, 1);
+  will-change: clip-path;
+}
+
+.footer-display-text.revealed {
+  clip-path: inset(0% 0 0 0);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MARQUEE GPU ACCELERATION
+   ══════════════════════════════════════════════════════════════ */
+.marquee-track {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SCROLL BEHAVIOR UTILITIES
+   ══════════════════════════════════════════════════════════════ */
+.will-change-transform { will-change: transform; }
+
+/* ══════════════════════════════════════════════════════════════
+   NAVBAR — hide/show on scroll direction
+   ══════════════════════════════════════════════════════════════ */
+.navbar-hidden {
+  transform: translateY(-110%);
+}
+
+.navbar-visible {
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ANIMATED GRADIENT BORDER (Events featured card)
+   ══════════════════════════════════════════════════════════════ */
+.event-gradient-border {
+  position: relative;
+  border-radius: 20px;
+  padding: 2px;
+  overflow: hidden;
+}
+
+.event-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    #8ff5ff,
+    #00fc40,
+    #ac89ff,
+    #ff6b9b,
+    #8ff5ff
+  );
+  border-radius: inherit;
+  animation: gradientBorderSpin 4s linear infinite;
+  z-index: 0;
+}
+
+.event-gradient-border > .event-gradient-inner {
+  position: relative;
+  z-index: 1;
+  border-radius: 18px;
+  background: var(--bg-container);
+  overflow: hidden;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FEATURED EVENT highlight wrapper
+   ══════════════════════════════════════════════════════════════ */
+.featured-event-wrap {
+  position: relative;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MISSION TEXT SHIMMER (fallback for dynamic bg)
+   ══════════════════════════════════════════════════════════════ */
+.mission-block {
+  position: relative;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PREFERS-REDUCED-MOTION — kill all custom animations
+   ══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  /* Orbs — keep visuals, no motion */
+  [style*="orbDrift"] { animation: none !important; }
+
+  /* Marquee — pause */
+  .animate-marquee, .animate-marquee-reverse {
+    animation-play-state: paused !important;
+  }
+
+  /* Team float */
+  .team-float { animation: none !important; }
+
+  /* Countdown pulse */
+  .countdown-pulse { animation: none !important; }
+
+  /* Leader halo spin */
+  .leader-halo::before { animation: none !important; }
+
+  /* Gradient border spin */
+  .gradient-border-spin,
+  .event-gradient-border::before { animation: none !important; }
+
+  /* Scroll reveals — show immediately */
+  .reveal-hidden {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .reveal-visible {
+    transition: none !important;
+  }
+
+  /* Footer reveal — show immediately */
+  .footer-display-text {
+    clip-path: inset(0% 0 0 0) !important;
+    transition: none !important;
+  }
+
+  /* Word reveal — show immediately */
+  .word-reveal-span {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Global */
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHANGE 1 — FULL MOBILE OPTIMIZATION
+   ══════════════════════════════════════════════════════════════ */
+
+/* 1A — overflow-x guard (body already has it, belt + suspenders) */
+html, body { overflow-x: hidden; }
+
+/* 1B — last content section before footer: no extra gap */
+main > *:last-child { margin-bottom: 0 !important; }
+
+/* All images get safe defaults */
+img { max-width: 100%; height: auto; }
+
+/* Buttons minimum tap target */
+.btn-primary, .btn-ghost {
+  min-height: 44px;
+}
+
+/* Section padding scales on mobile */
+/* 1C � Section padding scales for responsiveness */
+section { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+
+@media (max-width: 1024px) {
+  section { padding-left: 2.5rem !important; padding-right: 2.5rem !important; }
+}
+
+@media (max-width: 640px) {
+  section { padding-left: 1rem !important; padding-right: 1rem !important; }
+}
+
+@media (max-width: 768px) {
+  .section    { padding: 48px 0; }
+  .section-sm { padding: 32px 0; }
+
+  /* 1D — Hero display text scales */
+  .text-4xl  { font-size: clamp(1.5rem, 7vw, 2.25rem) !important; }
+  .text-5xl  { font-size: clamp(1.75rem, 8vw, 3rem)   !important; }
+  .text-6xl  { font-size: clamp(2rem, 9vw, 3.75rem)   !important; }
+  .text-7xl  { font-size: clamp(2.2rem, 10vw, 4.5rem) !important; }
+  .text-8xl  { font-size: clamp(2.5rem, 11vw, 6rem)   !important; }
+
+  /* Grid layouts wrap on mobile */
+  .grid.grid-cols-3 { grid-template-columns: repeat(1, 1fr); }
+  .grid.grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
+
+  /* 1E — ensure flex rows wrap */
+  .flex-row-tight { flex-wrap: wrap; }
+
+  /* Team grid: exactly 2 columns on mobile */
+  .team-spotlight-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  /* Alumni grid: 1 column on mobile (horizontal cards) */
+  .alumni-grid { grid-template-columns: 1fr !important; }
+
+  /* Stat section: 2-col on mobile */
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* nav filter pills wrap */
+  .filter-pills { flex-wrap: wrap; gap: 8px; }
+
+  /* Buttons full-width on mobile where stacked */
+  .btn-stack-mobile .btn-primary,
+  .btn-stack-mobile .btn-ghost { width: 100%; justify-content: center; }
+}
+
+/* Very small screens (≤ 380px) — team grid stays 2 col but smaller font */
+@media (max-width: 380px) {
+  .team-spotlight-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 6px !important; }
+}
+
+/* Blog card hover — Change 2 (base styles, JS-triggered via group hover) */
+.blog-post-card {
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              box-shadow 0.3s ease;
+  overflow: hidden;
+  border-bottom: 2px solid transparent;
+}
+
+.blog-post-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+  border-bottom-color: var(--primary);
+}
+
+.blog-post-card .blog-thumb-wrap {
+  overflow: hidden;
+}
+
+.blog-post-card .blog-thumb-img {
+  transition: transform 0.5s ease;
+}
+
+.blog-post-card:hover .blog-thumb-img {
+  transform: scale(1.06);
+}
+
+.blog-post-card .blog-title {
+  transition: color 0.25s ease;
+}
+
+.blog-post-card:hover .blog-title {
+  color: var(--primary);
+}
+
+.blog-post-card .blog-arrow {
+  transition: transform 0.25s ease;
+  display: inline-flex;
+}
+
+.blog-post-card:hover .blog-arrow {
+  transform: translateX(4px);
+}
+
+/* Magnetic button wrapper */
+.magnetic-btn-wrap {
+  display: inline-block;
+  position: relative;
+}
+
+.magnetic-btn-inner {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* == CHANGE 3B � Team card mobile typography == */
+@media (max-width: 768px) {
+  .team-card-name { font-size: 14px !important; }
+  .team-card-role { font-size: 12px !important; }
+}
+
+/* == CHANGE 4 � Hero entrance keyframes == */
+@keyframes heroFadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-eyebrow  { animation: heroFadeUp 0.6s ease-out 0ms    both; }
+.hero-headline { animation: heroFadeUp 0.7s ease-out 150ms  both; }
+.hero-sub      { animation: heroFadeUp 0.7s ease-out 500ms  both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow, .hero-headline, .hero-sub {
+    animation: none !important; opacity: 1 !important; transform: none !important;
+  }
+}
+
+/* Alumni icon button hover */
+.alumni-btn-fill { pointer-events: none; }
+a:hover .alumni-btn-fill { opacity: 1 !important; }
+a:hover .alumni-btn-icon { color: #ffffff !important; }

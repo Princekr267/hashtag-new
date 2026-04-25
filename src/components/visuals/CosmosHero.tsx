@@ -13,6 +13,12 @@ export default function CosmosHero(): JSX.Element {
     let t = 0
     let raf: number
 
+    // Change 6B: animation state
+    let mouseX = 0, mouseY = 0
+    let rotX = 0, rotY = 0
+    let targetRotX = 0, targetRotY = 0
+    let scrollY = 0
+
     const resize = () => {
       W = cv.offsetWidth
       H = cv.offsetHeight
@@ -29,9 +35,49 @@ export default function CosmosHero(): JSX.Element {
       }))
     }
 
+    // Change 6B — mouse parallax
+    const onMouseMove = (e: MouseEvent) => {
+      mouseX = e.clientX
+      mouseY = e.clientY
+    }
+
+    // Change 6B — scroll reaction
+    const onScroll = () => { scrollY = window.scrollY }
+
     const draw = () => {
+      // Change 6B: update rotation targets from mouse
+      targetRotX = (mouseY / (H || 1) - 0.5) * 0.2
+      targetRotY = (mouseX / (W || 1) - 0.5) * 0.4
+
+      // Lerp current toward target
+      rotX += (targetRotX - rotX) * 0.05
+      rotY += (targetRotY - rotY) * 0.05
+
+      // Derived offsets for planet/ring position
+      const parallaxX = rotY * 40   // subtle left/right shift
+      const parallaxY = rotX * 25   // subtle up/down shift
+
+      // Change 6B: scroll-driven opacity (0.8 → 0.2 over first 400px)
+      const scrollOpacity = Math.max(0.15, 0.85 - (scrollY / 400) * 0.7)
+
+      // Change 6B: scroll-driven scale (1 → 0.7 over first 400px)
+      const scrollScale = Math.max(0.7, 1 - (scrollY / 400) * 0.3)
+
+      // Change 6B: breathing scale
+      const breathe = 1 + Math.sin(t * 0.008 * 0.8) * 0.03
+
+      // Change 6B: hue cycle — shift planet blue hue slightly over 20s
+      const hueShift = Math.sin(t * 0.008 / 20 * Math.PI * 2) * 15  // ±15 deg
+
       ctx.clearRect(0, 0, W, H)
-      
+
+      // Global opacity & scale
+      ctx.save()
+      ctx.globalAlpha = scrollOpacity
+      ctx.translate(W / 2, H / 2)
+      ctx.scale(scrollScale * breathe, scrollScale * breathe)
+      ctx.translate(-W / 2, -H / 2)
+
       // Star field
       stars.forEach(s => {
         s.twinkle += s.speed
@@ -43,23 +89,23 @@ export default function CosmosHero(): JSX.Element {
         ctx.fill()
       })
 
-      // Planet properties
-      const cx = W / 2, cy = H / 2 + 10, pr = 110
-      
-      // Atmosphere glow - smoother and more expansive
+      // Planet center with parallax offset
+      const cx = W / 2 + parallaxX, cy = H / 2 + 10 + parallaxY, pr = 110
+
+      // Atmosphere glow
       for (let i = 8; i >= 1; i--) {
         ctx.beginPath()
         ctx.arc(cx, cy, pr + i * 16, 0, Math.PI * 2)
-        ctx.strokeStyle = `rgba(14, 100, 240, ${0.03 * (9-i)})`
+        ctx.strokeStyle = `rgba(${Math.round(14 + hueShift)}, 100, 240, ${0.03 * (9-i)})`
         ctx.lineWidth = 15
         ctx.stroke()
       }
       
-      // Planet body
+      // Planet body — hue-shifted gradient
       const pg = ctx.createRadialGradient(cx - 30, cy - 30, 0, cx, cy, pr)
-      pg.addColorStop(0, '#2b6cb0')
-      pg.addColorStop(0.3, '#1a365d')
-      pg.addColorStop(0.7, '#0a1a2f')
+      pg.addColorStop(0, `hsl(${210 + hueShift}, 60%, 35%)`)
+      pg.addColorStop(0.3, `hsl(${220 + hueShift}, 65%, 22%)`)
+      pg.addColorStop(0.7, `hsl(${230 + hueShift}, 70%, 10%)`)
       pg.addColorStop(1, '#000000')
       ctx.beginPath()
       ctx.arc(cx, cy, pr, 0, Math.PI * 2)
@@ -73,10 +119,9 @@ export default function CosmosHero(): JSX.Element {
       ctx.clip()
       for (let i = 0; i < 7; i++) {
         const yy = cy - pr + i * (pr * 2 / 6)
-        const halfWInRange = pr * pr - (yy - cy) * (yy - cy);
+        const halfWInRange = pr * pr - (yy - cy) * (yy - cy)
         const halfW = Math.sqrt(Math.max(0, halfWInRange))
         ctx.beginPath()
-        // Adding rotation or movement logic here if needed, but keeping it simple for now
         ctx.ellipse(cx, yy, halfW * 0.92, halfW * 0.08, 0, 0, Math.PI * 2)
         ctx.strokeStyle = `rgba(20,100,255,${0.06 + 0.04 * (i % 3)})`
         ctx.lineWidth = 0.8
@@ -93,7 +138,7 @@ export default function CosmosHero(): JSX.Element {
       ctx.fill()
       ctx.restore()
 
-      // Ring
+      // Ring (with parallax)
       ctx.save()
       ctx.translate(cx, cy)
       ctx.scale(1, 0.22)
@@ -110,6 +155,8 @@ export default function CosmosHero(): JSX.Element {
       }
       ctx.restore()
 
+      ctx.restore() // end global opacity/scale
+
       t++
       raf = requestAnimationFrame(draw)
     }
@@ -117,10 +164,14 @@ export default function CosmosHero(): JSX.Element {
     resize()
     draw()
     window.addEventListener('resize', resize)
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
       cancelAnimationFrame(raf)
       window.removeEventListener('resize', resize)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('scroll', onScroll)
     }
   }, [])
 
