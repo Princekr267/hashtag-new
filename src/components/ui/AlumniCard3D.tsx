@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react'
-import { motion, useSpring, useTransform, AnimatePresence } from 'framer-motion'
+import React, { useRef } from 'react'
+import { motion, useSpring, useTransform } from 'framer-motion'
 
 interface AlumniMember {
   name: string
@@ -166,10 +166,10 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
           style={{ transform: 'translateZ(50px)' }} 
           className="mt-auto flex items-center gap-4 py-2"
         >
-          <MagneticIconButton href="#" ariaLabel="Email" accent={accent}>
+          <MagneticIconButton href="#" accent={accent}>
             <EnvelopeIcon />
           </MagneticIconButton>
-          <MagneticIconButton href="#" ariaLabel="LinkedIn" accent={accent}>
+          <MagneticIconButton href="#" accent={accent}>
             <LinkedInIcon />
           </MagneticIconButton>
         </div>
@@ -178,8 +178,8 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
   )
 }
 
-const MagneticIconButton: React.FC<{ href: string; ariaLabel: string; accent: string; children: React.ReactNode }> = ({
-  href, ariaLabel, accent, children,
+const MagneticIconButton: React.FC<{ href: string; accent: string; children: React.ReactNode }> = ({
+  href, accent, children,
 }) => {
   const ref = useRef<HTMLAnchorElement>(null)
   const mx = useSpring(0, { stiffness: 200, damping: 15 })
@@ -194,7 +194,10 @@ const MagneticIconButton: React.FC<{ href: string; ariaLabel: string; accent: st
     my.set(dy * 0.4)
   }
 
-  const handleMouseLeave = () => {
+  const handleMouseLeave = (e: React.MouseEvent) => {
+    const el = e.currentTarget as HTMLElement
+    el.style.borderColor = `${accent}30`
+    el.style.boxShadow = 'none'
     mx.set(0)
     my.set(0)
   }
@@ -217,20 +220,13 @@ const MagneticIconButton: React.FC<{ href: string; ariaLabel: string; accent: st
         el.style.borderColor = accent
         el.style.boxShadow = `0 0 16px ${accent}60`
       }}
-      onMouseLeave={e => {
-        const el = e.currentTarget as HTMLElement
-        el.style.borderColor = `${accent}30`
-        el.style.boxShadow = 'none'
-        mx.set(0)
-        my.set(0)
-      }}
     >
-      {/* Hover fill — solid dark overlay so icon is always visible */}
+      {/* Hover fill */}
       <div 
-        className="alumni-btn-fill absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
+        className="alumni-btn-fill absolute inset-0 opacity-0 transition-opacity duration-300"
         style={{ background: `linear-gradient(135deg, ${accent}, ${accent}cc)` }}
       />
-      {/* Icon — always white for contrast against the fill */}
+      {/* Icon */}
       <div className="relative z-10" style={{ color: accent }}>
         <div className="alumni-btn-icon transition-colors duration-300">
           {children}

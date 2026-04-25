@@ -17,7 +17,7 @@ interface TeamCard3DProps {
 
 const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa' }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isFlipped, setIsFlipped] = useState(false)
+  const [_, setIsFlipped] = useState(false)
   const isFlippedRef = useRef(false)  // ref to avoid stale closure in mousemove
 
   // 3D tilt tracking on the whole card container

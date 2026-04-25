@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { motion } from 'framer-motion'
+import { motion, Variants } from 'framer-motion'
 import { ChevronDown, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
@@ -83,7 +83,7 @@ function BlurHeading() {
   const line1 = 'Explore the cosmos'
   const line2 = 'of technology'
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -91,7 +91,7 @@ function BlurHeading() {
     },
   }
 
-  const item = {
+  const item: Variants = {
     hidden: { opacity: 0, y: 30, filter: 'blur(8px)', scale: 0.95 },
     show: { opacity: 1, y: 0, filter: 'blur(0px)', scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
   }

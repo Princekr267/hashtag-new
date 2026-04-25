@@ -66,7 +66,7 @@ function getPolaroidRotation(idx: number): number {
 }
 
 // ── Event card — past events get polaroid treatment ───────────
-function EventCard({ event, idx, onClick }: { event: Event; idx: number; onClick: () => void }): JSX.Element {
+function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
   const isPast      = event.status === 'past'
   const rotation    = getPolaroidRotation(idx)
 
@@ -286,7 +286,7 @@ export default function Events(): JSX.Element {
                     position: 'relative',
                   }}
                 >
-                  <EventCard event={event} idx={idx} onClick={() => {}} />
+                  <EventCard event={event} idx={idx} />
                 </div>
               ))}
             </AnimatePresence>

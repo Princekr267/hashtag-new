@@ -745,12 +745,20 @@ img { max-width: 100%; height: auto; }
 }
 
 /* Section padding scales on mobile */
+/* 1C — Section padding scales for responsiveness */
+section { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+
+@media (max-width: 1024px) {
+  section { padding-left: 2.5rem !important; padding-right: 2.5rem !important; }
+}
+
+@media (max-width: 640px) {
+  section { padding-left: 1rem !important; padding-right: 1rem !important; }
+}
+
 @media (max-width: 768px) {
   .section    { padding: 48px 0; }
   .section-sm { padding: 32px 0; }
-
-  /* 1C — standardize section horizontal padding on mobile */
-  section { padding-left: 1rem !important; padding-right: 1rem !important; }
 
   /* 1D â€” Hero display text scales */
   .text-4xl  { font-size: clamp(1.5rem, 7vw, 2.25rem) !important; }
