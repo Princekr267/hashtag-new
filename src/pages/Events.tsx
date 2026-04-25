@@ -107,7 +107,7 @@ function EventCard({ event, idx, onClick }: { event: Event; idx: number; onClick
           style={{ background: `linear-gradient(90deg, ${event.gradientFrom}, ${event.gradientTo})` }}
         />
 
-        <div className="p-7 flex flex-col h-full gap-4">
+        <div className="p-5 md:p-7 flex flex-col h-full gap-4">
           {/* Header row */}
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -206,7 +206,7 @@ export default function Events(): JSX.Element {
 
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section className="section-sm px-6">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}

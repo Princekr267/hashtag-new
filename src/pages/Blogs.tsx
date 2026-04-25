@@ -12,7 +12,7 @@ export default function Blogs(): JSX.Element {
     <div className="relative z-10 pt-20">
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section className="section-sm px-6">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ export default function Blogs(): JSX.Element {
             }}
           >
             <Link to={`/blogs/${featured.id}`} className="w-full block bg-bg-container rounded-3xl h-full transition-all duration-500 group-hover:bg-[#060d1c]">
-              <div className="p-12 flex flex-col md:flex-row md:items-end justify-between gap-8 h-full relative overflow-hidden">
+              <div className="p-6 md:p-12 flex flex-col md:flex-row md:items-end justify-between gap-8 h-full relative overflow-hidden">
                 {/* Neon corner accent */}
                 <div
                   className="absolute top-0 left-0 w-24 h-24 pointer-events-none"
@@ -134,7 +134,7 @@ export default function Blogs(): JSX.Element {
                     e.currentTarget.style.background = 'rgba(10,14,24,0.85)'
                   }}
                 >
-                  <div className="p-8 flex flex-col h-full">
+                  <div className="p-6 md:p-8 flex flex-col h-full">
                     {/* Accent bar */}
                     <div
                       className="h-0.5 w-12 mb-6"

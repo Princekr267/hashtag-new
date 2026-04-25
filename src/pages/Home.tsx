@@ -172,7 +172,7 @@ export default function Home(): JSX.Element {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10 px-4">
+        <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10">
           {/* Subtle vignette behind text for contrast */}
           <div
             className="absolute inset-0 pointer-events-none"
@@ -365,18 +365,18 @@ export default function Home(): JSX.Element {
               viewport={{ once: true }}
               className="group"
             >
-              <div className="surface-card p-8 h-full bg-[#050a1a] border border-cyan-500/20 hover:border-cyan-500/50 transition-colors rounded-3xl relative overflow-hidden">
+              <div className="surface-card p-6 md:p-8 h-full bg-[#050a1a] border border-cyan-500/20 hover:border-cyan-500/50 transition-colors rounded-3xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-cyan-500/10 to-transparent pointer-events-none" />
                 <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-xs font-mono-custom tracking-widest text-cyan-400">STATUS.ONLINE</span>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
+                    <span className="text-xs font-mono-custom tracking-widest text-cyan-400 leading-none">STATUS.ONLINE</span>
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-2">HashDash Finance</h3>
                   <p className="text-text-muted mb-6 text-sm">
                     A full-stack React and Node.js finance dashboard with role-based access control and live data streaming.
                   </p>
-                  <div className="flex gap-2 font-mono-custom text-[10px] text-cyan-200/50 uppercase">
+                  <div className="flex flex-wrap gap-2 font-mono-custom text-[10px] text-cyan-200/50 uppercase">
                     <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">React</span>
                     <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">Node.js</span>
                     <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">MongoDB</span>
@@ -393,18 +393,18 @@ export default function Home(): JSX.Element {
               transition={{ delay: 0.1 }}
               className="group"
             >
-              <div className="surface-card p-8 h-full bg-[#050a1a] border border-purple-500/20 hover:border-purple-500/50 transition-colors rounded-3xl relative overflow-hidden">
+              <div className="surface-card p-6 md:p-8 h-full bg-[#050a1a] border border-purple-500/20 hover:border-purple-500/50 transition-colors rounded-3xl relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-purple-500/10 to-transparent pointer-events-none" />
                 <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <span className="w-2 h-2 rounded-full bg-purple-500 opacity-50" />
-                    <span className="text-xs font-mono-custom tracking-widest text-purple-400">V2.BETA</span>
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="w-2 h-2 rounded-full bg-purple-500 opacity-50 flex-shrink-0" />
+                    <span className="text-xs font-mono-custom tracking-widest text-purple-400 leading-none">V2.BETA</span>
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-2">CodeTrek Platform</h3>
                   <p className="text-text-muted mb-6 text-sm">
                     An automated judging platform built for our relay coding hackathons, capable of evaluating 100+ submissions per minute.
                   </p>
-                  <div className="flex gap-2 font-mono-custom text-[10px] text-purple-200/50 uppercase">
+                  <div className="flex flex-wrap gap-2 font-mono-custom text-[10px] text-purple-200/50 uppercase">
                     <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Python</span>
                     <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Docker</span>
                     <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Redis</span>

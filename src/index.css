@@ -749,14 +749,8 @@ img { max-width: 100%; height: auto; }
   .section    { padding: 48px 0; }
   .section-sm { padding: 32px 0; }
 
-  /* Containers should pad themselves instead of relying on px-6 alone */
-  .max-w-7xl.mx-auto { padding-left: 1rem; padding-right: 1rem; }
-
-  /* 1C — Headings never touch screen edge */
-  h1, h2, h3,
-  .hero-heading,
-  .page-title,
-  .section-title { padding-left: 1rem; padding-right: 1rem; }
+  /* 1C � standardize section horizontal padding on mobile */
+  section { padding-left: 1rem !important; padding-right: 1rem !important; }
 
   /* 1D — Hero display text scales */
   .text-4xl  { font-size: clamp(1.5rem, 7vw, 2.25rem) !important; }

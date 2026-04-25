@@ -63,7 +63,7 @@ function MissionVisionCard({
         background: `linear-gradient(135deg, rgba(10,14,24,0.95) 0%, rgba(6,10,20,0.98) 100%)`,
         border: `1px solid ${accentColor}28`,
         borderRadius: '24px',
-        padding: '40px',
+        padding: 'clamp(24px, 5vw, 40px)',
         minHeight: '320px',
         transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)',
         cursor: 'default',
@@ -275,7 +275,7 @@ export default function About(): JSX.Element {
 
       {/* ── HERO ──────────────────────────────────────────── */}
       <section className="section-sm px-6">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}

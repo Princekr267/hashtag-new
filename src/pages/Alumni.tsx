@@ -25,7 +25,7 @@ export default function Alumni(): JSX.Element {
     <div className="relative z-10 pt-20">
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section className="section-sm px-6">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
