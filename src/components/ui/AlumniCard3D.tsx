@@ -205,20 +205,36 @@ const MagneticIconButton: React.FC<{ href: string; ariaLabel: string; accent: st
       href={href}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-12 h-12 rounded-full border flex items-center justify-center transition-colors duration-300 group/btn overflow-hidden relative"
+      className="w-12 h-12 rounded-full border flex items-center justify-center overflow-hidden relative"
       style={{ 
         borderColor: `${accent}30`, 
         background: 'rgba(255,255,255,0.02)',
         x: mx,
         y: my
       }}
+      onMouseEnter={e => {
+        const el = e.currentTarget as HTMLElement
+        el.style.borderColor = accent
+        el.style.boxShadow = `0 0 16px ${accent}60`
+      }}
+      onMouseLeave={e => {
+        const el = e.currentTarget as HTMLElement
+        el.style.borderColor = `${accent}30`
+        el.style.boxShadow = 'none'
+        mx.set(0)
+        my.set(0)
+      }}
     >
+      {/* Hover fill — solid dark overlay so icon is always visible */}
       <div 
-        className="absolute inset-0 opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"
-        style={{ background: accent }}
+        className="alumni-btn-fill absolute inset-0 opacity-0 hover:opacity-100 transition-opacity duration-300"
+        style={{ background: `linear-gradient(135deg, ${accent}, ${accent}cc)` }}
       />
-      <div className="relative z-10 transition-colors duration-300 group-hover/btn:text-white" style={{ color: accent }}>
-        {children}
+      {/* Icon — always white for contrast against the fill */}
+      <div className="relative z-10" style={{ color: accent }}>
+        <div className="alumni-btn-icon transition-colors duration-300">
+          {children}
+        </div>
       </div>
     </motion.a>
   )

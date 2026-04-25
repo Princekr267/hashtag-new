@@ -42,6 +42,7 @@ export default function FlipCard({
             inset: 0,
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
+            transform: 'rotateY(0deg)',
           }}
         >
           {front}

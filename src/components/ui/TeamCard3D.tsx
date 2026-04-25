@@ -18,6 +18,7 @@ interface TeamCard3DProps {
 const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa' }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isFlipped, setIsFlipped] = useState(false)
+  const isFlippedRef = useRef(false)  // ref to avoid stale closure in mousemove
 
   // 3D tilt tracking on the whole card container
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -30,16 +31,22 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
     const my   = e.clientY - cy
     const rotX = (-my / (rect.height / 2)) * 6
     const rotY = ( mx / (rect.width  / 2)) * 6
-    el.style.transform = `rotateX(${rotX}deg) rotateY(${isFlipped ? 180 + rotY : rotY}deg)`
+    // Use ref (not state) to always read current flip status
+    el.style.transform = `rotateX(${rotX}deg) rotateY(${isFlippedRef.current ? 180 + rotY : rotY}deg)`
   }
 
   const handleMouseEnter = () => {
+    isFlippedRef.current = true
     setIsFlipped(true)
     const el = containerRef.current
-    if (el) el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
+    if (el) {
+      el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
+      el.style.transform = 'rotateX(0deg) rotateY(180deg)'
+    }
   }
 
   const handleMouseLeave = () => {
+    isFlippedRef.current = false
     setIsFlipped(false)
     const el = containerRef.current
     if (el) {
@@ -52,7 +59,18 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
     <>
       <div
         style={{ perspective: '900px', width: '100%', aspectRatio: '3 / 4' }}
-        onClick={() => { if ('ontouchstart' in window) setIsFlipped(f => !f) }}
+        onClick={() => {
+          if ('ontouchstart' in window) {
+            const el = containerRef.current
+            const next = !isFlippedRef.current
+            isFlippedRef.current = next
+            setIsFlipped(next)
+            if (el) {
+              el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
+              el.style.transform = `rotateX(0deg) rotateY(${next ? 180 : 0}deg)`
+            }
+          }
+        }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
@@ -62,7 +80,6 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
           style={{
             position: 'relative', width: '100%', height: '100%',
             transformStyle: 'preserve-3d', willChange: 'transform',
-            transform: isFlipped ? 'rotateX(0deg) rotateY(180deg)' : 'rotateX(0deg) rotateY(0deg)',
             transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
@@ -72,6 +89,7 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             style={{
               position: 'absolute', inset: 0,
               backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+              transform: 'rotateY(0deg)',
               borderRadius: '20px', overflow: 'hidden',
               background: '#0a0a0a',
               border: `1px solid rgba(255,255,255,0.07)`,
@@ -92,14 +110,13 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
                   transition: 'transform 0.6s ease',
                 }}
               />
-              {/* Title badge */}
-              <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 5 }}>
+              {/* Title badge — no backdropFilter to avoid breaking 3D stacking */}
+              <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 2 }}>
                 <span style={{
                   display: 'inline-block', padding: '2px 10px',
                   borderRadius: '999px', fontSize: '9px', fontWeight: 700,
                   letterSpacing: '0.15em', textTransform: 'uppercase',
-                  backdropFilter: 'blur(8px)',
-                  background: `${accentColor}22`, color: accentColor,
+                  background: `${accentColor}33`, color: accentColor,
                   border: `1px solid ${accentColor}45`,
                 }}>
                   {member.title}
