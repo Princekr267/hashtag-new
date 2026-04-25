@@ -15,6 +15,8 @@ import Blogs from './pages/Blogs'
 import Alumni from './pages/Alumni'
 import EventDetail from './pages/EventDetail'
 import BlogDetail from './pages/BlogDetail'
+import PageLoader from './components/ui/PageLoader'
+import { useState } from 'react'
 
 import { useSmoothScroll } from './hooks/useSmoothScroll'
 import { useScroll, useSpring } from 'framer-motion'
@@ -91,8 +93,9 @@ function AppInner(): JSX.Element {
   )
 }
 
-// Change 8: Remove the PageLoader entirely — start fully visible immediately
 export default function App(): JSX.Element {
+  const [isLoading, setIsLoading] = useState(true)
+
   return (
     <BrowserRouter
       future={{
@@ -100,8 +103,21 @@ export default function App(): JSX.Element {
         v7_relativeSplatPath: true,
       }}
     >
-      <CustomCursor />
-      <AppInner />
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <PageLoader key="loader" onComplete={() => setIsLoading(false)} />
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <CustomCursor />
+            <AppInner />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </BrowserRouter>
   )
 }

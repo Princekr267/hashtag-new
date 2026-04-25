@@ -80,6 +80,48 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   )
 }
 
+function BlurHeading() {
+  const line1 = 'Explore the cosmos'
+  const line2 = 'of technology'
+
+  const container: Variants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+    },
+  }
+
+  const item: Variants = {
+    hidden: { opacity: 0, y: 30, filter: 'blur(8px)', scale: 0.95 },
+    show: { opacity: 1, y: 0, filter: 'blur(0px)', scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+  }
+
+  return (
+    <motion.h1
+      className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
+      variants={container}
+      initial="hidden"
+      animate="show"
+    >
+      <span className="block" style={{ whiteSpace: 'pre', minHeight: '1em' }}>
+        {line1.split(' ').map((word, i) => (
+          <motion.span key={i} variants={item} className="inline-block mr-[0.25em]">
+            {word}
+          </motion.span>
+        ))}
+      </span>
+      <span className="block" style={{ whiteSpace: 'pre', minHeight: '1em' }}>
+        {line2.split(' ').map((word, i) => (
+          <motion.span key={i} variants={item} className="inline-block mr-[0.25em]">
+            {word}
+          </motion.span>
+        ))}
+      </span>
+    </motion.h1>
+  )
+}
+
 
 
 export default function Home(): JSX.Element {
@@ -141,6 +183,7 @@ export default function Home(): JSX.Element {
             }}
           />
 
+
           <div className="flex flex-col items-center gap-5 max-w-5xl relative z-10">
             {/* Eyebrow — Change 4A */}
             <motion.div
@@ -176,27 +219,8 @@ export default function Home(): JSX.Element {
               </div>
             </motion.div>
 
-            {/* Headline - "Explore the cosmos of technology" */}
-            <h1
-              className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
-            >
-              {"Explore the cosmos of technology".split(" ").map((word, i) => (
-                <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
-                  <motion.span
-                    className="inline-block"
-                    initial={{ y: "110%", opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{
-                      duration: 0.8,
-                      delay: 0.4 + i * 0.1,
-                      ease: [0.16, 1, 0.3, 1]
-                    }}
-                  >
-                    {word}
-                  </motion.span>
-                </span>
-              ))}
-            </h1>
+            {/* Main headline with modern blur reveal */}
+            <BlurHeading />
 
             {/* Subheadline — Change 4A actual description */}
             <motion.p
