@@ -879,3 +879,14 @@ section { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
 .alumni-btn-fill { pointer-events: none; }
 a:hover .alumni-btn-fill { opacity: 1 !important; }
 a:hover .alumni-btn-icon { color: #ffffff !important; }
+
+/* PREMIUM GRAIN OVERLAY */
+.grain-overlay {
+  position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.05; pointer-events: none; z-index: 9999;
+  filter: contrast(150%) brightness(100%);
+}
+
+.text-gradient-aurora { background: linear-gradient(135deg, #6366f1 0%, #a855f7 25%, #ec4899 50%, #f43f5e 75%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: aurora 8s linear infinite; }
+@keyframes aurora { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }

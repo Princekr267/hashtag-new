@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
-import { motion, Variants } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { motion, Variants, AnimatePresence } from 'framer-motion'
+import { useScrambleText } from '../hooks/useScrambleText'
 import { ChevronDown, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
@@ -173,7 +174,6 @@ export default function Home(): JSX.Element {
         </div>
 
         <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10">
-          {/* Subtle vignette behind text for contrast */}
           <div
             className="absolute inset-0 pointer-events-none"
             style={{

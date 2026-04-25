@@ -46,16 +46,16 @@ export default function CosmosHero(): JSX.Element {
 
     const draw = () => {
       // Change 6B: update rotation targets from mouse
-      targetRotX = (mouseY / (H || 1) - 0.5) * 0.2
-      targetRotY = (mouseX / (W || 1) - 0.5) * 0.4
+      targetRotX = (mouseX / (W || 1) - 0.5) * 0.4
+      targetRotY = (mouseY / (H || 1) - 0.5) * 0.2
 
       // Lerp current toward target
       rotX += (targetRotX - rotX) * 0.05
       rotY += (targetRotY - rotY) * 0.05
 
       // Derived offsets for planet/ring position
-      const parallaxX = rotY * 40   // subtle left/right shift
-      const parallaxY = rotX * 25   // subtle up/down shift
+      const parallaxX = rotX * 40   // subtle left/right shift
+      const parallaxY = rotY * 25   // subtle up/down shift
 
       // Change 6B: scroll-driven opacity (0.8 → 0.2 over first 400px)
       const scrollOpacity = Math.max(0.15, 0.85 - (scrollY / 400) * 0.7)
@@ -66,7 +66,6 @@ export default function CosmosHero(): JSX.Element {
       // Change 6B: breathing scale
       const breathe = 1 + Math.sin(t * 0.008 * 0.8) * 0.03
 
-      // Change 6B: hue cycle — shift planet blue hue slightly over 20s
       const hueShift = Math.sin(t * 0.008 / 20 * Math.PI * 2) * 15  // ±15 deg
 
       ctx.clearRect(0, 0, W, H)
@@ -162,7 +161,7 @@ export default function CosmosHero(): JSX.Element {
     }
 
     resize()
-    draw()
+    requestAnimationFrame(draw)
     window.addEventListener('resize', resize)
     window.addEventListener('mousemove', onMouseMove)
     window.addEventListener('scroll', onScroll, { passive: true })
