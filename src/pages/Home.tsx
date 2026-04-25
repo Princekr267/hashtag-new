@@ -134,14 +134,26 @@ export default function Home(): JSX.Element {
             </motion.div>
 
             {/* Headline - "Explore the cosmos of technology" */}
-            <motion.h1
+            <h1
               className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.85, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             >
-              Explore the cosmos<br />of technology
-            </motion.h1>
+              {"Explore the cosmos of technology".split(" ").map((word, i) => (
+                <span key={i} className="inline-block overflow-hidden mr-[0.3em]">
+                  <motion.span
+                    className="inline-block"
+                    initial={{ y: "110%", opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{
+                      duration: 0.8,
+                      delay: 0.4 + i * 0.1,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
+                  >
+                    {word}
+                  </motion.span>
+                </span>
+              ))}
+            </h1>
 
             {/* Subtext - "Where innovation meets the infinite" */}
             <motion.p
