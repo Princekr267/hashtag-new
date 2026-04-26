@@ -1,0 +1,634 @@
+{
+  "society": {
+    "name": "#Hashtag",
+    "tagline": "Code. Create. Collaborate.",
+    "founded": "2018",
+    "members": 240,
+    "projects": 48,
+    "events": 60,
+    "socials": {
+      "github": "https://github.com",
+      "linkedin": "https://linkedin.com",
+      "instagram": "https://instagram.com",
+      "twitter": "https://twitter.com"
+    }
+  },
+  "navbar": {
+    "logo": "/assets/logo.svg",
+    "links": [
+      "Home",
+      "About",
+      "Events",
+      "Team",
+      "Projects",
+      "Testimonials"
+    ]
+  },
+  "hero": {
+    "headline": "Where Code Meets Creativity",
+    "subheadline": "A technical society building the future, one project at a time.",
+    "cta_primary": "Explore Projects",
+    "cta_secondary": "Join #Hashtag"
+  },
+  "about": {
+    "description": "We are a passionate community of developers, designers, and innovators united by the goal of pushing the boundaries of technology. At #Hashtag, we believe in open collaboration, continuous learning, and creating impactful solutions for the future.",
+    "pillars": [
+      {
+        "icon": "Code2",
+        "title": "Open Source",
+        "desc": "Contributing to the community and building tools everyone can use to push the web forward."
+      },
+      {
+        "icon": "Cpu",
+        "title": "AI & ML",
+        "desc": "Exploring machine learning paradigms to solve real-world problems and automate the mundane."
+      },
+      {
+        "icon": "Globe",
+        "title": "Web Dev",
+        "desc": "Crafting stunning, accessible, and highly performant web experiences using modern frameworks."
+      },
+      {
+        "icon": "Zap",
+        "title": "Hackathons",
+        "desc": "Competing actively in global hackathons, innovating rapidly within a demanding timeframe."
+      }
+    ]
+  },
+  "events": {
+    "upcoming": {
+      "title": "TroubleShoot Ideathon",
+      "description": "The TroubleShoot ideathon is an event one of its kind. \n  Students from all over the region will be submitting their ideas along with a detailed presentation till 22nd August out of which final teams will be selected for the final round at Microsoft Office Noida on 30th August 2025. \n  Where they will have the opportunity to Pitch their ideas in front of Microsoft Employees and attend valuable Knowledge Sessions. \n  Winners will be awarded an attractive cash prize as well as certificates and swags to flaunt.",
+      "image": "/eventposters/cs.jpg",
+      "registerUrl": "https://reskilll.com/hack/troubleshoot"
+    },
+    "past": [
+      {
+        "title": "Hack Battle",
+        "description": "Hashtag successfully hosted VCT Hashtag, a high-energy Valorant Tournament, bringing competitive spirit to the forefront. The event highlighted teamwork, strategic thinking, and sportsmanship throughout. Top performers were awarded for their excellence. This tournament marks Hashtag’s commitment to promoting tech and e-sports culture on campus.",
+        "image": "/eventposters/vct.jpg"
+      },
+      {
+        "title": "IdeaUtsav",
+        "description": "IdeaUtsav was HashTag’s flagship ideation event where creativity met real-world tech challenges. Teams pitched smart, feasible solutions and competed with sharp ideas and strong collaboration. Top teams earned trophies, certificates, and well-deserved recognition — a true celebration of innovation and problem-solving!",
+        "image": "/eventposters/ideautsav.jpg"
+      },
+      {
+        "title": "Brand Brawl",
+        "description": "Brand Brawl is a coding fest- a challenge to design websites with a unique and a captive style. The exciting part? Participants can choose any tech stack. Pick from the given themes and bring them to life with a touch of creativity and innovation",
+        "image": "/eventposters/brandbrawl.jpg"
+      },
+      {
+        "title": "Cryptic Hunt",
+        "description": "Cryptic Hunt isn't just a hunt- It's a mental battlefield. Will your team choose the red pill or the blue? Put your logic to the test and solve your way through the rounds - start online, crack the codes, and pave the way to the real-world treasure where every clue leads you to glory!",
+        "image": "/eventposters/cryptichunt.jpg"
+      },
+      {
+        "title": "Treasure Hunt",
+        "description": "Treasure hunt was an event one of its kind, a mystery filled adventure full of suspense and twists all the way to the end. Every participant gave it their all and showed us their cleverness while solving the carefully curated puzzles and riddles created by the talents at HashTag. With twists and turns at every step, the participants showed they had what it takes to find the ultimate treasure.",
+        "image": "/eventposters/treasurehunt.jpg"
+      },
+      {
+        "title": "Relay Coding",
+        "description": "Hashtag conducted Codetrek'25 Where participants tackled a series of coding tasks under tight time constraints. The event tested not just technical knowledge but also critical thinking and time management. With every level, the competition grew more intense, pushing participants to think fast and code faster. CodeTrek reaffirmed Hashtag’s mission to foster innovation, analytical thinking, and a passion for problem-solving.",
+        "image": "/eventposters/codetrekrelay.jpg"
+      },
+      {
+        "title": "Codetrek",
+        "description": "CodeTrek Aug'24 lit up the coding scene as teams raced to solve real-time challenges with speed and precision. The event blended logic, pressure, and teamwork — pushing coders to bring their A-game. With intense problem-solving, sharp collaboration, and nonstop energy, CodeTrek wasn’t just a contest — it was a full-blown coding experience.",
+        "image": "/eventposters/codetrek.jpg"
+      }
+    ]
+  },
+  "team": {
+    "leaders": [
+      {
+        "name": "Anwesha Sen",
+        "title": "President",
+        "avatarUrl": "/Photos/Anwesha.png",
+        "social": {
+          "github": "https://github.com/anwesha1367",
+          "linkedin": "https://www.linkedin.com/in/anwesha-sen-97170227b",
+          "instagram": "https://www.instagram.com/anwesha_sen9405?igsh=MW9jbTlpd2xxbWJiNw=="
+        }
+      },
+      {
+        "name": "M. Abdullah Meraj",
+        "title": "Vice President",
+        "avatarUrl": "/Photos/Abdullah.png",
+        "social": {
+          "github": "https://github.com/mohdabdullahmeraj",
+          "linkedin": "https://www.linkedin.com/in/mohdabdullahmeraj/",
+          "instagram": "https://www.instagram.com/mohdabdullahmeraj/"
+        }
+      },
+      {
+        "name": "Priyal Jain",
+        "title": "Secretary ",
+        "avatarUrl": "/Photos/Priyal.png",
+        "social": {
+          "github": "https://github.com/pihu404",
+          "linkedin": "https://www.linkedin.com/in/priyal-jain-92863b282",
+          "instagram": "https://www.instagram.com/priyal2936?igsh=MW92ZDIzNW5wcnZjNA=="
+        }
+      },
+      {
+        "name": "Vanshika S.",
+        "title": "Treasurer",
+        "avatarUrl": "/Photos/Vanshika.png",
+        "social": {
+          "github": "https://github.com/Vanshika-Srivastava79",
+          "linkedin": "https://www.linkedin.com/in/vanshikasrivastava79",
+          "instagram": "https://www.instagram.com/vannssszzz/"
+        }
+      }
+    ],
+    "technical": {
+      "leads": [
+        {
+          "name": "Ayush Kumar S.",
+          "title": "Head",
+          "avatarUrl": "/Photos/Ayush_Kumar.png",
+          "social": {
+            "github": "https://github.com/ayushkumarsingh14",
+            "linkedin": "https://www.linkedin.com/in/ayush-kumar-singh-7ba5862ba",
+            "instagram": "https://www.instagram.com/ayush.feb14/"
+          }
+        },
+        {
+          "name": "Ankit Choudhary",
+          "title": "Co-Head",
+          "avatarUrl": "/Photos/Ankit.png",
+          "social": {
+            "github": "https://github.com/ankit77003",
+            "linkedin": "https://www.linkedin.com/in/ankit-choudhary-978a11266/",
+            "instagram": "https://www.instagram.com/ankitchoudhary4141/"
+          }
+        }
+      ]
+    },
+    "graphics": {
+      "leads": [
+        {
+          "name": "Avishka Bhardwaj",
+          "title": "Head",
+          "avatarUrl": "/Photos/Avishka.png",
+          "social": {
+            "github": "https://github.com/avishkabhardwaj",
+            "linkedin": "https://www.linkedin.com/in/avishka-bhardwaj-091807327",
+            "instagram": "https://www.instagram.com/avishka.20?utm_source=qr&igsh=MTNzZ2I3cDdsYWV2NQ=="
+          }
+        },
+        {
+          "name": "Anantabh Kashyap",
+          "title": "Co-Head",
+          "avatarUrl": "/Photos/Arin.png",
+          "social": {
+            "github": "https://github.com/arxnkshyp/",
+            "linkedin": "https://www.linkedin.com/in/arin-kashyap/",
+            "instagram": "https://www.instagram.com/arxnkshyp/"
+          }
+        }
+      ]
+    },
+    "management": {
+      "leads": [
+        {
+          "name": "Atulya Mukesh",
+          "title": "Head",
+          "avatarUrl": "/Photos/Atulya.png",
+          "social": {
+            "github": "https://github.com/atulya-mukesh",
+            "linkedin": "https://www.linkedin.com/in/atulya-mukesh-12716a2ba?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+            "instagram": "https://www.instagram.com/atulya.mukesh/profilecard/?igsh=MThyenFxOTEydWZ5Zw=="
+          }
+        },
+        {
+          "name": "Akshat Jain",
+          "title": "Co-Head",
+          "avatarUrl": "/Photos/Akshat_Jain.png",
+          "social": {
+            "github": "https://github.com/Akshatjain2411",
+            "linkedin": "https://www.linkedin.com/in/Akshatjain",
+            "instagram": "https://www.instagram.com/akshatjain2411"
+          }
+        }
+      ]
+    },
+    "content": {
+      "leads": [
+        {
+          "name": "Shreya Sai",
+          "title": "Head",
+          "avatarUrl": "/Photos/Shreya.png",
+          "social": {
+            "github": "https://github.com/sst2105",
+            "linkedin": "https://www.linkedin.com/in/shreya-sai-thanikella/",
+            "instagram": "https://www.instagram.com/l_.shreya._l"
+          }
+        },
+        {
+          "name": "Rimi Kumari",
+          "title": "Co-Head",
+          "avatarUrl": "/Photos/Rimi.png",
+          "social": {
+            "github": "https://github.com/",
+            "linkedin": "https://www.linkedin.com/in/",
+            "instagram": "https://www.instagram.com/"
+          }
+        }
+      ]
+    },
+    "social": {
+      "leads": [
+        {
+          "name": "Pratyush Patwal",
+          "title": "Head",
+          "avatarUrl": "/Photos/Pratyush.png",
+          "social": {
+            "github": "https://github.com/pratyush1279",
+            "linkedin": "https://www.linkedin.com/in/pratyush-patwal-198144333?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+            "instagram": "https://www.instagram.com/ohhpratyush?igsh=MWl3bDJjNnowdjQ4ZQ=="
+          }
+        },
+        {
+          "name": "Ayush Parashar",
+          "title": "Co-Head",
+          "avatarUrl": "/Photos/Ayush_Parashar.png",
+          "social": {
+            "github": "https://github.com/ayushparashar91",
+            "linkedin": "https://www.linkedin.com/in/ayush-parashar-49a596213",
+            "instagram": "https://www.instagram.com/ayushparashar19"
+          }
+        }
+      ]
+    },
+    "pr": {
+      "leads": [
+        {
+          "name": "Avishka Bhardwaj",
+          "title": "Head",
+          "avatarUrl": "/Photos/Avishka.png",
+          "social": {
+            "github": "https://github.com/avishkabhardwaj",
+            "linkedin": "https://www.linkedin.com/in/avishka-bhardwaj-091807327",
+            "instagram": "https://www.instagram.com/avishka.20?utm_source=qr&igsh=MTNzZ2I3cDdsYWV2NQ=="
+          }
+        }
+      ]
+    },
+    "members": {
+      "leads": [
+        {
+          "name": "Amisha",
+          "title": "Member",
+          "avatarUrl": "/Photos/Amisha.png",
+          "social": {
+            "github": "https://github.com/Amisha1kumari",
+            "linkedin": "https://www.linkedin.com/in/amisha-kumari-04bb10328",
+            "instagram": "https://www.instagram.com/amixh.aa?igsh=MTFjaHMwemZ2dmw3eA=="
+          }
+        },
+        {
+          "name": "Kartik Mishra",
+          "title": "Member",
+          "avatarUrl": "/Photos/Kartik.png",
+          "social": {
+            "github": "https://github.com/codelawyer-max",
+            "linkedin": "https://www.linkedin.com/in/kartik-mishra-6139b9335",
+            "instagram": "https://www.instagram.com/kartikkmishraaa"
+          }
+        },
+        {
+          "name": "Prince Kumar",
+          "title": "Member",
+          "avatarUrl": "/Photos/Prince.png",
+          "social": {
+            "github": "https://github.com/Princekr267",
+            "linkedin": "https://www.linkedin.com/in/prince-kumar-27a12b315",
+            "instagram": "https://www.instagram.com/princekrr267"
+          }
+        },
+        {
+          "name": "Dilawar Ali",
+          "title": "Member",
+          "avatarUrl": "/Photos/Dilawar.png",
+          "social": {
+            "github": "https://github.com/Dilawar-ali313",
+            "linkedin": "https://www.linkedin.com/in/dilawar-ali-4533ab335",
+            "instagram": "https://www.instagram.com/dilawarzaidi._?igsh=N3ZkdXhhNDZjNHpl"
+          }
+        },
+        {
+          "name": "Suhani Mittal",
+          "title": "Member",
+          "avatarUrl": "/Photos/Suhani.png",
+          "social": {
+            "github": "https://github.com/suhani-ux123",
+            "linkedin": "https://www.linkedin.com/in/suhani-mittal-a650a2381?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+            "instagram": "https://www.instagram.com/suuhanii__m?igsh=MWljZWE0djNoaXJ5aw=="
+          }
+        },
+        {
+          "name": "Kushagra Pandey",
+          "title": "Member",
+          "avatarUrl": "/Photos/Kushagra.png",
+          "social": {
+            "github": "https://github.com/kushagra0333",
+            "linkedin": "https://www.linkedin.com/in/its-kushagra-pandey",
+            "instagram": "https://www.instagram.com/its_kushagra_pandey"
+          }
+        },
+        {
+          "name": "Tanvi Salhotra",
+          "title": "Member",
+          "avatarUrl": "/Photos/tanvi_salhotra.png",
+          "social": {
+            "github": "https://github.com/tan07vi",
+            "linkedin": "http://www.linkedin.com/in/tanvi7709",
+            "instagram": "https://www.instagram.com/nikoniko_7t"
+          }
+        },
+        {
+          "name": "Anushka Dua",
+          "title": "Member",
+          "avatarUrl": "/Photos/Anushka_Dua.png",
+          "social": {
+            "github": "https://github.com/anushkadua23",
+            "linkedin": "https://www.linkedin.com/in/anushka-dua-06427131a?utm_source=share_via&utm_content=profile&utm_medium=member_ios",
+            "instagram": "https://www.instagram.com/anushkaa_dua?igsh=NHllZGZzM2RzNTAx&utm_source=qr"
+          }
+        },
+        {
+          "name": "Rimjhim Shukla",
+          "title": "Member",
+          "avatarUrl": "/Photos/Rimjhim.png",
+          "social": {
+            "github": "https://github.com/shuklarimjhim87-a11y",
+            "linkedin": "https://www.linkedin.com/in/rimjhim-shukla-a264203a8?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+            "instagram": "https://www.instagram.com/_rimjhimshuklaa_"
+          }
+        },
+        {
+          "name": "Bhumika Dobha",
+          "title": "Member",
+          "avatarUrl": "/Photos/Bhumika_Dobhal.png",
+          "social": {
+            "github": "https://github.com/dobhalbhumikaaa",
+            "linkedin": "https://www.linkedin.com/in/bhumika-dobhal-06118b381?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+            "instagram": "https://www.instagram.com/bhumika_dobhal?igsh=MXBkb3g3NmNtdzBhbg=="
+          }
+        }
+      ]
+    }
+  },
+  "projects": [
+    {
+      "id": 1,
+      "title": "Neon Grid",
+      "description": "A fully responsive, scalable dashboard template built for enterprise IoT management.",
+      "tech": [
+        "React",
+        "Three.js",
+        "Tailwind"
+      ],
+      "github": "https://github.com",
+      "live": "https://example.com",
+      "image": "/assets/images/project1.jpg",
+      "featured": true
+    },
+    {
+      "id": 2,
+      "title": "AI Image Upscaler",
+      "description": "An AI-powered tool that enhances resolution of old photos running securely in your browser via ONNX.",
+      "tech": [
+        "Next.js",
+        "ONNX.js",
+        "Python"
+      ],
+      "github": "https://github.com",
+      "live": "https://example.com",
+      "image": "/assets/images/project2.jpg",
+      "featured": true
+    },
+    {
+      "id": 3,
+      "title": "CryptoTracker",
+      "description": "Real-time cryptocurrency portfolio tracker with predictive analytics.",
+      "tech": [
+        "Vue",
+        "Chart.js",
+        "Firebase"
+      ],
+      "github": "https://github.com",
+      "live": "https://example.com",
+      "image": "/assets/images/project3.jpg",
+      "featured": false
+    }
+  ],
+  "testimonials": [
+    {
+      "id": 1,
+      "name": "Dr. Emily Roberts",
+      "role": "Faculty Advisor",
+      "quote": "The dedication and technical prowess demonstrated by #Hashtag members never cease to amaze me.",
+      "avatar": "/assets/images/test1.jpg"
+    },
+    {
+      "id": 2,
+      "name": "Michael Chang",
+      "role": "Alumni / Staff Engineer",
+      "quote": "Joining this society was the best decision of my college life. It prepared me directly for the industry.",
+      "avatar": "/assets/images/test2.jpg"
+    }
+  ],
+  "events": [
+    {
+      "id": "e1",
+      "title": "AI/ML Workshop 2026",
+      "description": "Join us for an intensive hands-on workshop covering the latest in machine learning, neural networks, and AI deployment. Perfect for beginners and intermediate learners.",
+      "date": "May 15, 2026",
+      "type": "upcoming",
+      "image": "https://images.unsplash.com/photo-1591453089816-0fbb971b454c?w=800&h=600&fit=crop",
+      "registrationLink": "https://forms.google.com/ai-ml-workshop"
+    },
+    {
+      "id": "e2",
+      "title": "Web3 Hackathon",
+      "description": "Build the future of decentralized applications in our 48-hour hackathon. Win prizes worth $10,000 and network with industry leaders.",
+      "date": "June 22, 2026",
+      "type": "upcoming",
+      "image": "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=600&fit=crop",
+      "registrationLink": "https://forms.google.com/web3-hack"
+    },
+    {
+      "id": "e3",
+      "title": "DevOps Bootcamp",
+      "description": "Master CI/CD pipelines, containerization with Docker, and Kubernetes orchestration. Industry experts will guide you through real-world scenarios.",
+      "date": "July 10, 2026",
+      "type": "upcoming",
+      "image": "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=800&h=600&fit=crop",
+      "registrationLink": "https://forms.google.com/devops-bootcamp"
+    },
+    {
+      "id": "e4",
+      "title": "CodeFest 2025",
+      "description": "Our annual flagship coding competition saw 500+ participants compete in algorithmic challenges, system design, and live coding rounds.",
+      "date": "Dec 18, 2025",
+      "type": "past",
+      "image": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop"
+    },
+    {
+      "id": "e5",
+      "title": "React Masterclass",
+      "description": "A deep dive into React 18 features, hooks, server components, and performance optimization. Over 200 developers attended this workshop.",
+      "date": "Nov 5, 2025",
+      "type": "past",
+      "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop"
+    },
+    {
+      "id": "e6",
+      "title": "TechTalks: Cloud Computing",
+      "description": "Industry veterans shared insights on AWS, Azure, and GCP best practices. Featured speakers from FAANG companies.",
+      "date": "Oct 12, 2025",
+      "type": "past",
+      "image": "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&h=600&fit=crop"
+    }
+  ],
+  "blogs": [
+    {
+      "id": "b1",
+      "title": "Getting Started with TypeScript in 2026",
+      "excerpt": "TypeScript has become essential for modern web development. Learn the fundamentals, advanced types, and best practices to level up your code quality.",
+      "author": "Sarah Chen",
+      "date": "Mar 15, 2026",
+      "tag": "Tutorial",
+      "image": "https://images.unsplash.com/photo-1516116216624-53e697fedbea?w=800&h=600&fit=crop",
+      "link": "https://blog.hashtag.dev/typescript-2026"
+    },
+    {
+      "id": "b2",
+      "title": "Building Scalable APIs with Node.js",
+      "excerpt": "Explore patterns for creating production-ready REST and GraphQL APIs. We cover authentication, caching, rate limiting, and monitoring.",
+      "author": "Alex Rodriguez",
+      "date": "Feb 28, 2026",
+      "tag": "Backend",
+      "image": "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=600&fit=crop",
+      "link": "https://blog.hashtag.dev/scalable-apis"
+    },
+    {
+      "id": "b3",
+      "title": "My Journey from Beginner to FAANG",
+      "excerpt": "How I went from writing my first 'Hello World' to landing a software engineering role at a top tech company. Tips, resources, and lessons learned.",
+      "author": "Priya Sharma",
+      "date": "Jan 20, 2026",
+      "tag": "Career",
+      "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=600&fit=crop",
+      "link": "https://blog.hashtag.dev/journey-to-faang"
+    },
+    {
+      "id": "b4",
+      "title": "React Server Components Explained",
+      "excerpt": "Dive deep into React's new paradigm for server-side rendering. Understand when to use Server Components and how they improve performance.",
+      "author": "Michael Wong",
+      "date": "Apr 2, 2026",
+      "tag": "Frontend",
+      "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800&h=600&fit=crop",
+      "link": "https://blog.hashtag.dev/react-server-components"
+    },
+    {
+      "id": "b5",
+      "title": "Mastering Git: Beyond the Basics",
+      "excerpt": "Level up your version control skills with advanced Git techniques including rebasing, cherry-picking, and resolving complex merge conflicts.",
+      "author": "James Peterson",
+      "date": "Mar 8, 2026",
+      "tag": "DevOps",
+      "image": "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=800&h=600&fit=crop",
+      "link": "https://blog.hashtag.dev/mastering-git"
+    },
+    {
+      "id": "b6",
+      "title": "The Future of Web Development",
+      "excerpt": "Exploring upcoming trends in web development including WebAssembly, Edge Computing, and AI-powered development tools.",
+      "author": "Emma Davis",
+      "date": "Apr 5, 2026",
+      "tag": "Opinion",
+      "image": "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=600&fit=crop",
+      "link": "https://blog.hashtag.dev/future-of-web"
+    }
+  ],
+  "alumni": [
+    {
+      "id": "a1",
+      "name": "Rahul Verma",
+      "currentRole": "Senior Software Engineer at Google",
+      "batch": 2020,
+      "image": "https://api.dicebear.com/7.x/avataaars/svg?seed=RahulVerma",
+      "github": "https://github.com/rahulverma",
+      "linkedin": "https://linkedin.com/in/rahulverma"
+    },
+    {
+      "id": "a2",
+      "name": "Sneha Patel",
+      "currentRole": "Full Stack Developer at Microsoft",
+      "batch": 2021,
+      "image": "https://api.dicebear.com/7.x/avataaars/svg?seed=SnehaPatel",
+      "github": "https://github.com/snehapatel",
+      "linkedin": "https://linkedin.com/in/snehapatel"
+    },
+    {
+      "id": "a3",
+      "name": "Arjun Mehta",
+      "currentRole": "Machine Learning Engineer at Amazon",
+      "batch": 2019,
+      "image": "https://api.dicebear.com/7.x/avataaars/svg?seed=ArjunMehta",
+      "github": "https://github.com/arjunmehta",
+      "linkedin": "https://linkedin.com/in/arjunmehta"
+    },
+    {
+      "id": "a4",
+      "name": "Anjali Singh",
+      "currentRole": "DevOps Engineer at Netflix",
+      "batch": 2022,
+      "image": "https://api.dicebear.com/7.x/avataaars/svg?seed=AnjaliSingh",
+      "github": "https://github.com/anjalisingh",
+      "linkedin": "https://linkedin.com/in/anjalisingh"
+    },
+    {
+      "id": "a5",
+      "name": "Karan Sharma",
+      "currentRole": "Frontend Lead at Uber",
+      "batch": 2020,
+      "image": "https://api.dicebear.com/7.x/avataaars/svg?seed=KaranSharma",
+      "github": "https://github.com/karansharma",
+      "linkedin": "https://linkedin.com/in/karansharma"
+    },
+    {
+      "id": "a6",
+      "name": "Meera Gupta",
+      "currentRole": "Product Manager at Meta",
+      "batch": 2021,
+      "image": "https://api.dicebear.com/7.x/avataaars/svg?seed=MeeraGupta",
+      "github": "https://github.com/meeragupta",
+      "linkedin": "https://linkedin.com/in/meeragupta"
+    },
+    {
+      "id": "a7",
+      "name": "Vikram Reddy",
+      "currentRole": "Backend Developer at Stripe",
+      "batch": 2022,
+      "image": "https://api.dicebear.com/7.x/avataaars/svg?seed=VikramReddy",
+      "github": "https://github.com/vikramreddy",
+      "linkedin": "https://linkedin.com/in/vikramreddy"
+    },
+    {
+      "id": "a8",
+      "name": "Pooja Nair",
+      "currentRole": "Data Scientist at Apple",
+      "batch": 2019,
+      "image": "https://api.dicebear.com/7.x/avataaars/svg?seed=PoojaNair",
+      "github": "https://github.com/poojanair",
+      "linkedin": "https://linkedin.com/in/poojanair"
+    }
+  ]
+}
