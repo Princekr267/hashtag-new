@@ -404,30 +404,40 @@ export default function Navbar(): JSX.Element {
 
           {/* ── Center: Desktop nav links ── */}
           <div className="hidden md:flex items-center gap-1">
-            {NAV_ITEMS.map(({ label, path }) => (
-              <NavLink
+            {NAV_ITEMS.map(({ label, path }, idx) => (
+              <motion.div
                 key={path}
-                to={path}
-                end={path === '/'}
-                className={({ isActive }) =>
-                  `relative px-4 py-2 text-sm font-medium transition-all duration-200 font-label
-                  ${isActive ? 'text-primary' : 'text-text-muted hover:text-text-primary'}`
-                }
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ 
+                  delay: 2.2 + (idx * 0.1), 
+                  duration: 0.6, 
+                  ease: [0.16, 1, 0.3, 1] 
+                }}
               >
-                {({ isActive }) => (
-                  <>
-                    {label}
-                    {isActive && (
-                      <motion.div
-                        layoutId="nav-underline"
-                        className="absolute bottom-0 left-3 right-3 h-px"
-                        style={{ background: 'linear-gradient(90deg, transparent, #60a5fa, transparent)' }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
-                  </>
-                )}
-              </NavLink>
+                <NavLink
+                  to={path}
+                  end={path === '/'}
+                  className={({ isActive }) =>
+                    `relative px-4 py-2 text-sm font-medium transition-all duration-200 font-label
+                    ${isActive ? 'text-primary' : 'text-text-muted hover:text-text-primary'}`
+                  }
+                >
+                  {({ isActive }) => (
+                    <>
+                      {label}
+                      {isActive && (
+                        <motion.div
+                          layoutId="nav-underline"
+                          className="absolute bottom-0 left-3 right-3 h-px"
+                          style={{ background: 'linear-gradient(90deg, transparent, #60a5fa, transparent)' }}
+                          transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                        />
+                      )}
+                    </>
+                  )}
+                </NavLink>
+              </motion.div>
             ))}
           </div>
 

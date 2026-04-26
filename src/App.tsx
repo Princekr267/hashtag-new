@@ -16,6 +16,7 @@ import Alumni from './pages/Alumni'
 import EventDetail from './pages/EventDetail'
 import BlogDetail from './pages/BlogDetail'
 import PageLoader from './components/ui/PageLoader'
+import { useState } from 'react'
 
 import { useSmoothScroll } from './hooks/useSmoothScroll'
 import { useScroll, useSpring } from 'framer-motion'
@@ -92,7 +93,7 @@ function AppInner(): JSX.Element {
 }
 
 export default function App(): JSX.Element {
-  const [loading, setLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
 
   return (
     <BrowserRouter
@@ -101,17 +102,17 @@ export default function App(): JSX.Element {
         v7_relativeSplatPath: true,
       }}
     >
-      <CustomCursor />
       <AnimatePresence mode="wait">
-        {loading ? (
-          <PageLoader key="loader" onComplete={() => setLoading(false)} />
+        {isLoading ? (
+          <PageLoader key="loader" onComplete={() => setIsLoading(false)} />
         ) : (
           <motion.div
             key="content"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.5 }}
           >
+            <CustomCursor />
             <AppInner />
           </motion.div>
         )}
