@@ -2,6 +2,11 @@ import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
 
+// Detect touch-primary devices — on these we skip Lenis and use native scroll
+const isTouchDevice = () =>
+  typeof window !== 'undefined' &&
+  ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+
 export function useSmoothScroll(): void {
   const { pathname } = useLocation()
   const lenisRef = useRef<Lenis | null>(null)
@@ -11,11 +16,14 @@ export function useSmoothScroll(): void {
       window.history.scrollRestoration = 'manual'
     }
 
+    // Skip Lenis on touch/mobile — native scroll is better there
+    if (isTouchDevice()) return
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     })
-    
+
     lenisRef.current = lenis
 
     let rafId: number
@@ -57,7 +65,7 @@ export function useSmoothScroll(): void {
 
     // Stop Lenis to halt any ongoing momentum
     lenisRef.current.stop()
-    
+
     // Immediate jump
     lenisRef.current.scrollTo(0, { immediate: true })
     window.scrollTo(0, 0)

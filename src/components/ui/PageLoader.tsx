@@ -1,82 +1,146 @@
-import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import WarpSpeed from '../visuals/WarpSpeed'
 
 interface PageLoaderProps {
   onComplete: () => void
 }
 
+const TITLE = '#Hashtag Official'
+
 const containerVariants = {
-  initial: { y: 0 },
   exit: {
     y: '-100vh',
     transition: {
       duration: 0.8,
-      ease: [0.76, 0, 0.24, 1] as const,
+      ease: [0.76, 0, 0.24, 1] as [number, number, number, number],
     },
   },
 }
 
 export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element {
-  const [greeting, setGreeting] = useState('Good Morning')
+  const [charStage, setCharStage] = useState<'idle' | 'typing' | 'done'>('idle')
+  const [subVisible, setSubVisible] = useState(false)
+  const timeoutRefs = useRef<ReturnType<typeof setTimeout>[]>([])
 
   useEffect(() => {
-    const hour = new Date().getHours()
-    if (hour < 12) setGreeting('Good Morning')
-    else if (hour < 18) setGreeting('Good Afternoon')
-    else setGreeting('Good Evening')
-
-    // Match animation duration (2.2s) + small linger
-    const timer = setTimeout(() => onComplete(), 2800)
-    return () => clearTimeout(timer)
+    // Start character reveal
+    const t1 = setTimeout(() => setCharStage('typing'), 200)
+    const t2 = setTimeout(() => setCharStage('done'), 200 + TITLE.length * 60 + 200)
+    const t3 = setTimeout(() => setSubVisible(true), 1400)
+    const t4 = setTimeout(() => onComplete(), 2800)
+    timeoutRefs.current = [t1, t2, t3, t4]
+    return () => timeoutRefs.current.forEach(clearTimeout)
   }, [onComplete])
 
   return (
-    <motion.div
-      key="loader"
-      variants={containerVariants}
-      initial="initial"
-      exit="exit"
-      className="fixed inset-0 z-[100000] bg-[#020617] overflow-hidden flex flex-col items-center justify-center shadow-2xl"
-    >
-      {/* Scanning Line */}
+    <AnimatePresence mode="wait">
       <motion.div
-        initial={{ top: '0%' }}
-        animate={{ top: '100%' }}
-        transition={{ duration: 2.2, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
-        className="absolute left-0 w-full h-[2px] bg-cyan-400 z-50 shadow-[0_0_30px_5px_rgba(34,211,238,0.8)]"
-      />
-
-      {/* Revealed Content via ClipPath */}
-      <motion.div
-        initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
-        animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
-        transition={{ duration: 2.2, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
-        className="absolute inset-0 flex flex-col items-center justify-center bg-[#020617]"
+        key="loader"
+        variants={containerVariants}
+        exit="exit"
+        className="fixed inset-0 z-[100000] flex flex-col items-center justify-center overflow-hidden"
+        style={{ background: '#020617' }}
       >
-        <div className="flex flex-col items-center gap-6">
-          <span className="text-cyan-400 font-mono-custom tracking-[0.3em] text-sm md:text-base uppercase flex items-center gap-3">
-            <span className="hidden md:block w-12 h-px bg-cyan-400/50" />
-            {greeting}
-            <span className="hidden md:block w-12 h-px bg-cyan-400/50" />
-          </span>
-          
+        <WarpSpeed />
+        
+        {/* Dynamic deep navy gradient background overlay */}
+        <div
+          className="absolute inset-0 z-0 opacity-80"
+          style={{ background: 'radial-gradient(circle at 50% 50%, #050a1f 0%, #020617 80%)' }}
+        />
+
+        {/* Scanning line */}
+        <div
+          className="absolute left-0 right-0 h-1 z-10 animate-scan"
+          style={{
+            background: 'linear-gradient(90deg, transparent, rgba(34,211,238,0.8), rgba(96,165,250,0.8), transparent)',
+            boxShadow: '0 0 20px rgba(34,211,238,0.6)'
+          }}
+        />
+
+        {/* Background glow orbs - Electric Blue & Cyan */}
+        <div
+          className="absolute w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] rounded-full blur-[100px] opacity-30 animate-pulse"
+          style={{
+            background: 'radial-gradient(circle, #60a5fa, transparent)',
+            top: '10%',
+            left: '10%',
+          }}
+        />
+        <div
+          className="absolute w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] rounded-full blur-[100px] opacity-20"
+          style={{
+            background: 'radial-gradient(circle, #22d3ee, transparent)',
+            bottom: '10%',
+            right: '10%',
+          }}
+        />
+
+        {/* Content */}
+        <div className="relative z-20 flex flex-col items-center gap-4 px-4 w-full">
+          {/* Greeting */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={charStage !== 'idle' ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8, ease: [0.2, 0, 0, 1] }}
+            className="text-[#22d3ee] text-sm md:text-md tracking-[0.3em] font-label uppercase font-bold mb-2 flex items-center gap-3 drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]"
+          >
+            <span className="w-8 h-px bg-[#22d3ee]/50"></span>
+            {new Date().getHours() < 12 ? 'Good Morning' : new Date().getHours() < 18 ? 'Good Afternoon' : 'Good Evening'}
+            <span className="w-8 h-px bg-[#22d3ee]/50"></span>
+          </motion.div>
+
           <h1
-            className="text-white font-display text-center whitespace-nowrap"
+            className="font-display text-center"
             style={{
-              fontSize: 'clamp(2.5rem, 8vw, 7rem)',
+              fontFamily: 'Outfit, sans-serif',
+              fontSize: 'clamp(2rem, 8vw, 6rem)',
               fontWeight: 900,
-              letterSpacing: '0.02em',
-              textTransform: 'uppercase',
+              lineHeight: 1,
+              letterSpacing: '-0.02em',
+              color: '#fff'
             }}
           >
-            Hashtag Official
+            {TITLE.split('').map((char, idx) => (
+              <motion.span
+                key={idx}
+                initial={{ opacity: 0, scale: 0.8, y: 40, filter: 'blur(10px)' }}
+                animate={
+                  charStage === 'idle'
+                    ? { opacity: 0, scale: 0.8, y: 40, filter: 'blur(10px)' }
+                    : { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }
+                }
+                transition={{
+                  delay: idx * 0.04,
+                  duration: 0.5,
+                  ease: [0.2, 0, 0, 1],
+                }}
+                style={{
+                  display: 'inline-block',
+                  background: 'linear-gradient(180deg, #ffffff 0%, #a5f3fc 50%, #3b82f6 100%)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text',
+                  whiteSpace: char === ' ' ? 'pre' : 'normal',
+                  textShadow: '0 20px 40px rgba(59,130,246,0.3)',
+                }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </motion.span>
+            ))}
           </h1>
-        </div>
 
-        <div className="absolute bottom-12 text-slate-500 font-label tracking-[0.4em] text-[10px] uppercase">
-          JIMS EMTC // Student Tech Society
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={subVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 0.8, ease: [0.2, 0, 0, 1] }}
+            className="mt-6 text-[#94a3b8] font-body tracking-wider text-xs md:text-sm uppercase max-w-md text-center leading-relaxed"
+          >
+            Hashtag Official <br/><span className="text-[#60a5fa] font-bold">JIMS Greater Noida</span>
+          </motion.p>
         </div>
       </motion.div>
-    </motion.div>
+    </AnimatePresence>
   )
 }

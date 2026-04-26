@@ -10,7 +10,8 @@ export default function ConstellationBackground(): JSX.Element {
     if (!ctx) return
 
     let W: number, H: number, nodes: any[] = []
-    const N = 28
+    const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    const N = isMobile ? 14 : 28
     let raf: number
 
     const resize = () => {
