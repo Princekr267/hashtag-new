@@ -99,21 +99,21 @@ function BlurHeading() {
 
   return (
     <motion.h1
-      className="text-4xl sm:text-6xl md:text-8xl lg:text-[100px] font-display font-bold leading-[1.05] tracking-tight text-white max-w-4xl"
+      className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[100px] font-display font-extrabold leading-[0.95] tracking-[-0.03em] text-white max-w-5xl"
       variants={container}
       initial="hidden"
       animate="show"
     >
-      <span className="block" style={{ whiteSpace: 'pre', minHeight: '1em' }}>
+      <span className="block" style={{ minHeight: '1.1em' }}>
         {line1.split(' ').map((word, i) => (
-          <motion.span key={i} variants={item} className="inline-block mr-[0.25em]">
+          <motion.span key={i} variants={item} className="inline-block mr-[0.2em] last:mr-0">
             {word}
           </motion.span>
         ))}
       </span>
-      <span className="block" style={{ whiteSpace: 'pre', minHeight: '1em' }}>
+      <span className="block text-gradient" style={{ minHeight: '1.1em' }}>
         {line2.split(' ').map((word, i) => (
-          <motion.span key={i} variants={item} className="inline-block mr-[0.25em]">
+          <motion.span key={i} variants={item} className="inline-block mr-[0.2em] last:mr-0">
             {word}
           </motion.span>
         ))}
@@ -173,7 +173,7 @@ export default function Home(): JSX.Element {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10">
+        <div className="max-w-7xl mx-auto w-full flex flex-col items-center lg:items-start text-center lg:text-left relative z-10">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -181,7 +181,7 @@ export default function Home(): JSX.Element {
             }}
           />
 
-          <div className="flex flex-col items-center gap-5 max-w-5xl relative z-10">
+          <div className="flex flex-col items-center lg:items-start gap-6 max-w-5xl relative z-10">
             {/* Eyebrow — Change 4A */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -221,11 +221,12 @@ export default function Home(): JSX.Element {
 
             {/* Subheadline — Change 4A actual description */}
             <motion.p
-              className="font-body leading-relaxed max-w-[560px]"
+              className="font-body leading-relaxed max-w-[620px]"
               style={{
-                fontSize: 'clamp(1rem, 2.5vw, 1.2rem)',
-                color: 'rgba(148,163,196,0.85)',
+                fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+                color: 'rgba(148,163,196,0.9)',
                 fontWeight: 400,
+                letterSpacing: '0.01em',
               }}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}

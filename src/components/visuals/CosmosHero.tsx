@@ -26,7 +26,9 @@ export default function CosmosHero(): JSX.Element {
       cv.height = H * devicePixelRatio
       ctx.scale(devicePixelRatio, devicePixelRatio)
       
-      stars = Array.from({ length: 280 }, () => ({
+      const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      const starCount = isMobile ? 80 : 280
+      stars = Array.from({ length: starCount }, () => ({
         x: Math.random() * W,
         y: Math.random() * H,
         r: Math.random() * 1.4,
@@ -92,11 +94,13 @@ export default function CosmosHero(): JSX.Element {
       const cx = W / 2 + parallaxX, cy = H / 2 + 10 + parallaxY, pr = 110
 
       // Atmosphere glow
-      for (let i = 8; i >= 1; i--) {
+      const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      const glowSteps = isMobile ? 3 : 8
+      for (let i = glowSteps; i >= 1; i--) {
         ctx.beginPath()
-        ctx.arc(cx, cy, pr + i * 16, 0, Math.PI * 2)
-        ctx.strokeStyle = `rgba(${Math.round(14 + hueShift)}, 100, 240, ${0.03 * (9-i)})`
-        ctx.lineWidth = 15
+        ctx.arc(cx, cy, pr + i * (isMobile ? 22 : 16), 0, Math.PI * 2)
+        ctx.strokeStyle = `rgba(${Math.round(14 + hueShift)}, 100, 240, ${ (isMobile ? 0.05 : 0.03) * (glowSteps + 1 - i)})`
+        ctx.lineWidth = isMobile ? 20 : 15
         ctx.stroke()
       }
       

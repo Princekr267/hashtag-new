@@ -2,12 +2,15 @@ import React, { useRef, useState } from 'react'
 import { TeamMember } from '../../constants/data'
 
 /**
- * TeamCard3D — Fix 3
+ * TeamCard3D — Mobile-first 3D Flip Card
  *
- * On hover: card flips 180° around Y axis (CSS 3D flip)
- * Front: photo + name + role + department (with cursor-tracked 3D tilt on the whole scene)
- * Back:  dark glass with accent gradient, member name, role, social links, quote icon
- * Social links fully clickable on both faces.
+ * Desktop: hover flips the card with 3D tilt tracking
+ * Mobile:  tap toggles flip (no hover). Shows "Tap to flip" hint.
+ * All layout issues fixed:
+ *  - Member name wraps instead of truncating
+ *  - Designation is always on one line (ellipsis if super long)
+ *  - Back-face avatar stays fully inside the card
+ *  - Social links are large, accessible touch targets
  */
 
 interface TeamCard3DProps {
@@ -15,28 +18,28 @@ interface TeamCard3DProps {
   accentColor?: string
 }
 
+// True if the primary pointer is touch/coarse (mobile / tablet)
+const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
+
 const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa' }) => {
   const containerRef = useRef<HTMLDivElement>(null)
-  const [_, setIsFlipped] = useState(false)
-  const isFlippedRef = useRef(false)  // ref to avoid stale closure in mousemove
+  const [isFlipped, setIsFlipped] = useState(false)
 
-  // 3D tilt tracking on the whole card container
+  /* ── Desktop: hover → flip + tilt ─────────────────────────────── */
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (IS_TOUCH) return
     const el = containerRef.current
     if (!el) return
     const rect = el.getBoundingClientRect()
-    const cx   = rect.left + rect.width  / 2
-    const cy   = rect.top  + rect.height / 2
-    const mx   = e.clientX - cx
-    const my   = e.clientY - cy
-    const rotX = (-my / (rect.height / 2)) * 6
-    const rotY = ( mx / (rect.width  / 2)) * 6
-    // Use ref (not state) to always read current flip status
-    el.style.transform = `rotateX(${rotX}deg) rotateY(${isFlippedRef.current ? 180 + rotY : rotY}deg)`
+    const mx = e.clientX - (rect.left + rect.width / 2)
+    const my = e.clientY - (rect.top + rect.height / 2)
+    const rotX = (-my / (rect.height / 2)) * 5
+    const rotY = (mx / (rect.width / 2)) * 5
+    el.style.transform = `rotateX(${rotX}deg) rotateY(${isFlipped ? 180 + rotY : rotY}deg)`
   }
 
   const handleMouseEnter = () => {
-    isFlippedRef.current = true
+    if (IS_TOUCH) return
     setIsFlipped(true)
     const el = containerRef.current
     if (el) {
@@ -46,231 +49,246 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
   }
 
   const handleMouseLeave = () => {
-    isFlippedRef.current = false
+    if (IS_TOUCH) return
     setIsFlipped(false)
     const el = containerRef.current
     if (el) {
       el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
-      el.style.transform  = 'rotateX(0deg) rotateY(0deg)'
+      el.style.transform = 'rotateX(0deg) rotateY(0deg)'
+    }
+  }
+
+  /* ── Mobile: tap → toggle flip ─────────────────────────────────── */
+  const handleTap = () => {
+    if (!IS_TOUCH) return
+    const next = !isFlipped
+    setIsFlipped(next)
+    const el = containerRef.current
+    if (el) {
+      el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
+      el.style.transform = `rotateX(0deg) rotateY(${next ? 180 : 0}deg)`
     }
   }
 
   return (
-    <>
+    <div
+      style={{ perspective: '900px', width: '100%', aspectRatio: '3 / 4' }}
+      onClick={handleTap}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div
-        style={{ perspective: '900px', width: '100%', aspectRatio: '3 / 4' }}
-        onClick={() => {
-          if ('ontouchstart' in window) {
-            const el = containerRef.current
-            const next = !isFlippedRef.current
-            isFlippedRef.current = next
-            setIsFlipped(next)
-            if (el) {
-              el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
-              el.style.transform = `rotateX(0deg) rotateY(${next ? 180 : 0}deg)`
-            }
-          }
+        ref={containerRef}
+        onMouseMove={handleMouseMove}
+        style={{
+          position: 'relative', width: '100%', height: '100%',
+          transformStyle: 'preserve-3d', willChange: 'transform',
+          transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
       >
+        {/* ── FRONT FACE ───────────────────────────────────────────── */}
         <div
-          ref={containerRef}
-          onMouseMove={handleMouseMove}
           style={{
-            position: 'relative', width: '100%', height: '100%',
-            transformStyle: 'preserve-3d', willChange: 'transform',
-            transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
+            position: 'absolute', inset: 0,
+            backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+            transform: 'rotateY(0deg)',
+            borderRadius: '20px', overflow: 'hidden',
+            background: '#0a0a0a',
+            border: `1px solid rgba(255,255,255,0.07)`,
+            boxShadow: `0 8px 32px rgba(0,0,0,0.45)`,
+            display: 'flex', flexDirection: 'column',
           }}
         >
-
-          {/* ── FRONT FACE ──────────────────────────────────── */}
-          <div
-            style={{
-              position: 'absolute', inset: 0,
-              backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
-              transform: 'rotateY(0deg)',
-              borderRadius: '20px', overflow: 'hidden',
-              background: '#0a0a0a',
-              border: `1px solid rgba(255,255,255,0.07)`,
-              boxShadow: `0 8px 32px rgba(0,0,0,0.45)`,
-            }}
-          >
-            {/* Photo — top 65% */}
-            <div style={{ height: '65%', overflow: 'hidden', position: 'relative' }}>
-              <img
-                src={member.avatarUrl}
-                alt={member.name}
-                loading="lazy"
-                decoding="async"
-                style={{
-                  width: '100%', height: '100%',
-                  objectFit: 'cover', objectPosition: 'center top',
-                  display: 'block',
-                  transition: 'transform 0.6s ease',
-                }}
-              />
-              {/* Title badge — no backdropFilter to avoid breaking 3D stacking */}
-              <div style={{ position: 'absolute', top: '12px', left: '12px', zIndex: 2 }}>
-                <span style={{
-                  display: 'inline-block', padding: '2px 10px',
-                  borderRadius: '999px', fontSize: '9px', fontWeight: 700,
-                  letterSpacing: '0.15em', textTransform: 'uppercase',
-                  background: `${accentColor}33`, color: accentColor,
-                  border: `1px solid ${accentColor}45`,
-                }}>
-                  {member.title}
-                </span>
-              </div>
-              {/* Fade */}
-              <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0, height: '64px',
-                background: 'linear-gradient(to bottom, transparent, #0a0a0a)',
-                pointerEvents: 'none',
-              }} />
-            </div>
-
-            {/* Info — bottom 35% */}
-            <div style={{
-              height: '35%', padding: '12px 16px',
-              display: 'flex', flexDirection: 'column', justifyContent: 'center',
-            }}>
-              <h3 style={{
-                fontWeight: 700, fontSize: 'clamp(0.85rem, 2.5vw, 1rem)',
-                color: 'white', lineHeight: 1.3, margin: 0,
-                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
-              }}>
-                {member.name}
-              </h3>
-              <p style={{
-                fontSize: '9px', fontWeight: 600, letterSpacing: '0.18em',
-                textTransform: 'uppercase', color: `${accentColor}bb`, marginTop: '4px',
-              }}>
-                {member.department}
-              </p>
-              {/* Hover hint */}
-              <p style={{
-                fontSize: '9px', color: 'rgba(255,255,255,0.2)', marginTop: '8px',
+          {/* Photo — top 62% */}
+          <div style={{ flex: '0 0 62%', overflow: 'hidden', position: 'relative' }}>
+            <img
+              src={member.avatarUrl}
+              alt={member.name}
+              loading="lazy"
+              decoding="async"
+              style={{
+                width: '100%', height: '100%',
+                objectFit: 'cover', objectPosition: 'center top',
+                display: 'block',
+                transition: 'transform 0.6s ease',
+              }}
+            />
+            {/* Title badge */}
+            <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2 }}>
+              <span style={{
+                display: 'inline-block', padding: '3px 9px',
+                borderRadius: '999px', fontSize: '9px', fontWeight: 700,
                 letterSpacing: '0.12em', textTransform: 'uppercase',
+                background: `${accentColor}33`, color: accentColor,
+                border: `1px solid ${accentColor}45`,
+                whiteSpace: 'nowrap',
               }}>
-                Hover to flip ✦
-              </p>
+                {member.title}
+              </span>
             </div>
-
-            {/* Top glow edge */}
+            {/* Bottom fade */}
             <div style={{
-              position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-              background: `linear-gradient(90deg, transparent, ${accentColor}50, transparent)`,
+              position: 'absolute', bottom: 0, left: 0, right: 0, height: '56px',
+              background: 'linear-gradient(to bottom, transparent, #0a0a0a)',
+              pointerEvents: 'none',
             }} />
           </div>
 
-          {/* ── BACK FACE ───────────────────────────────────── */}
-          <div
-            style={{
-              position: 'absolute', inset: 0,
-              backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
-              borderRadius: '20px', overflow: 'hidden',
-              transform: 'rotateY(180deg)',
-              background: `linear-gradient(145deg, #060d1a 0%, #0a1225 100%)`,
-              border: `1px solid ${accentColor}35`,
-              boxShadow: `0 0 60px ${accentColor}15, inset 0 0 40px ${accentColor}06`,
-              display: 'flex', flexDirection: 'column',
-              alignItems: 'center', justifyContent: 'center',
-              gap: '16px', padding: '24px',
-            }}
-          >
-            {/* Dot grid */}
-            <div style={{
-              position: 'absolute', inset: 0, borderRadius: '20px',
-              backgroundImage: `radial-gradient(${accentColor} 1px, transparent 1px)`,
-              backgroundSize: '20px 20px', opacity: 0.05, pointerEvents: 'none',
-            }} />
-            {/* Top line */}
-            <div style={{
-              position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-              background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
-            }} />
-
-            {/* Avatar circle */}
-            <div style={{
-              width: '80px', height: '80px', borderRadius: '50%',
-              overflow: 'hidden', border: `2px solid ${accentColor}50`,
-              boxShadow: `0 0 0 4px ${accentColor}15`,
-              flexShrink: 0,
+          {/* Info — remaining height */}
+          <div style={{
+            flex: '1 1 0', padding: '10px 14px 12px',
+            display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px',
+            overflow: 'hidden',
+          }}>
+            {/* Name — allow wrapping, no truncation */}
+            <h3 style={{
+              fontWeight: 700,
+              fontSize: 'clamp(0.82rem, 3.5vw, 1rem)',
+              color: 'white', lineHeight: 1.25, margin: 0,
+              wordBreak: 'break-word',
             }}>
-              <img
-                src={member.avatarUrl}
-                alt={member.name}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
-                onError={e => {
-                  const img = e.currentTarget
-                  img.onerror = null
-                  img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(member.name)}&backgroundColor=071428&textColor=${accentColor.replace('#', '')}`
-                }}
-              />
-            </div>
-
-            {/* Name + role */}
-            <div style={{ textAlign: 'center', position: 'relative', zIndex: 2 }}>
-              <h3 style={{
-                fontWeight: 700, fontSize: '1.05rem', color: 'white',
-                margin: '0 0 4px 0', lineHeight: 1.3,
-              }}>
-                {member.name}
-              </h3>
-              <p style={{
-                fontSize: '10px', fontWeight: 600, letterSpacing: '0.2em',
-                textTransform: 'uppercase', color: accentColor, margin: 0,
-              }}>
-                {member.title}
-              </p>
-            </div>
-
-            {/* Divider */}
-            <div style={{
-              width: '40px', height: '1px',
-              background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
-            }} />
-
-            {/* Social links */}
-            <div style={{
-              display: 'flex', gap: '10px', position: 'relative', zIndex: 10,
-              pointerEvents: 'auto',
-            }}>
-              {member.social?.github && (
-                <BackSocialBtn href={member.social.github} label="GitHub" accent={accentColor}>
-                  <GitHubIcon />
-                </BackSocialBtn>
-              )}
-              {member.social?.linkedin && (
-                <BackSocialBtn href={member.social.linkedin} label="LinkedIn" accent={accentColor}>
-                  <LinkedInIcon />
-                </BackSocialBtn>
-              )}
-              {member.social?.instagram && (
-                <BackSocialBtn href={member.social.instagram} label="Instagram" accent={accentColor}>
-                  <InstagramIcon />
-                </BackSocialBtn>
-              )}
-            </div>
-
-            {/* Bottom label */}
+              {member.name}
+            </h3>
+            {/* Department — single line with ellipsis */}
             <p style={{
-              fontSize: '8px', fontWeight: 600, letterSpacing: '0.3em',
-              color: 'rgba(255,255,255,0.15)', textTransform: 'uppercase',
-              position: 'absolute', bottom: '14px', margin: 0,
+              fontSize: '9px', fontWeight: 600, letterSpacing: '0.16em',
+              textTransform: 'uppercase', color: `${accentColor}bb`,
+              margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             }}>
-              HASHTAG OFFICIAL
+              {member.department}
+            </p>
+            {/* Interaction hint — adapts to device */}
+            <p style={{
+              fontSize: '8px', color: 'rgba(255,255,255,0.22)', marginTop: '2px',
+              letterSpacing: '0.1em', textTransform: 'uppercase',
+            }}>
+              {IS_TOUCH ? 'Tap to flip ✦' : 'Hover to flip ✦'}
             </p>
           </div>
 
+          {/* Top glow edge */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+            background: `linear-gradient(90deg, transparent, ${accentColor}50, transparent)`,
+          }} />
         </div>
+
+        {/* ── BACK FACE ────────────────────────────────────────────── */}
+        <div
+          style={{
+            position: 'absolute', inset: 0,
+            backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
+            borderRadius: '20px', overflow: 'hidden',
+            transform: 'rotateY(180deg)',
+            background: `linear-gradient(145deg, #060d1a 0%, #0a1225 100%)`,
+            border: `1px solid ${accentColor}35`,
+            boxShadow: `0 0 60px ${accentColor}15, inset 0 0 40px ${accentColor}06`,
+            display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center',
+            padding: '20px 16px',
+            gap: '12px',
+            boxSizing: 'border-box',
+          }}
+        >
+          {/* Dot grid */}
+          <div style={{
+            position: 'absolute', inset: 0, borderRadius: '20px',
+            backgroundImage: `radial-gradient(${accentColor} 1px, transparent 1px)`,
+            backgroundSize: '20px 20px', opacity: 0.05, pointerEvents: 'none',
+          }} />
+          {/* Top line */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+            background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
+          }} />
+
+          {/* Avatar circle — fixed size, never overflows */}
+          <div style={{
+            width: '72px', height: '72px',
+            borderRadius: '50%',
+            overflow: 'hidden',
+            border: `2px solid ${accentColor}55`,
+            boxShadow: `0 0 0 4px ${accentColor}18`,
+            flexShrink: 0,
+            position: 'relative', zIndex: 2,
+          }}>
+            <img
+              src={member.avatarUrl}
+              alt={member.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
+              onError={e => {
+                const img = e.currentTarget
+                img.onerror = null
+                img.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(member.name)}&backgroundColor=071428&textColor=${accentColor.replace('#', '')}`
+              }}
+            />
+          </div>
+
+          {/* Name + role */}
+          <div style={{
+            textAlign: 'center', position: 'relative', zIndex: 2,
+            width: '100%', overflow: 'hidden',
+          }}>
+            <h3 style={{
+              fontWeight: 700, fontSize: 'clamp(0.85rem, 3.5vw, 1rem)', color: 'white',
+              margin: '0 0 4px 0', lineHeight: 1.25,
+              wordBreak: 'break-word',
+            }}>
+              {member.name}
+            </h3>
+            <p style={{
+              fontSize: '9px', fontWeight: 600, letterSpacing: '0.18em',
+              textTransform: 'uppercase', color: accentColor, margin: 0,
+              overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            }}>
+              {member.title}
+            </p>
+          </div>
+
+          {/* Divider */}
+          <div style={{
+            width: '36px', height: '1px', flexShrink: 0,
+            background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
+          }} />
+
+          {/* Social links — large touch targets */}
+          <div style={{
+            display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center',
+            position: 'relative', zIndex: 10, pointerEvents: 'auto',
+          }}>
+            {member.social?.github && (
+              <BackSocialBtn href={member.social.github} label="GitHub" accent={accentColor}>
+                <GitHubIcon />
+              </BackSocialBtn>
+            )}
+            {member.social?.linkedin && (
+              <BackSocialBtn href={member.social.linkedin} label="LinkedIn" accent={accentColor}>
+                <LinkedInIcon />
+              </BackSocialBtn>
+            )}
+            {member.social?.instagram && (
+              <BackSocialBtn href={member.social.instagram} label="Instagram" accent={accentColor}>
+                <InstagramIcon />
+              </BackSocialBtn>
+            )}
+          </div>
+
+          {/* Bottom label */}
+          <p style={{
+            fontSize: '8px', fontWeight: 600, letterSpacing: '0.28em',
+            color: 'rgba(255,255,255,0.15)', textTransform: 'uppercase',
+            position: 'absolute', bottom: '12px', margin: 0, zIndex: 2,
+          }}>
+            HASHTAG OFFICIAL
+          </p>
+        </div>
+
       </div>
-    </>
+    </div>
   )
 }
 
-// ── Back-face social button ───────────────────────────────────────
+/* ── Back-face social button ─────────────────────────────────────── */
 const BackSocialBtn: React.FC<{
   href: string; label: string; accent: string; children: React.ReactNode
 }> = ({ href, label, accent, children }) => (
@@ -282,21 +300,24 @@ const BackSocialBtn: React.FC<{
     onClick={e => e.stopPropagation()}
     style={{
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      width: '40px', height: '40px', borderRadius: '50%',
+      // Larger size for touch accessibility (44×44 minimum)
+      width: '44px', height: '44px', borderRadius: '50%',
       background: `${accent}18`, color: accent,
       border: `1px solid ${accent}40`,
       transition: 'all 0.2s ease',
       cursor: 'pointer', pointerEvents: 'auto',
+      WebkitTapHighlightColor: 'transparent',
+      touchAction: 'manipulation',
     }}
     onMouseEnter={e => {
       e.currentTarget.style.background = accent
-      e.currentTarget.style.color      = '#000'
-      e.currentTarget.style.transform  = 'scale(1.1)'
+      e.currentTarget.style.color = '#000'
+      e.currentTarget.style.transform = 'scale(1.1)'
     }}
     onMouseLeave={e => {
       e.currentTarget.style.background = `${accent}18`
-      e.currentTarget.style.color      = accent
-      e.currentTarget.style.transform  = 'scale(1)'
+      e.currentTarget.style.color = accent
+      e.currentTarget.style.transform = 'scale(1)'
     }}
   >
     {children}

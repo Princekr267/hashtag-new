@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -15,12 +15,11 @@ import Blogs from './pages/Blogs'
 import Alumni from './pages/Alumni'
 import EventDetail from './pages/EventDetail'
 import BlogDetail from './pages/BlogDetail'
+import PageLoader from './components/ui/PageLoader'
 
 import { useSmoothScroll } from './hooks/useSmoothScroll'
 import { useScroll, useSpring } from 'framer-motion'
 
-// Change 1: Pure opacity fade — no color overlays, no movement
-// exit: 200ms, enter: 300ms, wait mode so they don't overlap
 function AnimatedRoutes(): JSX.Element {
   const location = useLocation()
 
@@ -31,7 +30,7 @@ function AnimatedRoutes(): JSX.Element {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.3 } }}
         exit={{ opacity: 0, transition: { duration: 0.2 } }}
-        style={{ willChange: 'opacity' }}
+        style={{ willChange: 'opacity', touchAction: 'pan-y' }}
       >
         <Routes location={location}>
           <Route path="/"       element={<Home />} />
@@ -58,8 +57,6 @@ function AppInner(): JSX.Element {
     restDelta: 0.001,
   })
 
-  // Change 2 (partial) & Change 9g: Scroll-driven CSS var for scroll progress
-  // Also used by orb parallax via --scroll-y on :root
   useEffect(() => {
     let ticking = false
     const onScroll = () => {
@@ -81,7 +78,10 @@ function AppInner(): JSX.Element {
       <ConstellationBackground />
 
       <Navbar />
-      <main className="relative z-10 min-h-screen flex flex-col justify-between">
+      <main
+        className="relative z-10 min-h-screen flex flex-col justify-between"
+        style={{ touchAction: 'pan-y' }}
+      >
         <div className="flex-grow">
           <AnimatedRoutes />
         </div>
@@ -91,8 +91,9 @@ function AppInner(): JSX.Element {
   )
 }
 
-// Change 8: Remove the PageLoader entirely — start fully visible immediately
 export default function App(): JSX.Element {
+  const [loading, setLoading] = useState(true)
+
   return (
     <BrowserRouter
       future={{
@@ -101,7 +102,20 @@ export default function App(): JSX.Element {
       }}
     >
       <CustomCursor />
-      <AppInner />
+      <AnimatePresence mode="wait">
+        {loading ? (
+          <PageLoader key="loader" onComplete={() => setLoading(false)} />
+        ) : (
+          <motion.div
+            key="content"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            <AppInner />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </BrowserRouter>
   )
 }
