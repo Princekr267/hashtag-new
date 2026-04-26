@@ -1,13 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion, Variants, AnimatePresence } from 'framer-motion'
-import { useScrambleText } from '../hooks/useScrambleText'
+import { useEffect, useRef } from 'react'
+import { motion, Variants } from 'framer-motion'
 import { ChevronDown, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import MagneticButton from '../components/ui/MagneticButton'
 import CosmosHero from '../components/visuals/CosmosHero'
-import AmbientOrbs from '../components/ui/AmbientOrbs'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
 import { STATS, MARQUEE_EVENTS } from '../constants/data'
 
@@ -128,12 +126,71 @@ export default function Home(): JSX.Element {
   const marqueeDoubled = [...MARQUEE_EVENTS, ...MARQUEE_EVENTS]
 
   useEffect(() => {
+    gsap.to('.hero-content', {
+      y: 150,
+      scale: 0.95,
+      opacity: 0,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.hero-section',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      }
+    });
+
+    gsap.utils.toArray('.artifact-card').forEach((el: any) => {
+      gsap.to(el, {
+        y: -60, // Same speed for both — keeps them aligned
+        ease: 'none',
+        scrollTrigger: {
+          trigger: '.artifacts-section',
+          start: 'top bottom',
+          end: 'bottom top',
+          scrub: true,
+        }
+      });
+    });
+
+    gsap.fromTo('.feature-card-wrapper',
+      { opacity: 0, y: 60, scale: 0.9, rotateX: -15 },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        rotateX: 0,
+        duration: 1.2,
+        ease: 'power3.out',
+        stagger: 0.2,
+        scrollTrigger: {
+          trigger: '.features-section',
+          start: 'top 80%',
+        }
+      }
+    );
+
+    gsap.fromTo('.stat-block',
+      { opacity: 0, scale: 0.8, y: 30 },
+      {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 0.8,
+        ease: 'back.out(1.5)',
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: '.stats-section',
+          start: 'top 85%',
+        }
+      }
+    );
+
     document.querySelectorAll('[data-reveal]').forEach((el) => {
       gsap.fromTo(el,
-        { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', opacity: 0, y: 30 },
+        { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', opacity: 0, y: 50 },
         {
-          clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)',
-          opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+          clipPath: 'polygon(-5% -5%, 105% -5%, 105% 105%, -5% 105%)',
+          opacity: 1, y: 0, duration: 1.4, ease: 'power4.out',
           scrollTrigger: { trigger: el, start: 'top 85%' },
         },
       )
@@ -152,36 +209,33 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           HERO SECTION
           ════════════════════════════════════════════════════ */}
-      <section className="min-h-screen flex items-center px-6 pt-24 pb-12 relative overflow-hidden">
+      <section className="hero-section min-h-screen flex items-center px-6 pt-24 pb-12 relative overflow-hidden" style={{ backgroundColor: 'var(--bg-base)' }}>
 
-        {/* Ambient background orbs */}
-        <AmbientOrbs />
-
-        {/* Grid pattern */}
-        <div className="absolute inset-0 pointer-events-none" style={{
+        {/* Removed AmbientOrbs to fix heavy lag */}
+        
+        {/* Subtle Grid pattern for tech feel */}
+        <div className="absolute inset-0 pointer-events-none opacity-40" style={{
           backgroundImage: `
-            linear-gradient(rgba(143,245,255,0.025) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(143,245,255,0.025) 1px, transparent 1px)
+            linear-gradient(rgba(96,165,250,0.04) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(96,165,250,0.04) 1px, transparent 1px)
           `,
-          backgroundSize: '80px 80px',
+          backgroundSize: '100px 100px',
         }} />
 
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse 60% 70% at 70% 50%, rgba(143,245,255,0.04) 0%, transparent 70%)',
-        }} />
-
-        <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Lightweight Cosmos Hero background instead of Orbs */}
+        <div className="absolute inset-0 z-0 pointer-events-none mix-blend-screen opacity-70">
           <CosmosHero />
-          <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10">
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,0,0,0.55) 0%, transparent 80%)',
-            }}
-          />
+        {/* Gradient overlay to ensure text readability */}
+        <div 
+          className="absolute inset-0 pointer-events-none z-0" 
+          style={{
+            background: 'radial-gradient(circle at center, transparent 0%, var(--bg-base) 80%)'
+          }} 
+        />
+
+        <div className="hero-content max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10">
 
 
           <div className="flex flex-col items-center gap-5 max-w-5xl relative z-10">
@@ -241,10 +295,10 @@ export default function Home(): JSX.Element {
 
             {/* CTA row */}
             <motion.div
-              className="mt-4 flex flex-col sm:flex-row items-center gap-4"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 1.0, duration: 0.8 }}
+              className="mt-6 flex flex-col sm:flex-row items-center gap-6"
+              initial={{ opacity: 0, y: 20, filter: 'blur(5px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              transition={{ delay: 1.2, duration: 1, ease: 'easeOut' }}
             >
               <MagneticButton>
                 <Link
@@ -281,11 +335,11 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           WHAT WE DO
           ════════════════════════════════════════════════════ */}
-      <section className="section px-6">
+      <section className="features-section section px-6" style={{ perspective: '1000px' }}>
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 flex items-end justify-between">
             <h2 data-reveal className="text-4xl md:text-6xl font-display font-bold">
-              What We <span className="text-gradient-green">Build</span>
+              What We <span className="text-gradient">Build</span>
             </h2>
             <Link to="/about" className="hidden md:flex items-center gap-[8px] text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wider">
               <span className="leading-none">Learn more</span> <ArrowRight size={14} className="flex-shrink-0" />
@@ -294,14 +348,7 @@ export default function Home(): JSX.Element {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {FEATURES.map((f, idx) => (
-              <motion.div
-                key={f.title}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.2, 0, 0, 1] }}
-                className="h-full"
-              >
+              <div key={f.title} className="feature-card-wrapper h-full" style={{ transformStyle: 'preserve-3d' }}>
                 <InteractiveCard3D accentColor={f.accent} className="h-full">
                   <div className="p-10 flex flex-col gap-6 h-full">
                     <div className="flex flex-col gap-3">
@@ -336,7 +383,7 @@ export default function Home(): JSX.Element {
                     />
                   </div>
                 </InteractiveCard3D>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -346,75 +393,64 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           ARTIFACTS SECTION
           ════════════════════════════════════════════════════ */}
-      <section className="section px-6 relative z-10">
+      <section className="artifacts-section section px-6 relative z-10">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
             <div>
               <h2 data-reveal className="text-4xl md:text-5xl font-display font-bold mb-4">
                 Live <span className="text-gradient">Artifacts</span>
               </h2>
-              <p className="text-text-muted font-body max-w-xl">
+              <p className="text-text-muted font-body max-w-xl" data-reveal>
                 Open-source projects and internal tools built by the Hashtag community. 
                 We don't just learn tech, we ship it to production.
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-10 items-stretch">
             {/* Artifact 1 */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="group"
-            >
-              <div className="surface-card p-6 md:p-8 h-full bg-[#050a1a] border border-cyan-500/20 hover:border-cyan-500/50 transition-colors rounded-3xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-cyan-500/10 to-transparent pointer-events-none" />
-                <div className="relative z-10">
+            <div className="artifact-card group h-full">
+              <div className="surface-card p-6 md:p-8 h-full flex flex-col bg-[#030b1a]/40 border border-primary/20 hover:border-primary/50 transition-colors rounded-3xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-primary/10 to-transparent pointer-events-none" />
+                <div className="relative z-10 flex flex-col h-full">
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse flex-shrink-0" />
-                    <span className="text-xs font-mono-custom tracking-widest text-cyan-400 leading-none">STATUS.ONLINE</span>
+                    <span className="w-2 h-2 rounded-full bg-primary animate-pulse flex-shrink-0" />
+                    <span className="text-xs font-mono-custom tracking-widest text-primary leading-none">STATUS.ONLINE</span>
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-2">HashDash Finance</h3>
-                  <p className="text-text-muted mb-6 text-sm">
+                  <p className="text-text-muted mb-6 text-sm flex-grow">
                     A full-stack React and Node.js finance dashboard with role-based access control and live data streaming.
                   </p>
-                  <div className="flex flex-wrap gap-2 font-mono-custom text-[10px] text-cyan-200/50 uppercase">
-                    <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">React</span>
-                    <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">Node.js</span>
-                    <span className="px-2 py-1 bg-cyan-900/30 rounded border border-cyan-500/20">MongoDB</span>
+                  <div className="flex flex-wrap gap-2 font-mono-custom text-[10px] text-primary/50 uppercase mt-auto">
+                    <span className="px-2 py-1 bg-primary/10 rounded border border-primary/20">React</span>
+                    <span className="px-2 py-1 bg-primary/10 rounded border border-primary/20">Node.js</span>
+                    <span className="px-2 py-1 bg-primary/10 rounded border border-primary/20">MongoDB</span>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Artifact 2 */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="group"
-            >
-              <div className="surface-card p-6 md:p-8 h-full bg-[#050a1a] border border-purple-500/20 hover:border-purple-500/50 transition-colors rounded-3xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-purple-500/10 to-transparent pointer-events-none" />
-                <div className="relative z-10">
+            <div className="artifact-card group h-full">
+              <div className="surface-card p-6 md:p-8 h-full flex flex-col bg-[#030b1a]/40 border border-secondary/20 hover:border-secondary/50 transition-colors rounded-3xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-secondary/10 to-transparent pointer-events-none" />
+                <div className="relative z-10 flex flex-col h-full">
                   <div className="flex items-center gap-2 mb-4">
-                    <span className="w-2 h-2 rounded-full bg-purple-500 opacity-50 flex-shrink-0" />
-                    <span className="text-xs font-mono-custom tracking-widest text-purple-400 leading-none">V2.BETA</span>
+                    <span className="w-2 h-2 rounded-full bg-secondary opacity-50 flex-shrink-0" />
+                    <span className="text-xs font-mono-custom tracking-widest text-secondary leading-none">V2.BETA</span>
                   </div>
                   <h3 className="text-2xl font-display font-bold text-white mb-2">CodeTrek Platform</h3>
-                  <p className="text-text-muted mb-6 text-sm">
+                  <p className="text-text-muted mb-6 text-sm flex-grow">
                     An automated judging platform built for our relay coding hackathons, capable of evaluating 100+ submissions per minute.
                   </p>
-                  <div className="flex flex-wrap gap-2 font-mono-custom text-[10px] text-purple-200/50 uppercase">
-                    <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Python</span>
-                    <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Docker</span>
-                    <span className="px-2 py-1 bg-purple-900/30 rounded border border-purple-500/20">Redis</span>
+                  <div className="flex flex-wrap gap-2 font-mono-custom text-[10px] text-secondary/50 uppercase mt-auto">
+                    <span className="px-2 py-1 bg-secondary/10 rounded border border-secondary/20">Python</span>
+                    <span className="px-2 py-1 bg-secondary/10 rounded border border-secondary/20">Docker</span>
+                    <span className="px-2 py-1 bg-secondary/10 rounded border border-secondary/20">Redis</span>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -423,7 +459,7 @@ export default function Home(): JSX.Element {
           SCROLLING MARQUEE
           ════════════════════════════════════════════════════ */}
       <div className="py-8 overflow-hidden">
-        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(143,245,255,0.12), transparent)' }} />
+        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.15), transparent)' }} />
         <div className="flex overflow-hidden py-6">
           <div className="marquee-track animate-marquee">
             {marqueeDoubled.map((e, i) => (
@@ -442,28 +478,28 @@ export default function Home(): JSX.Element {
             ))}
           </div>
         </div>
-        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(0,252,64,0.12), transparent)' }} />
+        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(129,140,248,0.15), transparent)' }} />
       </div>
 
       {/* ════════════════════════════════════════════════════════
           STATS
           ════════════════════════════════════════════════════ */}
-      <section className="section px-6">
+      <section className="stats-section section px-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-16 text-center">
             <h2 data-reveal className="text-4xl md:text-6xl font-display font-bold">
               By the <span className="text-gradient">Numbers</span>
             </h2>
-            <p className="text-text-muted mt-4 max-w-lg mx-auto font-body text-base">
+            <p data-reveal className="text-text-muted mt-4 max-w-lg mx-auto font-body text-base">
               A community that grows, builds, and makes things happen every semester.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 border border-outline-var/30">
+          <div className="grid grid-cols-2 lg:grid-cols-3 border border-outline-var/30 overflow-hidden rounded-2xl">
             {STATS.map((stat) => (
               <div
                 key={stat.label}
-                className="p-10 md:p-12 surface-card border-b border-r border-outline-var/30"
+                className="stat-block p-10 md:p-12 surface-card border-b border-r border-outline-var/30"
               >
                 <StatCounter stat={stat} />
               </div>

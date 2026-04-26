@@ -1,84 +1,82 @@
-import { useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 
 interface PageLoaderProps {
   onComplete: () => void
 }
 
-const TITLE = 'HASHTAG OFFICIAL'
-
 const containerVariants = {
+  initial: { y: 0 },
   exit: {
-    y: '100vh',
+    y: '-100vh',
     transition: {
-      duration: 1.0,
-      ease: [0.76, 0, 0.24, 1] as [number, number, number, number],
+      duration: 0.8,
+      ease: [0.76, 0, 0.24, 1] as const,
     },
   },
 }
 
 export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element {
+  const [greeting, setGreeting] = useState('Good Morning')
+
   useEffect(() => {
+    const hour = new Date().getHours()
+    if (hour < 12) setGreeting('Good Morning')
+    else if (hour < 18) setGreeting('Good Afternoon')
+    else setGreeting('Good Evening')
+
+    // Match animation duration (2.2s) + small linger
     const timer = setTimeout(() => onComplete(), 2800)
     return () => clearTimeout(timer)
   }, [onComplete])
 
   return (
-    <AnimatePresence>
+    <motion.div
+      key="loader"
+      variants={containerVariants}
+      initial="initial"
+      exit="exit"
+      className="fixed inset-0 z-[100000] bg-[#020617] overflow-hidden flex flex-col items-center justify-center shadow-2xl"
+    >
+      {/* Scanning Line */}
       <motion.div
-        key="loader"
-        variants={containerVariants}
-        exit="exit"
-        className="fixed inset-0 z-[100000] flex items-center justify-center bg-[#020617] overflow-hidden"
+        initial={{ top: '0%' }}
+        animate={{ top: '100%' }}
+        transition={{ duration: 2.2, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
+        className="absolute left-0 w-full h-[2px] bg-cyan-400 z-50 shadow-[0_0_30px_5px_rgba(34,211,238,0.8)]"
+      />
+
+      {/* Revealed Content via ClipPath */}
+      <motion.div
+        initial={{ clipPath: 'inset(0% 0% 100% 0%)' }}
+        animate={{ clipPath: 'inset(0% 0% 0% 0%)' }}
+        transition={{ duration: 2.2, ease: [0.76, 0, 0.24, 1], delay: 0.2 }}
+        className="absolute inset-0 flex flex-col items-center justify-center bg-[#020617]"
       >
-        <div className="relative">
-          {/* The Text - Hidden initially, revealed by curtain */}
-          <motion.h1
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.5, duration: 0.1 }}
+        <div className="flex flex-col items-center gap-6">
+          <span className="text-cyan-400 font-mono-custom tracking-[0.3em] text-sm md:text-base uppercase flex items-center gap-3">
+            <span className="hidden md:block w-12 h-px bg-cyan-400/50" />
+            {greeting}
+            <span className="hidden md:block w-12 h-px bg-cyan-400/50" />
+          </span>
+          
+          <h1
             className="text-white font-display text-center whitespace-nowrap"
             style={{
-              fontSize: 'clamp(2rem, 10vw, 6rem)',
+              fontSize: 'clamp(2.5rem, 8vw, 7rem)',
               fontWeight: 900,
               letterSpacing: '0.02em',
               textTransform: 'uppercase',
             }}
           >
             Hashtag Official
-          </motion.h1>
-
-          {/* The Blue Curtain */}
-          <motion.div
-            initial={{ scaleY: 0, originY: 0 }}
-            animate={{ 
-              scaleY: [0, 1, 1, 0],
-              originY: [0, 0, 1, 1]
-            }}
-            transition={{ 
-              duration: 2.2,
-              times: [0, 0.4, 0.6, 1],
-              ease: [0.76, 0, 0.24, 1]
-            }}
-            className="absolute z-10 bg-[#3b82f6]"
-            style={{ 
-              left: '-20px', right: '-20px', 
-              top: '-20px', bottom: '-20px',
-              boxShadow: '0 0 60px rgba(59,130,246,0.6)'
-            }}
-          />
+          </h1>
         </div>
 
-        {/* Brand Subtitle */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.6, duration: 0.8 }}
-          className="absolute bottom-12 text-slate-500 font-label tracking-[0.4em] text-[10px] uppercase"
-        >
+        <div className="absolute bottom-12 text-slate-500 font-label tracking-[0.4em] text-[10px] uppercase">
           JIMS EMTC // Student Tech Society
-        </motion.div>
+        </div>
       </motion.div>
-    </AnimatePresence>
+    </motion.div>
   )
 }
