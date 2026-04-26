@@ -890,3 +890,10 @@ a:hover .alumni-btn-icon { color: #ffffff !important; }
 
 .text-gradient-aurora { background: linear-gradient(135deg, #6366f1 0%, #a855f7 25%, #ec4899 50%, #f43f5e 75%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% auto; animation: aurora 8s linear infinite; }
 @keyframes aurora { 0% { background-position: 0% 50% } 50% { background-position: 100% 50% } 100% { background-position: 0% 50% } }
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #60a5fa, #fbbf24);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

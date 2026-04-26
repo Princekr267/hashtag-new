@@ -99,24 +99,31 @@ function BlurHeading() {
 
   return (
     <motion.h1
-      className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[100px] font-display font-extrabold leading-[0.95] tracking-[-0.03em] text-white max-w-5xl"
+      className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[100px] font-display font-bold leading-[1.0] tracking-tight text-white max-w-5xl text-center mx-auto"
       variants={container}
       initial="hidden"
       animate="show"
     >
       <span className="block" style={{ minHeight: '1.1em' }}>
         {line1.split(' ').map((word, i) => (
-          <motion.span key={i} variants={item} className="inline-block mr-[0.2em] last:mr-0">
+          <motion.span key={i} variants={item} className="inline-block mr-[0.25em] last:mr-0">
             {word}
           </motion.span>
         ))}
       </span>
-      <span className="block text-gradient" style={{ minHeight: '1.1em' }}>
-        {line2.split(' ').map((word, i) => (
-          <motion.span key={i} variants={item} className="inline-block mr-[0.2em] last:mr-0">
-            {word}
-          </motion.span>
-        ))}
+      <span className="block" style={{ minHeight: '1.1em' }}>
+        {line2.split(' ').map((word, i) => {
+          const isLast = i === line2.split(' ').length - 1;
+          return (
+            <motion.span
+              key={i}
+              variants={item}
+              className={`inline-block mr-[0.25em] last:mr-0 ${isLast ? 'text-gradient-gold' : ''}`}
+            >
+              {word}
+            </motion.span>
+          );
+        })}
       </span>
     </motion.h1>
   )
@@ -173,7 +180,7 @@ export default function Home(): JSX.Element {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="max-w-7xl mx-auto w-full flex flex-col items-center lg:items-start text-center lg:text-left relative z-10">
+        <div className="max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10">
           <div
             className="absolute inset-0 pointer-events-none"
             style={{
@@ -181,7 +188,7 @@ export default function Home(): JSX.Element {
             }}
           />
 
-          <div className="flex flex-col items-center lg:items-start gap-6 max-w-5xl relative z-10">
+          <div className="flex flex-col items-center gap-6 max-w-5xl relative z-10">
             {/* Eyebrow — Change 4A */}
             <motion.div
               initial={{ opacity: 0, y: 12 }}
