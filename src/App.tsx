@@ -30,7 +30,7 @@ function AnimatedRoutes(): JSX.Element {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1, transition: { duration: 0.3 } }}
         exit={{ opacity: 0, transition: { duration: 0.2 } }}
-        style={{ willChange: 'opacity', touchAction: 'pan-y' }}
+        style={{ willChange: 'opacity' }}
       >
         <Routes location={location}>
           <Route path="/"       element={<Home />} />
@@ -80,7 +80,6 @@ function AppInner(): JSX.Element {
       <Navbar />
       <main
         className="relative z-10 min-h-screen flex flex-col justify-between"
-        style={{ touchAction: 'pan-y' }}
       >
         <div className="flex-grow">
           <AnimatedRoutes />

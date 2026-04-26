@@ -51,7 +51,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
   /* Change 9b: prevent rubber-band jank */
-  overscroll-behavior: none;
+  
 }
 
 @media (pointer: coarse) {

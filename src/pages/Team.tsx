@@ -91,8 +91,7 @@ export default function Team(): JSX.Element {
         <motion.div
           layout
           ref={spotlightRef}
-          className="team-spotlight-grid grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
-          style={{ touchAction: 'pan-y' }}
+        className="team-spotlight-grid grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6"
         >
           <AnimatePresence mode="popLayout">
             {leadershipFirst.map((m, i) => {
