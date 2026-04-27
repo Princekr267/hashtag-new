@@ -64,13 +64,13 @@ const Events = () => {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.3 }}
-              className="card-surface overflow-hidden group hover:shadow-[0_0_30px_rgba(108,99,255,0.15)] transition-all duration-300 transform hover:-translate-y-2 flex flex-col rounded-xl sm:rounded-2xl"
+              className="card-surface overflow-hidden group hover:shadow-[0_0_30px_rgba(108,99,255,0.15)] md:hover:shadow-[0_0_30px_rgba(108,99,255,0.15)] transition-all duration-300 transform md:hover:-translate-y-2 flex flex-col rounded-xl sm:rounded-2xl"
             >
               <div className="relative h-40 sm:h-48 overflow-hidden bg-background">
                 <img 
                   src={event.image || '/assets/images/event1.jpg'} 
                   alt={event.title}
-                  className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-100 transition-all duration-500"
+                  className="w-full h-full object-cover opacity-100 sm:opacity-80 group-hover:scale-105 sm:group-hover:opacity-100 transition-all duration-500"
                   loading="lazy"
                 />
                 <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-md px-2.5 sm:px-3 py-1 rounded-full border border-white/10 flex items-center gap-1.5 sm:gap-2">
@@ -96,10 +96,15 @@ const Events = () => {
           ))}
           {filteredEvents.length === 0 && (
             <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              className="col-span-full py-20 text-center text-muted"
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              className="col-span-full flex flex-col items-center justify-center py-20 bg-surface/30 rounded-2xl border border-border/50"
             >
-              No {filter} events found.
+              <Calendar className="w-12 h-12 text-muted mb-4 opacity-50" />
+              <h3 className="text-xl font-semibold mb-2">No {filter} events found</h3>
+              <p className="text-muted text-center max-w-sm">
+                Stay tuned! We are brewing something exciting. Check back later or subscribe to our newsletter.
+              </p>
             </motion.div>
           )}
         </AnimatePresence>

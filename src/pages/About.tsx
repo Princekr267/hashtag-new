@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -56,9 +56,36 @@ function MissionVisionCard({
   accentColor: string
   icon: string
 }) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const glowRef = useRef<HTMLDivElement>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!glowRef.current || !cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    
+    gsap.to(glowRef.current, {
+      opacity: 1,
+      background: `radial-gradient(400px circle at ${x}px ${y}px, ${accentColor}15, transparent 80%)`,
+      duration: 0.4
+    })
+  }
+
+  const handleMouseLeave = () => {
+    if (!glowRef.current) return
+    gsap.to(glowRef.current, {
+      opacity: 0,
+      duration: 0.6
+    })
+  }
+
   return (
     <div
-      className="relative overflow-hidden h-full"
+      ref={cardRef}
+      className="relative overflow-hidden h-full group"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
       style={{
         background: `linear-gradient(135deg, rgba(10,14,24,0.95) 0%, rgba(6,10,20,0.98) 100%)`,
         border: `1px solid ${accentColor}28`,
@@ -71,24 +98,18 @@ function MissionVisionCard({
         flexDirection: 'column',
         gap: '20px',
       }}
-      onMouseEnter={e => {
-        e.currentTarget.style.transform = 'translateY(-6px)'
-        e.currentTarget.style.boxShadow = `0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px ${accentColor}40, inset 0 1px 0 rgba(255,255,255,0.05)`
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.transform = 'translateY(0)'
-        e.currentTarget.style.boxShadow = `0 0 0 1px ${accentColor}14`
-      }}
     >
-      {/* Mesh gradient background glow */}
+      {/* ── Interactive Glow Overlay ── */}
+      <div 
+        ref={glowRef}
+        className="absolute inset-0 pointer-events-none z-10 opacity-0 transition-opacity duration-500"
+        style={{ mixBlendMode: 'plus-lighter' }}
+      />
+
+      {/* Mesh gradient background glow (static) */}
       <div style={{
         position: 'absolute', inset: 0, pointerEvents: 'none',
         background: `radial-gradient(ellipse 80% 60% at 10% 0%, ${accentColor}12, transparent 70%)`,
-        borderRadius: '24px',
-      }} />
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: `radial-gradient(ellipse 60% 50% at 90% 100%, ${accentColor}08, transparent 70%)`,
         borderRadius: '24px',
       }} />
 
@@ -101,7 +122,6 @@ function MissionVisionCard({
 
       {/* Icon + Badge row */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
-        {/* Large glowing icon */}
         <div style={{
           width: '56px', height: '56px',
           borderRadius: '16px',
@@ -115,7 +135,6 @@ function MissionVisionCard({
           {icon}
         </div>
 
-        {/* Type badge */}
         <span style={{
           padding: '5px 14px',
           borderRadius: '999px',
@@ -131,7 +150,6 @@ function MissionVisionCard({
         </span>
       </div>
 
-      {/* Heading */}
       <h2 style={{
         fontFamily: 'var(--font-display, Inter, sans-serif)',
         fontWeight: 800,
@@ -145,14 +163,12 @@ function MissionVisionCard({
         {heading}
       </h2>
 
-      {/* Divider */}
       <div style={{
         height: '1px',
         background: `linear-gradient(90deg, ${accentColor}50, transparent)`,
         position: 'relative', zIndex: 2, flexShrink: 0,
       }} />
 
-      {/* Body */}
       <p style={{
         fontSize: '15px',
         lineHeight: 1.75,
@@ -168,6 +184,161 @@ function MissionVisionCard({
   )
 }
 
+
+// ── Interactive Spotlight Section for Values Cards ────────────
+function AboutValuesSection() {
+  const containerRef = useRef<HTMLElement>(null)
+  const spotlightRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (prefersReduced || !containerRef.current || !spotlightRef.current) return
+
+    const container = containerRef.current
+    const spotlight = spotlightRef.current
+
+    // Set initial spotlight state
+    gsap.set(spotlight, { 
+      opacity: 0, 
+      background: 'radial-gradient(600px circle at center, rgba(96, 165, 250, 0.15), transparent 80%)' 
+    })
+
+    const ctx = gsap.context(() => {
+      // 1. Scroll-triggered entrance/exit for the light intensity
+      gsap.to(spotlight, {
+        opacity: 1,
+        scrollTrigger: {
+          trigger: container,
+          start: 'top 60%',
+          end: 'bottom 40%',
+          toggleActions: 'play reverse play reverse'
+        }
+      })
+
+      // 2. Mouse tracking logic
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = container.getBoundingClientRect()
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+        
+        gsap.to(spotlight, {
+          background: `radial-gradient(600px circle at ${x}px ${y}px, rgba(96, 165, 250, 0.15) 0%, rgba(129, 140, 248, 0.05) 30%, transparent 70%)`,
+          duration: 0.8,
+          ease: 'power2.out'
+        })
+      }
+
+      const handleMouseLeave = () => {
+        gsap.to(spotlight, {
+          background: `radial-gradient(800px circle at 50% 50%, rgba(96, 165, 250, 0.1) 0%, transparent 70%)`,
+          duration: 1.5,
+          ease: 'power2.inOut'
+        })
+      }
+
+      container.addEventListener('mousemove', handleMouseMove)
+      container.addEventListener('mouseleave', handleMouseLeave)
+    }, containerRef)
+
+    return () => {
+      ctx.revert()
+    }
+  }, [])
+
+  return (
+    <section 
+      ref={containerRef} 
+      className="section px-6 relative overflow-hidden bg-[#020617] border-y border-white/[0.02]"
+    >
+      {/* ── Interactive Spotlight (On Top) ── */}
+      <div 
+        ref={spotlightRef}
+        className="absolute inset-0 pointer-events-none z-20 will-change-[background,opacity]"
+        style={{ mixBlendMode: 'plus-lighter' }}
+      />
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="mb-20 text-center">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-display font-bold"
+          >
+            Our <span className="text-gradient-violet">Values</span>
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-text-muted mt-6 max-w-2xl mx-auto font-body text-base leading-relaxed"
+          >
+            The core principles that drive our technical ambition and community culture.
+            Each value represents a pillar of our collective mission.
+          </motion.p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+          {VALUES.map((v, idx) => (
+            <motion.div 
+              key={v.title}
+              initial={{ opacity: 0, y: 40, filter: 'grayscale(100%) brightness(0.5)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'grayscale(0%) brightness(1)' }}
+              viewport={{ margin: "-100px" }}
+              transition={{ 
+                duration: 0.8, 
+                delay: idx * 0.1,
+                ease: [0.16, 1, 0.3, 1]
+              }}
+            >
+              <FlipCard
+                height="300px"
+                front={
+                  <div
+                    className="w-full h-full surface-card p-10 flex flex-col gap-6 rounded-[32px] border border-white/[0.05] bg-[#0A0F1A]/80 backdrop-blur-sm hover:border-primary/30 transition-colors group"
+                  >
+                    <div 
+                      className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl transition-transform duration-500 group-hover:scale-110"
+                      style={{ 
+                        background: `${v.accent}10`, 
+                        color: v.accent,
+                        border: `1px solid ${v.accent}20` 
+                      }}
+                    >
+                      {v.icon}
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-display font-bold mb-3" style={{ color: v.accent }}>{v.title}</h3>
+                      <p className="text-text-muted text-sm font-body leading-relaxed">{v.desc}</p>
+                    </div>
+                  </div>
+                }
+                back={
+                  <div
+                    className="w-full h-full rounded-[32px] flex flex-col items-center justify-center p-10 text-center gap-6"
+                    style={{
+                      background: `linear-gradient(145deg, #0A0F1A 0%, #050810 100%)`,
+                      border: `1px solid ${v.accent}30`,
+                      boxShadow: `0 20px 50px rgba(0,0,0,0.5), inset 0 0 30px ${v.accent}10`
+                    }}
+                  >
+                    <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
+                      <span className="text-[10px] font-label tracking-[0.2em] text-primary-dim uppercase">Metric</span>
+                    </div>
+                    <span className="text-5xl font-display font-black tracking-tighter" style={{ color: v.accent }}>{v.stat}</span>
+                    <p className="text-text-muted text-sm font-body italic leading-relaxed">"{v.quote}"</p>
+                  </div>
+                }
+              />
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 export default function About(): JSX.Element {
   const timelineWrap   = useRef<HTMLDivElement>(null)
@@ -346,62 +517,7 @@ export default function About(): JSX.Element {
       </section>
 
       {/* ── VALUES — FLIP CARDS ──────────────────────────────── */}
-      <section className="section px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-16">
-            <h2 data-reveal className="text-4xl md:text-5xl font-display font-bold">
-              Our <span className="text-gradient-violet">Values</span>
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-            {VALUES.map((v, idx) => (
-              <motion.div
-                key={v.title}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <FlipCard
-                  height="260px"
-                  front={
-                    <div
-                      className="w-full h-full surface-card shimmer-card p-8 flex flex-col gap-5 rounded-2xl"
-                      style={{ borderColor: `${v.accent}18` }}
-                    >
-                      <span className="text-3xl font-mono-custom" style={{ color: v.accent }}>
-                        {v.icon}
-                      </span>
-                      <div>
-                        <h3 className="text-lg font-display font-bold mb-2" style={{ color: v.accent }}>
-                          {v.title}
-                        </h3>
-                        <p className="text-text-muted text-sm font-body leading-relaxed">{v.desc}</p>
-                      </div>
-                    </div>
-                  }
-                  back={
-                    <div
-                      className="w-full h-full rounded-2xl flex flex-col items-center justify-center p-8 text-center gap-4"
-                      style={{
-                        background: `linear-gradient(135deg, ${v.accent}15, ${v.accent}05)`,
-                        border: `1px solid ${v.accent}30`,
-                      }}
-                    >
-                      <span className="text-4xl font-display font-black" style={{ color: v.accent }}>
-                        {v.stat}
-                      </span>
-                      <p className="text-text-muted text-sm font-body italic leading-relaxed">
-                        "{v.quote}"
-                      </p>
-                    </div>
-                  }
-                />
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <AboutValuesSection />
 
       {/* ── TIMELINE — Change 4: Scroll-driven progress line ─────────── */}
       <section className="section px-6">

@@ -434,8 +434,8 @@ export default function Navbar(): JSX.Element {
                   to={path}
                   end={path === '/'}
                   className={({ isActive }) =>
-                    `relative px-4 py-2 text-sm font-medium transition-all duration-200 font-label
-                    ${isActive ? 'text-primary' : 'text-text-muted hover:text-text-primary'}`
+                    `relative px-4 py-2 text-sm font-medium transition-all duration-200 font-label nav-link-desktop
+                    ${isActive ? 'text-primary' : 'text-text-muted text-hover-primary'}`
                   }
                 >
                   {({ isActive }) => (
@@ -503,10 +503,10 @@ export default function Navbar(): JSX.Element {
                     to={path}
                     end={path === '/'}
                     className={({ isActive }) =>
-                      `block py-4 text-2xl font-bold font-display border-b transition-colors duration-200
+                      `block py-4 text-2xl font-bold font-display border-b transition-colors duration-200 nav-link-mobile
                       ${isActive
-                        ? 'text-gradient border-primary/20'
-                        : 'text-text-muted border-white/5 hover:text-text-primary'}`
+                        ? 'text-primary border-primary/20'
+                        : 'text-text-muted border-white/5'}`
                     }
                   >
                     {label}

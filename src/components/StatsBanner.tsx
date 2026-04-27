@@ -50,32 +50,32 @@ const StatsBanner: React.FC = () => {
     <section className="relative -mt-16 z-20 pb-20 px-6 md:px-12 w-full max-w-[1200px] mx-auto">
       <div className="glass-panel py-8 px-6 md:px-12 flex flex-wrap justify-between gap-8 md:gap-4 divide-x-0 md:divide-x divide-border">
         
-        <div className="flex-1 flex flex-col items-center justify-center min-w-[120px] pb-4 md:pb-0">
-          <div className="font-heading font-bold text-4xl md:text-5xl text-white mb-2">
-            <Counter target={members} />+
+        <div className="flex-1 flex flex-col items-center justify-center min-w-[120px] pb-4 md:pb-0 group cursor-default transition-all duration-300">
+          <div className="font-heading font-bold text-4xl md:text-5xl text-white mb-2 transition-all duration-300 ease-out group-hover:scale-110 group-hover:text-primary will-change-transform inline-block">
+            <Counter target={members} /><span className="inline-block transition-transform group-hover:scale-110">+</span>
           </div>
-          <p className="text-muted text-sm font-medium uppercase tracking-wider">Members</p>
+          <p className="text-muted text-sm font-medium uppercase tracking-wider transition-all duration-300 ease-out group-hover:scale-105 will-change-transform inline-block">Members</p>
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center min-w-[120px] pb-4 md:pb-0 border-t border-border/50 md:border-t-0 pt-4 md:pt-0 pl-0 md:pl-4">
-          <div className="font-heading font-bold text-4xl md:text-5xl text-white mb-2">
-            <Counter target={projects} />+
+        <div className="flex-1 flex flex-col items-center justify-center min-w-[120px] pb-4 md:pb-0 border-t border-border/50 md:border-t-0 pt-4 md:pt-0 pl-0 md:pl-4 group cursor-default transition-all duration-300">
+          <div className="font-heading font-bold text-4xl md:text-5xl text-white mb-2 transition-all duration-300 ease-out group-hover:scale-110 group-hover:text-primary will-change-transform inline-block">
+            <Counter target={projects} /><span className="inline-block transition-transform group-hover:scale-110">+</span>
           </div>
-          <p className="text-muted text-sm font-medium uppercase tracking-wider">Projects built</p>
+          <p className="text-muted text-sm font-medium uppercase tracking-wider transition-all duration-300 ease-out group-hover:scale-105 will-change-transform inline-block">Projects built</p>
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center min-w-[120px] pb-4 md:pb-0 border-t border-border/50 md:border-t-0 pt-4 md:pt-0 pl-0 md:pl-4">
-          <div className="font-heading font-bold text-4xl md:text-5xl text-white mb-2">
-            <Counter target={events} />+
+        <div className="flex-1 flex flex-col items-center justify-center min-w-[120px] pb-4 md:pb-0 border-t border-border/50 md:border-t-0 pt-4 md:pt-0 pl-0 md:pl-4 group cursor-default transition-all duration-300">
+          <div className="font-heading font-bold text-4xl md:text-5xl text-white mb-2 transition-all duration-300 ease-out group-hover:scale-110 group-hover:text-primary will-change-transform inline-block">
+            <Counter target={events} /><span className="inline-block transition-transform group-hover:scale-110">+</span>
           </div>
-          <p className="text-muted text-sm font-medium uppercase tracking-wider">Events hosted</p>
+          <p className="text-muted text-sm font-medium uppercase tracking-wider transition-all duration-300 ease-out group-hover:scale-105 will-change-transform inline-block">Events hosted</p>
         </div>
 
-        <div className="flex-1 flex flex-col items-center justify-center min-w-[120px] border-t border-border/50 md:border-t-0 pt-4 md:pt-0 pl-0 md:pl-4">
-          <div className="font-heading font-bold text-4xl md:text-5xl text-white mb-2">
+        <div className="flex-1 flex flex-col items-center justify-center min-w-[120px] border-t border-border/50 md:border-t-0 pt-4 md:pt-0 pl-0 md:pl-4 group cursor-default transition-all duration-300">
+          <div className="font-heading font-bold text-4xl md:text-5xl text-white mb-2 transition-all duration-300 ease-out group-hover:scale-110 group-hover:text-primary will-change-transform inline-block">
             <Counter target={yearsActive} />
           </div>
-          <p className="text-muted text-sm font-medium uppercase tracking-wider">Years Active</p>
+          <p className="text-muted text-sm font-medium uppercase tracking-wider transition-all duration-300 ease-out group-hover:scale-105 will-change-transform inline-block">Years Active</p>
         </div>
 
       </div>

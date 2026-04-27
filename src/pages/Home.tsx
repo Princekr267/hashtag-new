@@ -68,13 +68,17 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   }, [stat.value])
 
   return (
-    <div className="text-center group">
-      <div className="stat-number text-gradient">
+    <motion.div 
+      className="text-center cursor-pointer group"
+      whileHover={{ scale: 1.15 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    >
+      <div className="stat-number text-gradient transition-all duration-500 group-hover:drop-shadow-[0_0_30px_rgba(96,165,250,0.4)] will-change-transform">
         <span ref={ref}>0</span>
-        <span>{stat.suffix}</span>
+        <span className="transition-colors duration-500 group-hover:text-white/80">{stat.suffix}</span>
       </div>
-      <p className="text-text-muted mt-2 text-xs font-label tracking-widest uppercase">{stat.label}</p>
-    </div>
+      <p className="text-text-muted mt-2 text-xs font-label tracking-widest uppercase transition-all duration-500 group-hover:text-primary group-hover:tracking-[0.15em]">{stat.label}</p>
+    </motion.div>
   )
 }
 
@@ -507,7 +511,7 @@ export default function Home(): JSX.Element {
             {STATS.map((stat) => (
               <div
                 key={stat.label}
-                className="stat-block p-10 md:p-12 surface-card border-b border-r border-outline-var/30"
+                className="stat-block p-10 md:p-12 surface-card border-b border-r border-outline-var/30 hover:bg-white/[0.01] transition-colors duration-500"
               >
                 <StatCounter stat={stat} />
               </div>
