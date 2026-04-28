@@ -79,7 +79,7 @@ function AppInner(): JSX.Element {
 
       <Navbar />
       <main
-        className="relative z-10 min-h-screen flex flex-col justify-between"
+        className="relative z-10 w-full min-h-screen flex flex-col justify-between overflow-x-clip border-none"
       >
         <div className="flex-grow">
           <AnimatedRoutes />

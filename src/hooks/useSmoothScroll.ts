@@ -63,10 +63,22 @@ export function useSmoothScroll(): void {
       lenis.scrollTo(element, { offset: -50 })
     }
 
+    const handleGalleryHijack = (event: Event) => {
+      const customEvent = event as CustomEvent<{ active?: boolean }>
+      const active = Boolean(customEvent.detail?.active)
+      if (active) {
+        lenis.stop()
+      } else {
+        lenis.start()
+      }
+    }
+
     document.addEventListener('click', handleClick)
+    window.addEventListener('horizontal-gallery-hijack', handleGalleryHijack as EventListener)
 
     return () => {
       document.removeEventListener('click', handleClick)
+      window.removeEventListener('horizontal-gallery-hijack', handleGalleryHijack as EventListener)
       cancelAnimationFrame(rafId)
       lenis.destroy()
       lenisRef.current = null

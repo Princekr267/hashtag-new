@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import MagneticButton from '../components/ui/MagneticButton'
 import CosmosHero from '../components/visuals/CosmosHero'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
+import HorizontalGallery from '../components/ui/HorizontalGallery'
 import { STATS, MARQUEE_EVENTS } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -537,6 +538,19 @@ export default function Home(): JSX.Element {
           </motion.div>
         </div>
       </section>
+
+      <HorizontalGallery 
+        label="Event Moments"
+        images={[
+          { src: '/images/Event/img1.png', alt: 'Event Moment 1' },
+          { src: '/images/Event/img2.png', alt: 'Event Moment 2' },
+          { src: '/images/Event/img3.png', alt: 'Event Moment 3' },
+          { src: '/images/Event/img4.png', alt: 'Event Moment 4' },
+          { src: '/images/Event/img5.png', alt: 'Event Moment 5' },
+          { src: '/images/Event/img6.png', alt: 'Event Moment 6' },
+          { src: '/images/Event/img7.png', alt: 'Event Moment 7' },
+        ]}
+      />
 
     </div>
   )

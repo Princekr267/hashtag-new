@@ -39,19 +39,33 @@
 /* ── Base Reset ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; cursor: none; }
+html { cursor: none; }
 
 body {
   background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-  /* Change 9e: font rendering */
+  width: 100%;
+  min-height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Change 9b: prevent rubber-band jank */
-  
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 @media (pointer: coarse) {
