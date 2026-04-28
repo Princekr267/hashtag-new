@@ -39,19 +39,33 @@
 /* ── Base Reset ──────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; cursor: none; }
+html { cursor: none; }
 
 body {
   background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: 'Inter', sans-serif;
-  overflow-x: hidden;
-  /* Change 9e: font rendering */
+  width: 100%;
+  min-height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  /* Change 9b: prevent rubber-band jank */
-  
+}
+
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
 @media (pointer: coarse) {
@@ -745,7 +759,7 @@ img { max-width: 100%; height: auto; }
 }
 
 /* Section padding scales on mobile */
-/* 1C � Section padding scales for responsiveness */
+/* 1C � Section padding scales for responsiveness */
 section { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
 
 @media (max-width: 1024px) {
@@ -855,13 +869,13 @@ section { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
   pointer-events: none;
 }
 
-/* == CHANGE 3B � Team card mobile typography == */
+/* == CHANGE 3B � Team card mobile typography == */
 @media (max-width: 768px) {
   .team-card-name { font-size: 14px !important; }
   .team-card-role { font-size: 12px !important; }
 }
 
-/* == CHANGE 4 � Hero entrance keyframes == */
+/* == CHANGE 4 � Hero entrance keyframes == */
 @keyframes heroFadeUp {
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -896,4 +910,102 @@ a:hover .alumni-btn-icon { color: #ffffff !important; }
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* ==============================================================
+   MOBILE INTERACTION UPGRADES (Global Overrides)
+   ============================================================== */
+
+/* 1. Eliminate sticky hover states on touch and ensure fallback values */
+@media (hover: none) and (pointer: coarse) {
+  /* Suppress desktop-only hover transform and box-shadow */
+  .btn-primary:hover,
+  .btn-ghost:hover,
+  .team-card:hover,
+  .blog-post-card:hover,
+  .polaroid-card:hover,
+  .shimmer-card:hover::after {
+    transform: none !important;
+    box-shadow: none !important;
+    background: inherit !important;
+    border-color: inherit !important;
+    animation: none !important;
+  }
+
+  /* Force elements meant to reveal on hover to be always visible */
+  .blog-post-card .blog-arrow { transform: translateX(0) !important; color: var(--primary); }
+  a:hover .alumni-btn-fill { opacity: 0.1 !important; }
+}
+
+/* 2. Active (Tap) States */
+.btn-primary:active,
+.btn-ghost:active,
+button:active {
+  transform: scale(0.95) !important;
+  transition: transform 0.1s ease !important;
+}
+
+.team-card:active,
+.blog-post-card:active,
+.alumni-card:active,
+.polaroid-card:active {
+  transform: scale(0.97) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4) !important;
+  transition: transform 0.1s ease, box-shadow 0.1s ease !important;
+}
+
+/* 3. Ripple effect for buttons and CTAs */
+button,
+.btn-primary,
+.btn-ghost {
+  position: relative;
+  overflow: hidden;
+}
+
+button::after,
+.btn-primary::after,
+.btn-ghost::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  transition: transform 0s, opacity 0s;
+}
+
+button:active::after,
+.btn-primary:active::after,
+.btn-ghost:active::after {
+  transform: translate(-50%, -50%) scale(4);
+  opacity: 1;
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+/* 4. Intersection Observer animation class applied on scroll only down */
+.mobile-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.mobile-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 5. Navigation Links Tap vs Hover */
+@media (hover: hover) and (pointer: fine) {
+  .text-hover-primary:hover { color: var(--text-primary); }
+  .nav-link-mobile:hover { color: var(--text-primary); }
+}
+.nav-link-desktop:active,
+.nav-link-mobile:active {
+  color: var(--primary) !important;
+  opacity: 0.8;
+  transition: color 0.1s ease, opacity 0.1s ease;
 }

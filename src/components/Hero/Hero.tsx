@@ -138,7 +138,9 @@ const Hero: React.FC = () => {
           className="flex flex-col sm:flex-row gap-4"
         >
           <a
-            href="#projects"
+            href="https://forms.gle/YOUR_APPLICATION_LINK"
+            target="_blank"
+            rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 px-7 py-3.5 font-semibold rounded-full transition-all duration-300"
             style={{
               background: '#C8FF47',
@@ -155,14 +157,14 @@ const Hero: React.FC = () => {
               (e.currentTarget as HTMLElement).style.transform = '';
             }}
           >
-            {heroData?.cta_primary ?? 'View Projects'}
+            {heroData?.cta_primary ?? 'Join Us'}
             <svg className="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </a>
 
           <a
-            href="#about"
+            href="/projects"
             className="inline-flex items-center gap-2 px-7 py-3.5 font-medium rounded-full border transition-all duration-300"
             style={{
               borderColor: 'rgba(255,255,255,0.12)',

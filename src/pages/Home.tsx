@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import MagneticButton from '../components/ui/MagneticButton'
 import CosmosHero from '../components/visuals/CosmosHero'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
+import HorizontalGallery from '../components/ui/HorizontalGallery'
 import { STATS, MARQUEE_EVENTS } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -68,13 +69,17 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   }, [stat.value])
 
   return (
-    <div className="text-center group">
-      <div className="stat-number text-gradient">
+    <motion.div 
+      className="text-center cursor-pointer group"
+      whileHover={{ scale: 1.15 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    >
+      <div className="stat-number text-gradient transition-all duration-500 group-hover:drop-shadow-[0_0_30px_rgba(96,165,250,0.4)] will-change-transform">
         <span ref={ref}>0</span>
-        <span>{stat.suffix}</span>
+        <span className="transition-colors duration-500 group-hover:text-white/80">{stat.suffix}</span>
       </div>
-      <p className="text-text-muted mt-2 text-xs font-label tracking-widest uppercase">{stat.label}</p>
-    </div>
+      <p className="text-text-muted mt-2 text-xs font-label tracking-widest uppercase transition-all duration-500 group-hover:text-primary group-hover:tracking-[0.15em]">{stat.label}</p>
+    </motion.div>
   )
 }
 
@@ -507,7 +512,7 @@ export default function Home(): JSX.Element {
             {STATS.map((stat) => (
               <div
                 key={stat.label}
-                className="stat-block p-10 md:p-12 surface-card border-b border-r border-outline-var/30"
+                className="stat-block p-10 md:p-12 surface-card border-b border-r border-outline-var/30 hover:bg-white/[0.01] transition-colors duration-500"
               >
                 <StatCounter stat={stat} />
               </div>
@@ -533,6 +538,19 @@ export default function Home(): JSX.Element {
           </motion.div>
         </div>
       </section>
+
+      <HorizontalGallery 
+        label="Event Moments"
+        images={[
+          { src: '/images/Event/img1.png', alt: 'Event Moment 1' },
+          { src: '/images/Event/img2.png', alt: 'Event Moment 2' },
+          { src: '/images/Event/img3.png', alt: 'Event Moment 3' },
+          { src: '/images/Event/img4.png', alt: 'Event Moment 4' },
+          { src: '/images/Event/img5.png', alt: 'Event Moment 5' },
+          { src: '/images/Event/img6.png', alt: 'Event Moment 6' },
+          { src: '/images/Event/img7.png', alt: 'Event Moment 7' },
+        ]}
+      />
 
     </div>
   )

@@ -19,6 +19,9 @@ export function useScrollReveal(options: UseScrollRevealOptions = {}) {
   useEffect(() => {
     // Respect reduced-motion preference
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    
+    // MOBILE INTERACTION ADDED: Apply Intersection Observer to mobile/tap only elements too
+    const isMobile = window.matchMedia('(max-width: 768px)').matches
 
     const targets = document.querySelectorAll<HTMLElement>('[data-reveal]')
     if (!targets.length) return

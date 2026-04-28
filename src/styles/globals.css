@@ -21,10 +21,9 @@
   }
 
   body {
-    @apply bg-[var(--color-bg)] text-[var(--color-text)] antialiased overflow-x-hidden;
+    @apply bg-[var(--color-bg)] text-[var(--color-text)] antialiased;
     font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     /* Native scroll — instant response, no JS interception */
-    scroll-behavior: smooth;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -83,7 +82,7 @@
 
 /* Smooth Scroll */
 html {
-  scroll-behavior: smooth;
+  
 }
 
 #root {

@@ -112,17 +112,16 @@ export default function Footer(): JSX.Element {
           <div>
             <h3 className="text-text-primary font-display font-semibold mb-6">Contact</h3>
             <ul className="flex flex-col gap-3">
-              <li className="text-text-muted text-sm flex items-center gap-[8px]">
-                <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                <span className="leading-none">JIMS, Greater Noida</span>
+              <li className="text-text-muted text-sm flex items-start gap-[8px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 mt-1.5" />
+                <span className="leading-snug">JIMS Engineering Management Technical Campus, 48/4, Knowledge Park III, Greater Noida, Uttar Pradesh 201306</span>
               </li>
               <li className="text-text-muted text-sm flex items-center gap-[8px]">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
-                <span className="leading-none">contact@hashtagofficial.in</span>
+                <a href="mailto:contact@hashtagofficial.in" className="hover:text-primary transition-colors leading-none">contact@hashtagofficial.in</a>
               </li>
             </ul>
           </div>
-
         </div>
 
         {/* Bottom Bar */}

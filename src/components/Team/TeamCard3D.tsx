@@ -43,6 +43,7 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member }) => {
         .flip-card { 
           perspective: 1000px; 
           height: 280px;
+          position: relative;
         }
         @media (min-width: 640px) {
           .flip-card { height: 320px; }
@@ -54,8 +55,19 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member }) => {
           transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
           transform-style: preserve-3d;
         }
-        .flip-card:hover .flip-inner,
+        
+        /* MOBILE INTERACTION ADDED: Separate hover strictly for desktop. */
+        @media (hover: hover) and (pointer: fine) {
+          .flip-card:hover .flip-inner { transform: rotateY(180deg); }
+        }
+        
         .flip-inner.flipped { transform: rotateY(180deg); }
+        
+        /* Give active scaling on tap */
+        .flip-card:active .flip-inner {
+          transform: scale(0.97);
+        }
+        
         .flip-face {
           position: absolute;
           width: 100%;
@@ -130,25 +142,49 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member }) => {
                 {member.name}
               </h3>
               <p
-                className="mt-1 hidden sm:block"
-                style={{ 
-                  color: 'var(--color-muted)', 
-                  fontFamily: 'DM Mono, monospace',
-                  fontSize: 'clamp(0.65rem, 2vw, 0.75rem)',
-                }}
+                className="mt-0.5 text-xs sm:text-sm font-medium tracking-wide uppercase"
+                style={{ color: '#C8FF47' }}
               >
-                Hover to see links →
+                {member.title}
               </p>
-              <p
-                className="mt-1 sm:hidden"
-                style={{ 
-                  color: 'var(--color-muted)', 
-                  fontFamily: 'DM Mono, monospace',
-                  fontSize: 'clamp(0.65rem, 2vw, 0.75rem)',
-                }}
-              >
-                Tap to flip →
-              </p>
+              
+              <div className="mt-auto pt-2 flex items-center justify-between">
+                <p
+                  className="hidden sm:block"
+                  style={{ 
+                    color: 'var(--color-muted)', 
+                    fontFamily: 'DM Mono, monospace',
+                    fontSize: 'clamp(0.65rem, 2vw, 0.75rem)',
+                  }}
+                >
+                  Hover to see links →
+                </p>
+                <p
+                  className="sm:hidden"
+                  style={{ 
+                    color: 'var(--color-muted)', 
+                    fontFamily: 'DM Mono, monospace',
+                    fontSize: 'clamp(0.65rem, 2vw, 0.75rem)',
+                  }}
+                >
+                  Tap to flip →
+                </p>
+
+                {/* LinkedIn Quick Link on Front */}
+                {member.social?.linkedin && member.social.linkedin !== 'https://www.linkedin.com/in/' && (
+                  <a
+                    href={member.social.linkedin}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-surface-var hover:bg-[#7B61FF] hover:text-white transition-colors"
+                    aria-label={`${member.name}'s LinkedIn`}
+                    style={{ zIndex: 10, position: 'relative' }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
 
