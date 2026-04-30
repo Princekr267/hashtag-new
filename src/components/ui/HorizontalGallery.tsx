@@ -19,6 +19,7 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
   const rafPendingRef = useRef(false);
   const hijackActiveRef = useRef(false);
   const hijackLockedRef = useRef(false);
+  const lastContainerTopRef = useRef<number | null>(null);
 
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -33,6 +34,17 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
   useEffect(() => {
     if (prefersReduced) return;
 
+    const debugLog = (
+      hypothesisId: string,
+      message: string,
+      data: Record<string, unknown>,
+      runId = 'initial',
+    ) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7680/ingest/76688da9-d7ac-46f6-b318-0af7b3c91abc',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8d80e5'},body:JSON.stringify({sessionId:'8d80e5',runId,hypothesisId,location:'HorizontalGallery.tsx',message,data,timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+    };
+
     const measure = () => {
       if (!trackRef.current) return;
 
@@ -43,33 +55,112 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
       setSectionHeight('100dvh');
       horizontalOffsetRef.current = Math.min(horizontalOffsetRef.current, maxOffset);
       setHorizontalOffset(horizontalOffsetRef.current);
+
+      debugLog('H1', 'measure-computed', {
+        maxOffset,
+        scrollWidth: trackRef.current.scrollWidth,
+        innerWidth: window.innerWidth,
+        images: images.length,
+      });
     };
 
     const isGalleryPinnedInView = () => {
       if (!containerRef.current) return false;
       const rect = containerRef.current.getBoundingClientRect();
-      const activationTolerancePx = 24;
+      const viewportHeight = window.innerHeight;
+      const lockThreshold = Math.max(24, Math.min(56, viewportHeight * 0.06));
+      const isCentered = Math.abs(rect.top) <= lockThreshold;
 
-      // Section is exactly centered when top is 0 (section height is 100vh).
-      // Use a tiny symmetric tolerance so up/down activation position is identical.
-      return Math.abs(rect.top) <= activationTolerancePx;
+      return isCentered;
     };
 
     const applyHorizontalDelta = (deltaY: number) => {
-      if (maxOffsetRef.current <= 0 || deltaY === 0) return false;
+      if (maxOffsetRef.current <= 0 || deltaY === 0) {
+        debugLog('H1', 'apply-rejected-no-range-or-zero-delta', {
+          maxOffset: maxOffsetRef.current,
+          deltaY,
+        });
+        return false;
+      }
       const prev = horizontalOffsetRef.current;
       const canMoveInDirection =
         (deltaY > 0 && prev < maxOffsetRef.current) || (deltaY < 0 && prev > 0);
+      const rect = containerRef.current?.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const lockThreshold = Math.max(24, Math.min(56, viewportHeight * 0.06));
+      const centerDistance = rect
+        ? Math.abs((rect.top + rect.bottom) / 2 - viewportHeight / 2)
+        : null;
+      const pinnedNow = isGalleryPinnedInView();
+      const currentTop = rect?.top ?? null;
+      const previousTop = lastContainerTopRef.current;
+      const scrollDirection = deltaY > 0 ? 'down' : 'up';
+      const crossedCenterWindow =
+        previousTop != null &&
+        currentTop != null &&
+        ((previousTop > lockThreshold && currentTop < -lockThreshold) ||
+          (previousTop < -lockThreshold && currentTop > lockThreshold) ||
+          (previousTop > 0 && currentTop <= 0) ||
+          (previousTop < 0 && currentTop >= 0));
+      const pinned = pinnedNow || crossedCenterWindow;
 
       if (hijackLockedRef.current) {
         if (!canMoveInDirection) {
           hijackLockedRef.current = false;
           setHijackActive(false);
+          debugLog('H4', 'hijack-unlocked-at-boundary', {
+            prev,
+            maxOffset: maxOffsetRef.current,
+            deltaY,
+          });
           return false;
         }
       } else {
-        if (!isGalleryPinnedInView() || !canMoveInDirection) return false;
+        if (!pinned || !canMoveInDirection) {
+          debugLog('H2', 'apply-rejected-not-pinned-or-cannot-move', {
+            pinned,
+            canMoveInDirection,
+            deltaY,
+            prev,
+            maxOffset: maxOffsetRef.current,
+            containerTop: rect?.top ?? null,
+            containerBottom: rect?.bottom ?? null,
+            viewportHeight,
+            lockThreshold,
+            centerDistance,
+            pinnedNow,
+            previousTop,
+            currentTop,
+            crossedCenterWindow,
+            scrollDirection,
+          });
+          lastContainerTopRef.current = currentTop;
+          return false;
+        }
         hijackLockedRef.current = true;
+        const snapOffset = rect?.top ?? 0;
+        if (Math.abs(snapOffset) > 0.5) {
+          window.scrollBy({ top: snapOffset, left: 0, behavior: 'auto' });
+          debugLog('H5', 'snap-to-pin-on-lock', {
+            snapOffset,
+            scrollDirection,
+          });
+        }
+        debugLog('H3', 'hijack-locked', {
+          deltaY,
+          prev,
+          maxOffset: maxOffsetRef.current,
+          containerTop: rect?.top ?? null,
+          containerBottom: rect?.bottom ?? null,
+          viewportHeight,
+          lockThreshold,
+          centerDistance,
+          pinnedNow,
+          previousTop,
+          currentTop,
+          crossedCenterWindow,
+          scrollDirection,
+        });
       }
 
       const next = Math.max(0, Math.min(maxOffsetRef.current, prev + deltaY));
@@ -84,6 +175,13 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
         });
       }
       setHijackActive(true);
+      debugLog('H3', 'apply-accepted', {
+        prev,
+        next,
+        deltaY,
+        changed,
+      });
+      lastContainerTopRef.current = currentTop;
       return changed || hijackLockedRef.current;
     };
 
@@ -96,7 +194,15 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
     };
 
     const onWheel = (e: WheelEvent) => {
-      const didHijack = applyHorizontalDelta(e.deltaY);
+      const primaryDelta =
+        Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      const didHijack = applyHorizontalDelta(primaryDelta);
+      debugLog('H2', 'wheel-processed', {
+        deltaY: e.deltaY,
+        deltaX: e.deltaX,
+        primaryDelta,
+        didHijack,
+      });
       if (didHijack) {
         e.preventDefault();
       }
