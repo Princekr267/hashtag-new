@@ -98,7 +98,9 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
       if (!containerRef.current) return false;
       const rect = containerRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      const lockThreshold = Math.max(24, Math.min(56, viewportHeight * 0.06));
+      
+      // HYDRATION FIX: More generous threshold for production/fast scrolls
+      const lockThreshold = Math.max(40, viewportHeight * 0.1); 
       return Math.abs(rect.top) <= lockThreshold;
     };
 
@@ -109,16 +111,17 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
       const canMoveInDirection = (deltaY > 0 && prev < maxOffsetRef.current) || (deltaY < 0 && prev > 0);
       const rect = containerRef.current?.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
-      const lockThreshold = Math.max(24, Math.min(56, viewportHeight * 0.06));
       const pinnedNow = isGalleryPinnedInView();
       const currentTop = rect?.top ?? null;
       const previousTop = lastContainerTopRef.current;
+
+      // HYDRATION FIX: Detect if we jumped over the center point between frames
       const crossedCenterWindow = previousTop != null && currentTop != null && (
-        (previousTop > lockThreshold && currentTop < -lockThreshold) ||
-        (previousTop < -lockThreshold && currentTop > lockThreshold) ||
         (previousTop > 0 && currentTop <= 0) ||
-        (previousTop < 0 && currentTop >= 0)
+        (previousTop < 0 && currentTop >= 0) ||
+        (Math.abs(currentTop) < viewportHeight * 0.15)
       );
+      
       const pinned = pinnedNow || crossedCenterWindow;
 
       if (hijackLockedRef.current) {
@@ -158,6 +161,16 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
     const setHijackActive = (active: boolean) => {
       if (hijackActiveRef.current === active) return;
       hijackActiveRef.current = active;
+      
+      // HYDRATION FIX: Robust body scroll lock for non-Lenis devices (native scroll)
+      if (active) {
+        document.body.style.overflow = 'hidden';
+        document.body.style.touchAction = 'none';
+      } else {
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+      }
+
       window.dispatchEvent(new CustomEvent('horizontal-gallery-hijack', { detail: { active } }));
     };
 
@@ -264,11 +277,21 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
     });
     resizeObserver.observe(container);
 
+    // HYDRATION FIX: Extra safety for production builds - re-measure on load and after a delay
+    const handleLoad = () => {
+      measure();
+      init();
+    };
+    window.addEventListener('load', handleLoad);
+    const safetyTimer = setTimeout(measure, 1500);
+
     return () => {
       cancelled = true;
       cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
       io.disconnect();
+      window.removeEventListener('load', handleLoad);
+      clearTimeout(safetyTimer);
       
       // HYDRATION FIX: Step 7 - Cleanup
       window.removeEventListener('wheel', onWheel, { capture: true });
@@ -277,6 +300,11 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
       window.removeEventListener('scroll', onWindowScroll);
       window.removeEventListener('resize', measure);
       container.dataset.scrollInit = 'false';
+      
+      // Ensure scroll is unlocked on unmount
+      document.body.style.overflow = '';
+      document.body.style.touchAction = '';
+      setHijackActive(false);
     };
   }, [prefersReduced, images]);
 
