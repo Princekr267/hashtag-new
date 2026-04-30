@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, Suspense, lazy } from 'react' // HYDRATION FIX
 import { motion, Variants } from 'framer-motion'
 import { ChevronDown, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -7,7 +7,10 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import MagneticButton from '../components/ui/MagneticButton'
 import CosmosHero from '../components/visuals/CosmosHero'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
-import HorizontalGallery from '../components/ui/HorizontalGallery'
+import HorizontalScrollSkeleton from '../components/ui/HorizontalScrollSkeleton' // HYDRATION FIX
+
+// HYDRATION FIX: Convert to dynamic import with SSR disabled (lazy loading in Vite)
+const HorizontalGallery = lazy(() => import('../components/ui/HorizontalGallery'))
 import { STATS, MARQUEE_EVENTS } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -539,18 +542,21 @@ export default function Home(): JSX.Element {
         </div>
       </section>
 
-      <HorizontalGallery 
-        label="Event Moments"
-        images={[
-          { src: '/images/Event/img1.png', alt: 'Event Moment 1' },
-          { src: '/images/Event/img2.png', alt: 'Event Moment 2' },
-          { src: '/images/Event/img3.png', alt: 'Event Moment 3' },
-          { src: '/images/Event/img4.png', alt: 'Event Moment 4' },
-          { src: '/images/Event/img5.png', alt: 'Event Moment 5' },
-          { src: '/images/Event/img6.png', alt: 'Event Moment 6' },
-          { src: '/images/Event/img7.png', alt: 'Event Moment 7' },
-        ]}
-      />
+      {/* HYDRATION FIX: Wrap in Suspense to handle lazy loading and prevent layout shift */}
+      <Suspense fallback={<HorizontalScrollSkeleton />}>
+        <HorizontalGallery 
+          label="Event Moments"
+          images={[
+            { src: '/images/Event/img1.png', alt: 'Event Moment 1' },
+            { src: '/images/Event/img2.png', alt: 'Event Moment 2' },
+            { src: '/images/Event/img3.png', alt: 'Event Moment 3' },
+            { src: '/images/Event/img4.png', alt: 'Event Moment 4' },
+            { src: '/images/Event/img5.png', alt: 'Event Moment 5' },
+            { src: '/images/Event/img6.png', alt: 'Event Moment 6' },
+            { src: '/images/Event/img7.png', alt: 'Event Moment 7' },
+          ]}
+        />
+      </Suspense>
 
     </div>
   )
