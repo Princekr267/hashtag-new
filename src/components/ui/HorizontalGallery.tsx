@@ -182,17 +182,23 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
     };
 
     const onWindowScroll = () => {
+      if (containerRef.current) {
+        lastContainerTopRef.current = containerRef.current.getBoundingClientRect().top;
+      }
       if (!hijackLockedRef.current && hijackActiveRef.current) {
         setHijackActive(false);
       }
     };
 
-    // HYDRATION FIX: Step 5 - Attach scroll behavior to container with double-init protection
+    // HYDRATION FIX: Step 5 - Attach scroll behavior with double-init protection
     const attachScrollBehavior = (target: HTMLElement) => {
       if (target.dataset.scrollInit === 'true') return;
       target.dataset.scrollInit = 'true';
 
-      target.addEventListener('wheel', onWheel, { passive: false });
+      lastContainerTopRef.current = target.getBoundingClientRect().top;
+
+      // HYDRATION FIX: Use window capture phase to intercept wheel before Lenis/global scrollers
+      window.addEventListener('wheel', onWheel, { passive: false, capture: true });
       target.addEventListener('touchstart', onTouchStart, { passive: true });
       target.addEventListener('touchmove', onTouchMove, { passive: false });
       window.addEventListener('scroll', onWindowScroll, { passive: true });
@@ -202,10 +208,9 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
       initialized = true;
     };
 
-    // HYDRATION FIX: Step 2, 3 - Readiness loop with image waiting
-    const init = async () => {
-      await waitForImages(container);
-      if (cancelled) return;
+    // HYDRATION FIX: Step 2, 3 - Non-blocking readiness loop
+    const init = () => {
+      if (cancelled || initialized) return;
 
       let attempts = 0;
       const MAX_ATTEMPTS = 60;
@@ -221,8 +226,8 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
 
         rafId = requestAnimationFrame(() => {
           const track = trackRef.current;
-          // HYDRATION FIX: Container must have real dimensions
-          if (track && track.scrollWidth > track.clientWidth + 10) {
+          // Check if ready (has content width)
+          if (track && track.scrollWidth > 50) { 
             attachScrollBehavior(container);
           } else {
             tryInit();
@@ -230,21 +235,30 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
         });
       };
 
-      setTimeout(tryInit, 120); // Extra buffer for framer motion/hydration
+      tryInit();
+      
+      // Still wait for images in background to re-measure for accuracy
+      waitForImages(container).then(() => {
+        if (!cancelled) measure();
+      });
     };
 
-    init();
+    // HYDRATION FIX: IntersectionObserver to trigger init as soon as section is near
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        init();
+        io.disconnect();
+      }
+    }, { rootMargin: '100% 0px' }); // Load when 1 viewport away
+    io.observe(container);
 
     // HYDRATION FIX: Step 4 - ResizeObserver as final safety net
     const resizeObserver = new ResizeObserver((entries) => {
       for (const entry of entries) {
         if (entry.contentRect.width > 0 && !initialized) {
-          requestAnimationFrame(() => {
-            const track = trackRef.current;
-            if (track && track.scrollWidth > track.clientWidth + 10) {
-              attachScrollBehavior(container);
-            }
-          });
+          init();
+        } else if (initialized) {
+          measure();
         }
       }
     });
@@ -254,9 +268,10 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
       cancelled = true;
       cancelAnimationFrame(rafId);
       resizeObserver.disconnect();
+      io.disconnect();
       
       // HYDRATION FIX: Step 7 - Cleanup
-      container.removeEventListener('wheel', onWheel);
+      window.removeEventListener('wheel', onWheel, { capture: true });
       container.removeEventListener('touchstart', onTouchStart);
       container.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('scroll', onWindowScroll);
