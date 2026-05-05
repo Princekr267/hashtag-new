@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { ArrowDown } from 'lucide-react';
 import ParticleField from './ParticleField';
+import ConstellationBackground from '../visuals/ConstellationBackground';
 import { animateSplitText, isReducedMotion } from '../../utils/animations';
 import { motion } from 'framer-motion';
 
@@ -37,7 +38,14 @@ const Hero: React.FC = () => {
     }
   }, [heroData]);
 
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [isMobile, setIsMobile] = React.useState(typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const particleCount = isMobile ? 600 : 1500;
 
   return (
@@ -49,14 +57,18 @@ const Hero: React.FC = () => {
       <div className="absolute inset-0 z-0" style={{ background: 'var(--color-bg)' }}>
         {!isReducedMotion() && (
           <React.Suspense fallback={<div className="absolute inset-0" style={{ background: 'var(--color-bg)' }} />}>
-            <Canvas
-              camera={{ position: [0, 0, 15], fov: 60 }}
-              dpr={[1, 1.5]} // Performance: cap at 1.5, not 2
-              className="pointer-events-none"
-              gl={{ antialias: false, alpha: true }}
-            >
-              <ParticleField count={particleCount} />
-            </Canvas>
+            {isMobile ? (
+              <ConstellationBackground />
+            ) : (
+              <Canvas
+                camera={{ position: [0, 0, 15], fov: 60 }}
+                dpr={[1, 1.5]} // Performance: cap at 1.5, not 2
+                className="pointer-events-none"
+                gl={{ antialias: false, alpha: true }}
+              >
+                <ParticleField count={particleCount} />
+              </Canvas>
+            )}
           </React.Suspense>
         )}
         {/* Radial vignette to blend edges */}
@@ -85,17 +97,17 @@ const Hero: React.FC = () => {
             transition={{ duration: 0.6 }}
             className="mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full border"
             style={{
-              background: 'rgba(200, 255, 71, 0.07)',
-              borderColor: 'rgba(200, 255, 71, 0.2)',
+              background: 'rgba(96, 165, 250, 0.07)',
+              borderColor: 'rgba(96, 165, 250, 0.2)',
               fontFamily: 'DM Mono, monospace',
               fontSize: '0.72rem',
               letterSpacing: '0.12em',
-              color: '#C8FF47',
+              color: 'var(--primary)',
             }}
           >
             <span
               className="w-1.5 h-1.5 rounded-full animate-pulse"
-              style={{ background: '#C8FF47' }}
+              style={{ background: 'var(--primary)' }}
             />
             {society.name} — {society.tagline}
           </motion.div>
@@ -143,17 +155,17 @@ const Hero: React.FC = () => {
             rel="noopener noreferrer"
             className="group inline-flex items-center gap-2 px-7 py-3.5 font-semibold rounded-full transition-all duration-300"
             style={{
-              background: '#C8FF47',
+              background: 'var(--primary)',
               color: '#080808',
               fontFamily: 'DM Sans, sans-serif',
-              boxShadow: '0 0 0 0 rgba(200,255,71,0)',
+              boxShadow: '0 0 0 0 rgba(96,165,250,0)',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(200,255,71,0.3)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 0 40px rgba(96,165,250,0.3)';
               (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 0 rgba(200,255,71,0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 0 0 0 rgba(96,165,250,0)';
               (e.currentTarget as HTMLElement).style.transform = '';
             }}
           >
@@ -172,8 +184,8 @@ const Hero: React.FC = () => {
               fontFamily: 'DM Sans, sans-serif',
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(200,255,71,0.3)';
-              (e.currentTarget as HTMLElement).style.background = 'rgba(200,255,71,0.05)';
+              (e.currentTarget as HTMLElement).style.borderColor = 'rgba(96,165,250,0.3)';
+              (e.currentTarget as HTMLElement).style.background = 'rgba(96,165,250,0.05)';
             }}
             onMouseLeave={(e) => {
               (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.12)';
@@ -207,7 +219,7 @@ const Hero: React.FC = () => {
         <div className="w-px relative overflow-hidden" style={{ height: '40px', background: 'rgba(255,255,255,0.15)' }}>
           <motion.div
             className="absolute top-0 w-full"
-            style={{ background: '#C8FF47' }}
+            style={{ background: 'var(--primary)' }}
             animate={{ y: ['-100%', '200%'] }}
             transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
           >

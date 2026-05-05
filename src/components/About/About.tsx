@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useData } from '../../hooks/useData';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { TorusKnot, Float, MeshDistortMaterial } from '@react-three/drei';
@@ -56,6 +56,13 @@ const ComplexKnot = () => {
 const About = () => {
   const { data } = useData();
   const { ref, isInView } = useInView({ threshold: 0.1, triggerOnce: true });
+  const [isMobile, setIsMobile] = useState(typeof window !== 'undefined' && window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (!data?.about) return null;
   const { description, pillars } = data.about;
@@ -112,16 +119,20 @@ const About = () => {
             </motion.div>
           </div>
 
-          <div className="w-full lg:w-1/2 h-[500px] relative">
-            <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-              <ambientLight intensity={1.5} />
-              <directionalLight position={[10, 10, 5]} intensity={2} />
-              <pointLight position={[-10, -10, -5]} color="#9d4edd" intensity={5} />
-              <ComplexKnot />
-              <EffectComposer>
-                <Bloom luminanceThreshold={0.5} mipmapBlur intensity={2.0} />
-              </EffectComposer>
-            </Canvas>
+          <div className="w-full lg:w-1/2 h-[500px] relative flex items-center justify-center">
+            {isMobile ? (
+              <div className="w-64 h-64 rounded-full bg-gradient-to-tr from-primary to-secondary blur-3xl opacity-50 animate-pulse" />
+            ) : (
+              <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
+                <ambientLight intensity={1.5} />
+                <directionalLight position={[10, 10, 5]} intensity={2} />
+                <pointLight position={[-10, -10, -5]} color="#9d4edd" intensity={5} />
+                <ComplexKnot />
+                <EffectComposer>
+                  <Bloom luminanceThreshold={0.5} mipmapBlur intensity={2.0} />
+                </EffectComposer>
+              </Canvas>
+            )}
           </div>
           
         </div>

@@ -224,7 +224,7 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           HERO SECTION
           ════════════════════════════════════════════════════ */}
-      <section className="hero-section min-h-screen flex items-center px-6 pt-24 pb-12 relative overflow-hidden" style={{ backgroundColor: 'var(--bg-base)' }}>
+      <section className="hero-section min-h-screen flex px-6 pt-24 pb-12 relative overflow-hidden" style={{ backgroundColor: 'var(--bg-base)' }}>
 
         {/* Removed AmbientOrbs to fix heavy lag */}
         
@@ -250,44 +250,45 @@ export default function Home(): JSX.Element {
           }} 
         />
 
-        <div className="hero-content max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10">
+        <div className="hero-content max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10 flex-1">
 
+          {/* Eyebrow — pinned near the top of the hero, right below navbar */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0, ease: 'easeOut' }}
+            style={{ animationFillMode: 'both' }}
+            className="pt-2"
+          >
+            <div className="flex items-center gap-3">
+              <span
+                className="font-label font-bold tracking-[0.4em] uppercase"
+                style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--tertiary)',
+                  letterSpacing: '0.15em',
+                }}
+              >
+                JIMS Greater Noida
+              </span>
+              <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '10px' }}>✦</span>
+              <span
+                className="font-label font-bold tracking-[0.4em] uppercase px-3 py-1 rounded-full border"
+                style={{
+                  fontSize: '0.7rem',
+                  color: 'var(--primary)',
+                  borderColor: 'rgba(96,165,250,0.25)',
+                  background: 'rgba(96,165,250,0.07)',
+                  letterSpacing: '0.15em',
+                }}
+              >
+                Tech Society
+              </span>
+            </div>
+          </motion.div>
 
-          <div className="flex flex-col items-center gap-6 max-w-5xl relative z-10">
-            {/* Eyebrow — Change 4A */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0, ease: 'easeOut' }}
-              style={{ animationFillMode: 'both' }}
-            >
-              <div className="flex items-center gap-3">
-                <span
-                  className="font-label font-bold tracking-[0.4em] uppercase"
-                  style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--tertiary)',
-                    letterSpacing: '0.15em',
-                  }}
-                >
-                  JIMS Greater Noida
-                </span>
-                <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '10px' }}>✦</span>
-                <span
-                  className="font-label font-bold tracking-[0.4em] uppercase px-3 py-1 rounded-full border"
-                  style={{
-                    fontSize: '0.7rem',
-                    color: 'var(--primary)',
-                    borderColor: 'rgba(96,165,250,0.25)',
-                    background: 'rgba(96,165,250,0.07)',
-                    letterSpacing: '0.15em',
-                  }}
-                >
-                  Tech Society
-                </span>
-              </div>
-            </motion.div>
-
+          {/* Centered hero content block */}
+          <div className="flex flex-col items-center gap-6 max-w-5xl relative z-10 my-auto">
             {/* Main headline with modern blur reveal */}
             <BlurHeading />
 
@@ -335,6 +336,9 @@ export default function Home(): JSX.Element {
               </Link>
             </motion.div>
           </div>
+
+          {/* Spacer to balance the mb-auto above and keep content centered */}
+          <div className="mb-auto" />
         </div>
 
         <motion.div

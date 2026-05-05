@@ -23,7 +23,7 @@ export const animateSplitText = (textRef: React.RefObject<HTMLElement | null>, o
 
   const container = textRef.current;
   const originalText = container.innerText;
-  
+
   container.innerHTML = originalText
     .split('')
     .map((char: string) => {
@@ -40,6 +40,6 @@ export const animateSplitText = (textRef: React.RefObject<HTMLElement | null>, o
     duration: options.duration || 0.8,
     ease: options.ease || 'power3.out',
     stagger: options.stagger || 0.03,
-    delay: options.delay || 0
+    delay: options.delay || 0,
   });
 };
