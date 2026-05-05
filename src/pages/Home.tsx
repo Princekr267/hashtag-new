@@ -43,6 +43,26 @@ const FEATURES = [
   },
 ]
 
+const SPONSORS = [
+  { name: "Microsoft Azure", image: "/Photos/Sponsors/Microsoft Azure.png" },
+  { name: "AZD", image: "/Photos/Sponsors/AZD.png" },
+  { name: "Reskilll", image: "/Photos/Sponsors/Reskill.png" },
+  { name: "Softmart", image: "/Photos/Sponsors/Softmart solutions_title sponser 1.png" },
+  { name: "Physics Wallah", image: "/Photos/Sponsors/Physics wallah.png" },
+  { name: "Finlatics", image: "/Photos/Sponsors/Finlatics.png" },
+  { name: "Click a Diet", image: "/Photos/Sponsors/clickadiet.png" },
+  { name: "Genesis", image: "/Photos/Sponsors/genesis.png" },
+  { name: "Interview Buddy", image: "/Photos/Sponsors/interview buddy.png" },
+  { name: "LinkedOut", image: "/Photos/Sponsors/LinkedOut_Bg_removed.png" },
+  { name: "Julep AI", image: "/Photos/Sponsors/julep.png" },
+  { name: "Events Info", image: "/Photos/Sponsors/Events Info.png" },
+  { name: "Give My Certificates", image: "/Photos/Sponsors/Givemycert.png" },
+  { name: "Advertising Point Line", image: "/Photos/Sponsors/adv point line.png" },
+  { name: "Meraj's Creatives", image: "/Photos/Sponsors/meraj's creatives.png" },
+  { name: "Navras Jemtec", image: "/Photos/Sponsors/NAVRAS LOGO (Original).png" },
+  { name: ".xyz Domain Registry", image: "/Photos/Sponsors/.xyz.png" }
+]
+
 // ── Animated stat counter ─────────────────────────────────────
 function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   const ref       = useRef<HTMLSpanElement>(null)
@@ -470,6 +490,141 @@ export default function Home(): JSX.Element {
           </div>
         </div>
       </section>
+
+      {/* ════════════════════════════════════════════════════════
+    HASHTAG SOCIETY
+═══════════════════════════════════════════════════════ */}
+<section className="section px-6">
+  <div className="max-w-6xl mx-auto">
+    <div className="surface-card p-8 md:p-14 rounded-3xl border border-primary/20">
+      <h2
+        data-reveal
+        className="text-4xl md:text-6xl font-display font-bold mb-8"
+      >
+        The <span className="text-gradient">HASHTAG Society</span>
+      </h2>
+
+      <p
+        data-reveal
+        className="text-text-muted text-lg leading-relaxed font-body"
+      >
+        Founded in the year 2019, HashTag aims to nurture knowledge,
+        opportunities, experience and collaborations within students.
+        With a vision rooted in enriching the student coding culture,
+        Hashtag pulses with ideas, energy and moments that unite learners.
+
+        <br /><br />
+
+        Hashtag is not just a technical society, it's a platform that welcomes
+        students across all levels of experience, fostering a culture of peer
+        learning and inclusive growth. The society welcomes participants from
+        all technical domains eager to build, learn and grow.
+
+        <br /><br />
+
+        The society has been actively organizing events, hackathons, and tech
+        competitions felicitating its participants and the winners for their
+        efforts and creativity.
+
+        <br /><br />
+
+        With every passing year, Hashtag continues to grow — inspiring
+        creativity, building a community and shaping the future of student
+        innovation.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ════════════════════════════════════════════════════════
+    OUR RELATIONS WITH JIMS
+═══════════════════════════════════════════════════════ */}
+<section className="section px-6">
+  <div className="max-w-6xl mx-auto">
+    <div className="surface-card p-8 md:p-14 rounded-3xl border border-secondary/20">
+      <h2
+        data-reveal
+        className="text-4xl md:text-6xl font-display font-bold mb-8"
+      >
+        Our Relations with <span className="text-gradient">JIMS</span>
+      </h2>
+
+      <p
+        data-reveal
+        className="text-text-muted text-lg leading-relaxed font-body"
+      >
+        HASHTAG is the tech pulse of JIMS Greater Noida — not just a club, but
+        a movement built into the core of the campus.
+
+        <br /><br />
+
+        Born in classrooms and raised in computer labs, HASHTAG was founded
+        with the vision to turn ideas into innovation.
+
+        <br /><br />
+
+        With full support from JIMS — mentorship, resources, and the freedom
+        to create — we’ve grown into a student-powered force of creativity and
+        code.
+
+        <br /><br />
+
+        Every workshop, every hackathon, every project we lead is a reflection
+        of JIMS’ trust in its students and belief in experiential learning.
+
+        <br /><br />
+
+        Together, we don’t just participate in tech — we shape it. JIMS
+        provides the launchpad, HASHTAG brings the momentum.
+
+        <br /><br />
+
+        It’s a collaboration where passion meets purpose, and a campus becomes
+        a community of creators. This is more than partnership — it’s a shared
+        mission to lead the future of tech.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* ════════════════════════════════════════════════════════
+    OUR SPONSORS
+═══════════════════════════════════════════════════════ */}
+<section className="section px-6">
+  <div className="max-w-7xl mx-auto">
+    <div className="mb-16 text-center">
+      <h2
+        data-reveal
+        className="text-4xl md:text-6xl font-display font-bold"
+      >
+        Our <span className="text-gradient">Sponsors</span>
+      </h2>
+
+      <p
+        data-reveal
+        className="text-text-muted mt-4 max-w-2xl mx-auto font-body text-base"
+      >
+        The organizations and communities that supported Hashtag in building
+        opportunities for students and fostering innovation.
+      </p>
+    </div>
+
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {SPONSORS.map((sponsor) => (
+        <div
+          key={sponsor.name}
+          className="surface-card p-6 rounded-2xl border border-outline-var/30 flex items-center justify-center hover:border-primary/40 transition-all duration-300"
+        >
+          <img
+            src={sponsor.image}
+            alt={sponsor.name}
+            className="max-h-20 w-auto object-contain mx-auto"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ════════════════════════════════════════════════════════
           SCROLLING MARQUEE
