@@ -4,7 +4,7 @@ interface CursorState {
   type: 'default' | 'hover' | 'text'
 }
 
-export default function CustomCursor(): JSX.Element {
+export default function CustomCursor(): JSX.Element | null {
   const outerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const [cursorState, setCursorState] = useState<CursorState>({ type: 'default' })

@@ -7,9 +7,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 // ── Types ───────────────────────────────────────────────────
 interface TeamMember {
+  id?: string;
   name: string;
   title: string;
   avatarUrl: string;
+  department?: string;
   social: { github?: string; linkedin?: string; instagram?: string };
 }
 
@@ -101,7 +103,8 @@ const Team: React.FC = () => {
 
   if (!teamData) return null;
 
-  const members = getDeptMembers(teamData, activeTab);
+  const deptString = DEPARTMENTS.find(d => d.key === activeTab)?.label || 'Member';
+  const members = getDeptMembers(teamData, activeTab).map(m => ({ ...m, department: deptString }));
 
   return (
     <section ref={sectionRef} id="team" className="relative py-32 overflow-hidden" style={{ background: 'var(--color-bg)' }}>
@@ -184,7 +187,7 @@ const Team: React.FC = () => {
           }}
         >
           {members.map((member, idx) => (
-            <TeamCard3D key={`${member.name}-${idx}`} member={member} index={idx} />
+            <TeamCard3D key={`${member.name}-${idx}`} member={member} />
           ))}
         </div>
 

@@ -1,5 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { TeamMember } from '../../constants/data'
+
+export interface TeamMember {
+  id?: string
+  name: string
+  title: string
+  avatarUrl: string
+  department?: string
+  social?: { github?: string; linkedin?: string; instagram?: string }
+  isLeader?: boolean
+}
 
 /**
  * TeamCard3D — Mobile-first 3D Flip Card
@@ -80,7 +89,7 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
 
   return (
     <div
-      className="h-[220px] min-[400px]:h-[250px] sm:h-[320px]"
+      className="group h-[220px] min-[400px]:h-[250px] sm:h-[320px]"
       style={{ perspective: '900px', width: '100%' }}
       onClick={handleTap}
       onMouseEnter={handleMouseEnter}
@@ -88,21 +97,24 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
     >
       <div
         ref={containerRef}
+        className="card-shadow"
         onMouseMove={handleMouseMove}
         style={{
           position: 'relative', width: '100%', height: '100%',
           transformStyle: 'preserve-3d', willChange: 'transform',
           transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
-        }}
+          '--glow-color': `${accentColor}80`,
+        } as React.CSSProperties}
       >
         {/* ── FRONT FACE ───────────────────────────────────────────── */}
         <div
+          className="animated-gradient group-hover-gradient-move glare-effect"
           style={{
             position: 'absolute', inset: 0,
             backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
             transform: 'rotateY(0deg)',
             borderRadius: '20px', overflow: 'hidden',
-            background: '#0a0a0a',
+            background: `linear-gradient(135deg, ${accentColor}30 0%, #0a0a0a 45%, #050505 55%, ${accentColor}30 100%)`,
             border: `1px solid rgba(255,255,255,0.07)`,
             boxShadow: `0 8px 32px rgba(0,0,0,0.45)`,
             display: 'flex', flexDirection: 'column',
@@ -184,12 +196,13 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
 
         {/* ── BACK FACE ────────────────────────────────────────────── */}
         <div
+          className="animated-gradient group-hover-gradient-move glare-effect"
           style={{
             position: 'absolute', inset: 0,
             backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
             borderRadius: '20px', overflow: 'hidden',
             transform: 'rotateY(180deg)',
-            background: `linear-gradient(145deg, #060d1a 0%, #0a1225 100%)`,
+            background: `linear-gradient(135deg, ${accentColor}40 0%, #060d1a 45%, #02060d 55%, ${accentColor}40 100%)`,
             border: `1px solid ${accentColor}35`,
             boxShadow: `0 0 60px ${accentColor}15, inset 0 0 40px ${accentColor}06`,
             display: 'flex', flexDirection: 'column',
