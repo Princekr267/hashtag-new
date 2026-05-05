@@ -65,10 +65,22 @@ function getPolaroidRotation(idx: number): number {
   return ((idx * 137.5) % 7) - 3
 }
 
-// ── Event card — past events get polaroid treatment ───────────
+// ── Event card — shiny matte gradient finish ───────────────────
 function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
-  const isPast      = event.status === 'past'
-  const rotation    = getPolaroidRotation(idx)
+  const isPast   = event.status === 'past'
+  const rotation = getPolaroidRotation(idx)
+  const cardRef  = React.useRef<HTMLAnchorElement>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return
+    const el = cardRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = ((e.clientX - rect.left) / rect.width)  * 100
+    const y = ((e.clientY - rect.top)  / rect.height) * 100
+    el.style.setProperty('--mx', `${x}%`)
+    el.style.setProperty('--my', `${y}%`)
+  }
 
   return (
     <motion.div
@@ -81,35 +93,55 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
       style={isPast ? { transform: `rotate(${rotation}deg)`, zIndex: 1 } : undefined}
     >
       <Link
-        className={`h-full block ${isPast ? 'cursor-pointer' : ''}`}
+        ref={cardRef}
+        className="h-full block"
         to={`/events/${event.id}`}
-        style={{
-          background: 'rgba(10,14,24,0.8)',
-          border: `1px solid ${event.gradientFrom}20`,
-          borderRadius: '16px',
-          overflow: 'hidden',
-          transition: 'all 0.3s ease',
-        }}
+        onMouseMove={handleMouseMove}
         onMouseEnter={e => {
-          if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return;
-          e.currentTarget.style.boxShadow = `0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px ${event.gradientFrom}30`
-          e.currentTarget.style.transform = 'translateY(-3px)'
-          e.currentTarget.style.background = `radial-gradient(circle at 50% 100%, ${event.gradientFrom}15, rgba(10,14,24,0.8) 70%)`
+          if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return
+          const el = e.currentTarget as HTMLElement
+          el.style.boxShadow = `0 0 60px 8px ${event.gradientFrom}35, 0 20px 50px rgba(0,0,0,0.55), 0 0 0 1px ${event.gradientFrom}30`
+          el.style.transform = 'translateY(-4px) scale(1.012)'
         }}
         onMouseLeave={e => {
-          if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return;
-          e.currentTarget.style.boxShadow = 'none'
-          e.currentTarget.style.transform = 'translateY(0)'
-          e.currentTarget.style.background = 'rgba(10,14,24,0.8)'
+          if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return
+          const el = e.currentTarget as HTMLElement
+          el.style.boxShadow = `0 4px 24px rgba(0,0,0,0.35), 0 0 0 1px ${event.gradientFrom}15`
+          el.style.transform = 'translateY(0) scale(1)'
+        }}
+        style={{
+          background: `linear-gradient(145deg, ${event.gradientFrom}18 0%, #07101f 45%, #030810 55%, ${event.gradientTo}18 100%)`,
+          border: `1px solid ${event.gradientFrom}25`,
+          borderRadius: '18px',
+          overflow: 'hidden',
+          position: 'relative',
+          transition: 'box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.2, 0, 0, 1)',
+          boxShadow: `0 4px 24px rgba(0,0,0,0.35), 0 0 0 1px ${event.gradientFrom}15`,
         }}
       >
-        {/* Gradient top accent strip */}
+        {/* Mouse-tracking glare spotlight */}
         <div
-          className="h-1 w-full"
+          aria-hidden
+          style={{
+            position: 'absolute', inset: 0, borderRadius: '18px',
+            background: `radial-gradient(circle at var(--mx, 50%) var(--my, 0%), ${event.gradientFrom}20 0%, transparent 55%)`,
+            pointerEvents: 'none', zIndex: 1,
+          }}
+        />
+        {/* Top sheen line */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+          background: `linear-gradient(90deg, transparent, ${event.gradientFrom}70, ${event.gradientTo}70, transparent)`,
+          zIndex: 2,
+        }} />
+
+        {/* Gradient accent bar */}
+        <div
+          className="h-[3px] w-full relative z-[3]"
           style={{ background: `linear-gradient(90deg, ${event.gradientFrom}, ${event.gradientTo})` }}
         />
 
-        <div className="p-5 md:p-7 flex flex-col h-full gap-4">
+        <div className="p-5 md:p-7 flex flex-col h-full gap-4 relative z-[3]">
           {/* Header row */}
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -163,6 +195,7 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
     </motion.div>
   )
 }
+
 
 // ── Featured upcoming event card with animated gradient border ─
 function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
