@@ -179,7 +179,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
         ) : (
           <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative', zIndex: 2 }}>
             {/* Name + Email row */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <FormField
                 label="Name"
                 placeholder="Your name"
@@ -401,12 +401,12 @@ export default function Navbar(): JSX.Element {
                 style={{ height: scrolled ? '36px' : '40px', transition: 'height 0.4s ease' }}
               />
             </NavLink>
-            <div className="h-6 w-px hidden sm:block" style={{ background: 'rgba(143,245,255,0.2)' }} />
+            <div className="h-6 w-px hidden max-[749px]:block lg:block" style={{ background: 'rgba(143,245,255,0.2)' }} />
             <a 
               href="https://jimsgn.org/" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="hidden sm:block group"
+              className="hidden max-[749px]:block lg:block group"
               aria-label="JIMS Greater Noida"
             >
               <img
@@ -418,7 +418,7 @@ export default function Navbar(): JSX.Element {
           </div>
 
           {/* ── Center: Desktop nav links ── */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden min-[750px]:flex items-center gap-1">
             {NAV_ITEMS.map(({ label, path }, idx) => (
               <motion.div
                 key={path}
@@ -456,21 +456,38 @@ export default function Navbar(): JSX.Element {
             ))}
           </div>
 
-          {/* ── Right: Contact Us button (opens modal) ── */}
-          <div className="hidden md:flex items-center gap-3">
-            <button
-              onClick={() => setContactOpen(true)}
-              className="btn-ghost flex items-center gap-[8px] text-xs"
-              style={{ padding: '8px 20px' }}
+          {/* ── Right: Contact Us button & JIMS Swap ── */}
+          <div className="hidden min-[750px]:flex items-center gap-3">
+            {/* JIMS logo shows here on tablet (750px - 1024px) */}
+            <a 
+              href="https://jimsgn.org/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hidden min-[750px]:block lg:hidden group"
+              aria-label="JIMS Greater Noida"
             >
-              <Mail size={14} className="flex-shrink-0" />
-              <span className="leading-none">Contact Us</span>
-            </button>
+              <img
+                src="/jims-logo.png"
+                alt="JIMS Greater Noida"
+                className="h-7 w-auto object-contain opacity-70 transition-opacity duration-300 group-hover:opacity-100"
+              />
+            </a>
+            {/* Contact Us shows on desktop (>1024px) */}
+            <div className="hidden lg:block">
+              <button
+                onClick={() => setContactOpen(true)}
+                className="btn-ghost flex items-center gap-[8px] text-xs"
+                style={{ padding: '8px 20px' }}
+              >
+                <Mail size={14} className="flex-shrink-0" />
+                <span className="leading-none">Contact Us</span>
+              </button>
+            </div>
           </div>
 
           {/* ── Mobile hamburger ── */}
           <button
-            className="md:hidden p-2 text-text-muted hover:text-primary transition-colors"
+            className="max-[749px]:block min-[750px]:hidden p-2 text-text-muted hover:text-primary transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -530,17 +547,6 @@ export default function Navbar(): JSX.Element {
                 </button>
               </motion.div>
 
-              {/* Logos in mobile menu */}
-              <motion.div
-                className="mt-auto pb-8 flex items-center gap-4 opacity-40"
-                variants={mobileLinkVariants}
-                initial="hidden"
-                animate="visible"
-                custom={NAV_ITEMS.length + 1}
-              >
-                <img src="/hashtag-logo.png" alt="" className="h-8 w-auto" />
-                <img src="/jims-logo.png"    alt="" className="h-7 w-auto" />
-              </motion.div>
             </div>
           </motion.div>
         )}

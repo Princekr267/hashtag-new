@@ -91,11 +91,13 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
           transition: 'all 0.3s ease',
         }}
         onMouseEnter={e => {
+          if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return;
           e.currentTarget.style.boxShadow = `0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px ${event.gradientFrom}30`
           e.currentTarget.style.transform = 'translateY(-3px)'
           e.currentTarget.style.background = `radial-gradient(circle at 50% 100%, ${event.gradientFrom}15, rgba(10,14,24,0.8) 70%)`
         }}
         onMouseLeave={e => {
+          if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return;
           e.currentTarget.style.boxShadow = 'none'
           e.currentTarget.style.transform = 'translateY(0)'
           e.currentTarget.style.background = 'rgba(10,14,24,0.8)'

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import TeamCard3D from './TeamCard3D';
+import TeamCard3D from '../ui/TeamCard3D';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -195,7 +195,7 @@ const Team: React.FC = () => {
               grid-template-columns: repeat(2, minmax(200px, 220px)) !important;
             }
           }
-          @media (min-width: 768px) {
+          @media (min-width: 750px) {
             .grid {
               grid-template-columns: repeat(3, minmax(200px, 240px)) !important;
             }

@@ -8,6 +8,7 @@ export default function CustomCursor(): JSX.Element {
   const outerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const [cursorState, setCursorState] = useState<CursorState>({ type: 'default' })
+  const [isTouch, setIsTouch] = useState(false)
 
   const mouseX = useRef(0)
   const mouseY = useRef(0)
@@ -16,6 +17,11 @@ export default function CustomCursor(): JSX.Element {
   const rafId = useRef<number>(0)
 
   useEffect(() => {
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
+    setIsTouch(isTouchDevice)
+
+    if (isTouchDevice) return
+
     const onMouseMove = (e: MouseEvent) => {
       mouseX.current = e.clientX
       mouseY.current = e.clientY
@@ -74,6 +80,8 @@ export default function CustomCursor(): JSX.Element {
 
   const isHover = cursorState.type === 'hover'
   const isText = cursorState.type === 'text'
+
+  if (isTouch) return null
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { TeamMember } from '../../constants/data'
 
 /**
@@ -18,16 +18,19 @@ interface TeamCard3DProps {
   accentColor?: string
 }
 
-// True if the primary pointer is touch/coarse (mobile / tablet)
-const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
-
 const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa' }) => {
   const containerRef = useRef<HTMLDivElement>(null)
+  const isFlippedRef = useRef(false)
   const [isFlipped, setIsFlipped] = useState(false)
+  const [isTouch, setIsTouch] = useState(false)
+
+  useEffect(() => {
+    setIsTouch(typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches)
+  }, [])
 
   /* ── Desktop: hover → flip + tilt ─────────────────────────────── */
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (IS_TOUCH) return
+    if (isTouch || isFlippedRef.current) return
     const el = containerRef.current
     if (!el) return
     const rect = el.getBoundingClientRect()
@@ -39,8 +42,9 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
   }
 
   const handleMouseEnter = () => {
-    if (IS_TOUCH) return
+    if (isTouch) return
     setIsFlipped(true)
+    isFlippedRef.current = true
     const el = containerRef.current
     if (el) {
       el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -48,9 +52,12 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
     }
   }
 
-  const handleMouseLeave = () => {
-    if (IS_TOUCH) return
+  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isTouch) return
+    const related = e.relatedTarget as Node | null
+    if (e.currentTarget.contains(related)) return
     setIsFlipped(false)
+    isFlippedRef.current = false
     const el = containerRef.current
     if (el) {
       el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -60,9 +67,10 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
 
   /* ── Mobile: tap → toggle flip ─────────────────────────────────── */
   const handleTap = () => {
-    if (!IS_TOUCH) return
+    if (!isTouch) return
     const next = !isFlipped
     setIsFlipped(next)
+    isFlippedRef.current = next
     const el = containerRef.current
     if (el) {
       el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -72,7 +80,8 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
 
   return (
     <div
-      style={{ perspective: '900px', width: '100%', aspectRatio: '3 / 4' }}
+      className="h-[220px] min-[400px]:h-[250px] sm:h-[320px]"
+      style={{ perspective: '900px', width: '100%' }}
       onClick={handleTap}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -136,9 +145,9 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
 
           {/* Info — remaining height */}
           <div style={{
-            flex: '1 1 0', padding: '10px 14px 12px',
+            flex: '1 1 0', padding: '12px 14px 14px',
             display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px',
-            overflow: 'hidden',
+            overflow: 'hidden', minHeight: 0,
           }}>
             {/* Name — allow wrapping, no truncation */}
             <h3 style={{
@@ -158,11 +167,11 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
               {member.department}
             </p>
             {/* Interaction hint — adapts to device */}
-            <p style={{
+            <p className="hidden sm:block" style={{
               fontSize: '8px', color: 'rgba(255,255,255,0.22)', marginTop: '2px',
               letterSpacing: '0.1em', textTransform: 'uppercase',
             }}>
-              {IS_TOUCH ? 'Tap to flip ✦' : 'Hover to flip ✦'}
+              {isTouch ? 'Tap to flip ✦' : 'Hover to flip ✦'}
             </p>
           </div>
 
@@ -185,9 +194,10 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             boxShadow: `0 0 60px ${accentColor}15, inset 0 0 40px ${accentColor}06`,
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
-            padding: '20px 16px',
-            gap: '12px',
+            padding: '16px 12px',
+            gap: 'clamp(6px, 1.5vw, 12px)',
             boxSizing: 'border-box',
+            pointerEvents: 'none',
           }}
         >
           {/* Dot grid */}
@@ -202,13 +212,13 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
           }} />
 
-          {/* Avatar circle — fixed size, never overflows */}
+          {/* Avatar circle — responsive size */}
           <div style={{
-            width: '72px', height: '72px',
+            width: '64px', height: '64px',
             borderRadius: '50%',
             overflow: 'hidden',
             border: `2px solid ${accentColor}55`,
-            boxShadow: `0 0 0 4px ${accentColor}18`,
+            boxShadow: `0 0 0 3px ${accentColor}18`,
             flexShrink: 0,
             position: 'relative', zIndex: 2,
           }}>
@@ -228,16 +238,21 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
           <div style={{
             textAlign: 'center', position: 'relative', zIndex: 2,
             width: '100%', overflow: 'hidden',
+            padding: '0 4px',
           }}>
             <h3 style={{
-              fontWeight: 700, fontSize: 'clamp(0.85rem, 3.5vw, 1rem)', color: 'white',
-              margin: '0 0 4px 0', lineHeight: 1.25,
+              fontWeight: 700, fontSize: 'clamp(0.7rem, 3.2vw, 1rem)', color: 'white',
+              margin: '0 0 3px 0', lineHeight: 1.2,
               wordBreak: 'break-word',
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical' as any,
+              overflow: 'hidden',
             }}>
               {member.name}
             </h3>
             <p style={{
-              fontSize: '9px', fontWeight: 600, letterSpacing: '0.18em',
+              fontSize: 'clamp(7px, 1.8vw, 9px)', fontWeight: 600, letterSpacing: '0.16em',
               textTransform: 'uppercase', color: accentColor, margin: 0,
               overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
             }}>
@@ -247,13 +262,13 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
 
           {/* Divider */}
           <div style={{
-            width: '36px', height: '1px', flexShrink: 0,
+            width: '28px', height: '1px', flexShrink: 0,
             background: `linear-gradient(90deg, transparent, ${accentColor}, transparent)`,
           }} />
 
-          {/* Social links — large touch targets */}
+          {/* Social links — responsive touch targets */}
           <div style={{
-            display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center',
+            display: 'flex', gap: 'clamp(6px, 1.5vw, 10px)', flexWrap: 'wrap', justifyContent: 'center',
             position: 'relative', zIndex: 10, pointerEvents: 'auto',
           }}>
             {member.social?.github && (
@@ -273,11 +288,12 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             )}
           </div>
 
-          {/* Bottom label */}
+          {/* Bottom label — flows in flexbox, not absolute */}
           <p style={{
-            fontSize: '8px', fontWeight: 600, letterSpacing: '0.28em',
+            fontSize: 'clamp(6px, 1.5vw, 8px)', fontWeight: 600, letterSpacing: '0.28em',
             color: 'rgba(255,255,255,0.15)', textTransform: 'uppercase',
-            position: 'absolute', bottom: '12px', margin: 0, zIndex: 2,
+            margin: 0, zIndex: 2, flexShrink: 0,
+            marginTop: 'auto',
           }}>
             HASHTAG OFFICIAL
           </p>
@@ -300,8 +316,8 @@ const BackSocialBtn: React.FC<{
     onClick={e => e.stopPropagation()}
     style={{
       display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-      // Larger size for touch accessibility (44×44 minimum)
-      width: '44px', height: '44px', borderRadius: '50%',
+      // Larger size for touch accessibility — responsive
+      width: 'clamp(36px, 10vw, 44px)', height: 'clamp(36px, 10vw, 44px)', borderRadius: '50%',
       background: `${accent}18`, color: accent,
       border: `1px solid ${accent}40`,
       transition: 'all 0.2s ease',
@@ -310,11 +326,13 @@ const BackSocialBtn: React.FC<{
       touchAction: 'manipulation',
     }}
     onMouseEnter={e => {
+      e.stopPropagation()
       e.currentTarget.style.background = accent
       e.currentTarget.style.color = '#000'
       e.currentTarget.style.transform = 'scale(1.1)'
     }}
     onMouseLeave={e => {
+      e.stopPropagation()
       e.currentTarget.style.background = `${accent}18`
       e.currentTarget.style.color = accent
       e.currentTarget.style.transform = 'scale(1)'

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Mail } from 'lucide-react'
 
 export default function Footer(): JSX.Element {
   const displayRef = useRef<HTMLDivElement>(null)
@@ -111,7 +112,7 @@ export default function Footer(): JSX.Element {
           {/* Contact */}
           <div>
             <h3 className="text-text-primary font-display font-semibold mb-6">Contact</h3>
-            <ul className="flex flex-col gap-3">
+            <ul className="flex flex-col gap-3 mb-6">
               <li className="text-text-muted text-sm flex items-start gap-[8px]">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0 mt-1.5" />
                 <span className="leading-snug">JIMS Engineering Management Technical Campus, 48/4, Knowledge Park III, Greater Noida, Uttar Pradesh 201306</span>
@@ -121,6 +122,16 @@ export default function Footer(): JSX.Element {
                 <a href="mailto:contact@hashtagofficial.in" className="hover:text-primary transition-colors leading-none">contact@hashtagofficial.in</a>
               </li>
             </ul>
+            <div className="lg:hidden">
+              <a 
+                href="mailto:contact@hashtagofficial.in" 
+                className="btn-ghost inline-flex items-center gap-[8px] text-xs"
+                style={{ padding: '8px 20px' }}
+              >
+                <Mail size={14} className="flex-shrink-0" />
+                <span className="leading-none">Contact Us</span>
+              </a>
+            </div>
           </div>
         </div>
 
