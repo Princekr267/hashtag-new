@@ -59,6 +59,22 @@ function MissionVisionCard({
   const cardRef = useRef<HTMLDivElement>(null)
   const glowRef = useRef<HTMLDivElement>(null)
 
+  const [isPressed, setIsPressed] = useState(false)
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([])
+
+  const createRipple = (clientX: number, clientY: number) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = clientX - rect.left
+    const y = clientY - rect.top
+    const id = Date.now()
+    
+    setRipples(prev => [...prev, { id, x, y }])
+    setTimeout(() => {
+      setRipples(prev => prev.filter(r => r.id !== id))
+    }, 800)
+  }
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!glowRef.current || !cardRef.current) return
     const rect = cardRef.current.getBoundingClientRect()
@@ -67,8 +83,22 @@ function MissionVisionCard({
     
     gsap.to(glowRef.current, {
       opacity: 1,
-      background: `radial-gradient(400px circle at ${x}px ${y}px, ${accentColor}15, transparent 80%)`,
+      background: `radial-gradient(400px circle at ${x}px ${y}px, ${accentColor}20, transparent 80%)`,
       duration: 0.4
+    })
+  }
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!glowRef.current || !cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const touch = e.touches[0]
+    const x = touch.clientX - rect.left
+    const y = touch.clientY - rect.top
+    
+    gsap.to(glowRef.current, {
+      opacity: 1,
+      background: `radial-gradient(350px circle at ${x}px ${y}px, ${accentColor}30, transparent 80%)`,
+      duration: 0.2
     })
   }
 
@@ -80,25 +110,66 @@ function MissionVisionCard({
     })
   }
 
+  const handlePressStart = (e: React.MouseEvent | React.TouchEvent) => {
+    setIsPressed(true)
+    if ('touches' in e) {
+      createRipple(e.touches[0].clientX, e.touches[0].clientY)
+    } else {
+      createRipple(e.clientX, e.clientY)
+    }
+  }
+
+  const handlePressEnd = () => {
+    setIsPressed(false)
+    if (glowRef.current) {
+      gsap.to(glowRef.current, { opacity: 0, duration: 0.8 })
+    }
+  }
+
   return (
     <div
       ref={cardRef}
-      className="relative overflow-hidden h-full group"
+      className="relative overflow-hidden h-full group touch-none"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseDown={handlePressStart}
+      onTouchStart={handlePressStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handlePressEnd}
+      onMouseUp={handlePressEnd}
+      onMouseEnter={() => setIsPressed(true)}
       style={{
         background: `linear-gradient(135deg, rgba(10,14,24,0.95) 0%, rgba(6,10,20,0.98) 100%)`,
-        border: `1px solid ${accentColor}28`,
+        border: `1px solid ${accentColor}${isPressed ? '50' : '28'}`,
         borderRadius: '24px',
         padding: 'clamp(24px, 5vw, 40px)',
         minHeight: '320px',
-        transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1)',
+        transition: 'all 0.5s cubic-bezier(0.16,1,0.3,1)',
+        transform: isPressed ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
+        boxShadow: isPressed 
+          ? `0 30px 60px rgba(0,0,0,0.6), 0 0 30px ${accentColor}25, inset 0 0 20px ${accentColor}10` 
+          : '0 10px 30px rgba(0,0,0,0.2)',
         cursor: 'default',
         display: 'flex',
         flexDirection: 'column',
         gap: '20px',
       }}
     >
+      {/* ── Ripple Layer ── */}
+      {ripples.map(r => (
+        <span
+          key={r.id}
+          className="absolute rounded-full pointer-events-none animate-ripple"
+          style={{
+            left: r.x,
+            top: r.y,
+            width: '2px',
+            height: '2px',
+            background: `${accentColor}40`,
+            transform: 'translate(-50%, -50%)',
+          }}
+        />
+      ))}
       {/* ── Interactive Glow Overlay ── */}
       <div 
         ref={glowRef}

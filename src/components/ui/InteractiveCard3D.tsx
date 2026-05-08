@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 
 interface InteractiveCard3DProps {
@@ -13,6 +13,7 @@ export default function InteractiveCard3D({
   accentColor = '#60a5fa' 
 }: InteractiveCard3DProps) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const [ripples, setRipples] = useState<{ id: number; x: number; y: number }[]>([])
   
   const x = useMotionValue(0)
   const y = useMotionValue(0)
@@ -34,6 +35,19 @@ export default function InteractiveCard3D({
       `radial-gradient(ellipse 110px 110px at ${gx}% ${gy}%, rgba(255,255,255,0.08) 0%, transparent 65%)`
   )
 
+  const createRipple = (clientX: number, clientY: number) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const rx = clientX - rect.left
+    const ry = clientY - rect.top
+    const id = Date.now()
+    
+    setRipples(prev => [...prev, { id, x: rx, y: ry }])
+    setTimeout(() => {
+      setRipples(prev => prev.filter(r => r.id !== id))
+    }, 800)
+  }
+
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return
     const rect  = cardRef.current.getBoundingClientRect()
@@ -50,11 +64,21 @@ export default function InteractiveCard3D({
     glareX.set(50); glareY.set(50)
   }
 
+  const handlePressStart = (e: React.MouseEvent | React.TouchEvent) => {
+    if ('touches' in e) {
+      createRipple(e.touches[0].clientX, e.touches[0].clientY)
+    } else {
+      createRipple(e.clientX, e.clientY)
+    }
+  }
+
   return (
     <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onMouseDown={handlePressStart}
+      onTouchStart={handlePressStart}
       className={`relative group ${className}`}
       style={{ perspective: '1200px' }}
     >
@@ -65,6 +89,22 @@ export default function InteractiveCard3D({
         {/* Main Surface */}
         <div className="relative z-10 w-full h-full bg-slate-900/40 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden group-hover:border-white/20 transition-colors duration-500">
           
+          {/* Ripple Layer */}
+          {ripples.map(r => (
+            <span
+              key={r.id}
+              className="absolute rounded-full pointer-events-none animate-ripple z-20"
+              style={{
+                left: r.x,
+                top: r.y,
+                width: '2px',
+                height: '2px',
+                background: `${accentColor}50`,
+                transform: 'translate(-50%, -50%)',
+              }}
+            />
+          ))}
+
           {/* Grid texture */}
           <div 
             className="absolute inset-0 z-0 opacity-[0.03] group-hover:opacity-[0.06] transition-opacity duration-500 pointer-events-none"

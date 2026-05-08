@@ -1,8 +1,7 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TEAM, DEPARTMENTS, type Department } from '../constants/data'
 import TeamCard3D from '../components/ui/TeamCard3D'
-import { useCursorSpotlight } from '../hooks/useCursorSpotlight'
 
 const DEPT_ACCENTS: Record<string, { color: string; glow: string; tag: string }> = {
   Leadership:   { color: '#60a5fa', glow: 'rgba(96,165,250,0.15)',  tag: 'bg-blue-500/10 text-blue-300' },
@@ -14,20 +13,49 @@ const DEPT_ACCENTS: Record<string, { color: string; glow: string; tag: string }>
   'Social Media': { color: '#60a5fa', glow: 'rgba(96,165,250,0.15)', tag: 'bg-blue-500/10 text-blue-300' },
 }
 
+function SpotlightCard({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null)
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    el.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`)
+    el.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`)
+  }
+
+  const handleMouseLeave = () => {
+    const el = ref.current
+    if (!el) return
+    el.style.setProperty('--mouse-x', '-999px')
+    el.style.setProperty('--mouse-y', '-999px')
+  }
+
+  return (
+    <div
+      ref={ref}
+      className="team-spotlight-card h-full"
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+    </div>
+  )
+}
+
 export default function Team(): JSX.Element {
   const [active, setActive] = useState<Department>('All')
-  // Cursor spotlight hook — updates --mouse-x / --mouse-y on the grid
-  const spotlightRef = useCursorSpotlight<HTMLDivElement>()
 
   const filtered = active === 'All'
     ? TEAM
     : TEAM.filter((m) => m.department === active)
 
-  const leadershipFirst = [...filtered].sort((a, b) => {
-    if (a.department === 'Leadership') return 1
-    if (b.department === 'Leadership') return -1
-    return 0
-  })
+  // Grouping logic by Role
+  const roleCategories = [
+    { id: 'leadership', label: 'Leadership', filter: (m: typeof TEAM[0]) => m.department === 'Leadership' },
+    { id: 'leads', label: 'Department Leads', filter: (m: typeof TEAM[0]) => m.department !== 'Leadership' && m.title.toLowerCase().includes('head') },
+    { id: 'members', label: 'Team Members', filter: (m: typeof TEAM[0]) => m.department !== 'Leadership' && !m.title.toLowerCase().includes('head') },
+  ]
 
   return (
     <div className="min-h-screen pt-28 pb-24 px-6">
@@ -58,14 +86,13 @@ export default function Team(): JSX.Element {
             </div>
           </motion.div>
 
-          {/* Decorative gradient orb — no 3D dependency */}
           <div className="absolute top-0 right-0 w-1/2 h-full -z-10 hidden lg:block pointer-events-none" style={{
             background: 'radial-gradient(ellipse 70% 80% at 80% 50%, rgba(96,165,250,0.06), transparent 70%)',
           }} />
         </div>
 
         {/* ── Filter tabs ─────────────────────────────────────── */}
-        <div className="flex flex-wrap gap-2 mb-12">
+        <div className="flex flex-wrap gap-2 mb-16">
           {DEPARTMENTS.map((dept) => {
             const isActive = dept === active
             const accent   = DEPT_ACCENTS[dept]?.color ?? '#60a5fa'
@@ -87,35 +114,52 @@ export default function Team(): JSX.Element {
           })}
         </div>
 
-        {/* ── Cards grid — uniform size, spotlight effect ───── */}
-        <motion.div
-          layout
-          ref={spotlightRef}
-        className="team-spotlight-grid grid grid-cols-2 min-[750px]:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
-        >
-          <AnimatePresence mode="popLayout">
-            {leadershipFirst.map((m, i) => {
-              const accentColor = DEPT_ACCENTS[m.department]?.color ?? '#60a5fa'
+        {/* ── Categorized Sections ────────────────────────────── */}
+        <div className="flex flex-col gap-20">
+          {roleCategories.map((cat) => {
+            const members = filtered.filter(cat.filter)
+            if (members.length === 0) return null
 
-              return (
+            return (
+              <div key={cat.id} className="role-section">
+                <div className="flex items-center gap-4 mb-10">
+                  <h2 className="text-xl md:text-2xl font-display font-bold text-white whitespace-nowrap">
+                    {cat.label}
+                  </h2>
+                  <div className="h-px w-full bg-gradient-to-r from-white/10 to-transparent" />
+                </div>
+
                 <motion.div
-                  key={m.id}
                   layout
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.4, delay: i * 0.04 }}
-                  className="team-spotlight-card"
+                  className="team-spotlight-grid grid grid-cols-2 min-[750px]:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"
                 >
-                  <TeamCard3D
-                    member={m}
-                    accentColor={accentColor}
-                  />
+                  <AnimatePresence mode="popLayout">
+                    {members.map((m, i) => {
+                      const accentColor = DEPT_ACCENTS[m.department]?.color ?? '#60a5fa'
+                      return (
+                        <motion.div
+                          key={m.id}
+                          layout
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.95 }}
+                          transition={{ duration: 0.4, delay: i * 0.04 }}
+                        >
+                          <SpotlightCard>
+                            <TeamCard3D
+                              member={m}
+                              accentColor={accentColor}
+                            />
+                          </SpotlightCard>
+                        </motion.div>
+                      )
+                    })}
+                  </AnimatePresence>
                 </motion.div>
-              )
-            })}
-          </AnimatePresence>
-        </motion.div>
+              </div>
+            )
+          })}
+        </div>
 
         {filtered.length === 0 && (
           <div className="text-center py-24 text-text-faint font-label tracking-wider">

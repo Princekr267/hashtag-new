@@ -316,23 +316,23 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
     const maxOffset = maxOffsetRef.current;
     const safeOffset = Math.max(0, Math.min(maxOffset, horizontalOffset));
     trackRef.current.style.transform = `translateX(${-safeOffset}px)`;
-    setProgress(maxOffset > 0 ? safeOffset / maxOffset : 0);
 
-    const centerOffset = safeOffset + window.innerWidth / 2;
-    let closestIndex = 0;
-    let minDistance = Infinity;
+    // Batch progress + centeredIndex into one rAF so we don't force layout
+    requestAnimationFrame(() => {
+      setProgress(maxOffset > 0 ? safeOffset / maxOffset : 0);
 
-    const items = Array.from(trackRef.current.children) as HTMLElement[];
-    items.forEach((item, index) => {
-      const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-      const dist = Math.abs(centerOffset - itemCenter);
-      if (dist < minDistance) {
-        minDistance = dist;
-        closestIndex = index;
-      }
+      if (!trackRef.current) return;
+      const centerOffset = safeOffset + window.innerWidth / 2;
+      let closestIndex = 0;
+      let minDistance = Infinity;
+      const items = Array.from(trackRef.current.children) as HTMLElement[];
+      items.forEach((item, index) => {
+        const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+        const dist = Math.abs(centerOffset - itemCenter);
+        if (dist < minDistance) { minDistance = dist; closestIndex = index; }
+      });
+      setCenteredIndex(closestIndex);
     });
-
-    setCenteredIndex(closestIndex);
   }, [horizontalOffset, images]);
 
   if (prefersReduced) {

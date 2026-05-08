@@ -6,15 +6,21 @@ export default function CosmosHero(): JSX.Element {
   useEffect(() => {
     const cv = canvasRef.current
     if (!cv) return
-    const ctx = cv.getContext('2d')
+    const ctx = cv.getContext('2d', { alpha: true })
     if (!ctx) return
 
     let W: number, H: number, stars: any[] = []
     let t = 0
     let raf: number
+    // Cache isMobile once — never re-query in draw loop
+    const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+    const glowSteps = isMobile ? 3 : 5        // reduced from 8→5 on desktop
+    const glowRadius = isMobile ? 22 : 16
+    const glowAlpha  = isMobile ? 0.05 : 0.03
+    const glowWidth  = isMobile ? 20 : 15
 
-    // Change 6B: animation state
-    let mouseX = 0, mouseY = 0
+    // Mouse / scroll state — updated only by events
+    let mouseX = W ? W / 2 : 0, mouseY = H ? H / 2 : 0
     let rotX = 0, rotY = 0
     let targetRotX = 0, targetRotY = 0
     let scrollY = 0
@@ -22,57 +28,54 @@ export default function CosmosHero(): JSX.Element {
     const resize = () => {
       W = cv.offsetWidth
       H = cv.offsetHeight
-      cv.width = W * devicePixelRatio
-      cv.height = H * devicePixelRatio
+      cv.width  = Math.round(W * devicePixelRatio)
+      cv.height = Math.round(H * devicePixelRatio)
       ctx.scale(devicePixelRatio, devicePixelRatio)
-      
-      const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-      const starCount = isMobile ? 80 : 280
+
+      // 200 stars on desktop (was 280), 60 on mobile (was 80)
+      const starCount = isMobile ? 60 : 200
       stars = Array.from({ length: starCount }, () => ({
         x: Math.random() * W,
         y: Math.random() * H,
         r: Math.random() * 1.4,
         twinkle: Math.random() * Math.PI * 2,
-        speed: 0.02 + Math.random() * 0.03
+        speed: 0.015 + Math.random() * 0.025,  // slightly slower
       }))
     }
 
-    // Change 6B — mouse parallax
+    // Throttled mouse — only fire at most once per rAF via a flag
+    let pendingMouse = false
     const onMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX
       mouseY = e.clientY
+      pendingMouse = true
     }
 
-    // Change 6B — scroll reaction
     const onScroll = () => { scrollY = window.scrollY }
 
     const draw = () => {
-      // Change 6B: update rotation targets from mouse
-      targetRotX = (mouseX / (W || 1) - 0.5) * 0.4
-      targetRotY = (mouseY / (H || 1) - 0.5) * 0.2
+      // Only recalculate rotation when mouse actually moved
+      if (pendingMouse) {
+        targetRotX = (mouseX / (W || 1) - 0.5) * 0.4
+        targetRotY = (mouseY / (H || 1) - 0.5) * 0.2
+        pendingMouse = false
+      }
 
-      // Lerp current toward target
-      rotX += (targetRotX - rotX) * 0.05
-      rotY += (targetRotY - rotY) * 0.05
+      // Skip lerp if already close enough (saves arithmetic when idle)
+      const dX = targetRotX - rotX, dY = targetRotY - rotY
+      if (Math.abs(dX) > 0.0001) rotX += dX * 0.05
+      if (Math.abs(dY) > 0.0001) rotY += dY * 0.05
 
-      // Derived offsets for planet/ring position
-      const parallaxX = rotX * 40   // subtle left/right shift
-      const parallaxY = rotY * 25   // subtle up/down shift
+      const parallaxX = rotX * 40
+      const parallaxY = rotY * 25
 
-      // Change 6B: scroll-driven opacity (0.8 → 0.2 over first 400px)
       const scrollOpacity = Math.max(0.15, 0.85 - (scrollY / 400) * 0.7)
-
-      // Change 6B: scroll-driven scale (1 → 0.7 over first 400px)
-      const scrollScale = Math.max(0.7, 1 - (scrollY / 400) * 0.3)
-
-      // Change 6B: breathing scale
-      const breathe = 1 + Math.sin(t * 0.008 * 0.8) * 0.03
-
-      const hueShift = Math.sin(t * 0.008 / 20 * Math.PI * 2) * 15  // ±15 deg
+      const scrollScale   = Math.max(0.7,  1    - (scrollY / 400) * 0.3)
+      const breathe       = 1 + Math.sin(t * 0.0064) * 0.03
+      const hueShift      = Math.sin(t * 0.00126) * 15
 
       ctx.clearRect(0, 0, W, H)
 
-      // Global opacity & scale
       ctx.save()
       ctx.globalAlpha = scrollOpacity
       ctx.translate(W / 2, H / 2)
@@ -80,42 +83,41 @@ export default function CosmosHero(): JSX.Element {
       ctx.translate(-W / 2, -H / 2)
 
       // Star field
-      stars.forEach(s => {
+      for (let si = 0; si < stars.length; si++) {
+        const s = stars[si]
         s.twinkle += s.speed
         const alpha = 0.3 + 0.7 * ((Math.sin(s.twinkle) + 1) / 2)
+        const b = 180 + (alpha * 75) | 0
         ctx.beginPath()
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2)
-        const b = Math.round(180 + alpha * 75)
-        ctx.fillStyle = `rgba(${Math.round(b * 0.7)},${Math.round(b * 0.85)},${b},${alpha})`
+        ctx.fillStyle = `rgba(${(b * 0.7) | 0},${(b * 0.85) | 0},${b},${alpha})`
         ctx.fill()
-      })
+      }
 
-      // Planet center with parallax offset
+      // Planet
       const cx = W / 2 + parallaxX, cy = H / 2 + 10 + parallaxY, pr = 110
 
-      // Atmosphere glow
-      const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-      const glowSteps = isMobile ? 3 : 8
+      // Atmosphere glow (fewer steps cached outside draw)
       for (let i = glowSteps; i >= 1; i--) {
         ctx.beginPath()
-        ctx.arc(cx, cy, pr + i * (isMobile ? 22 : 16), 0, Math.PI * 2)
-        ctx.strokeStyle = `rgba(${Math.round(14 + hueShift)}, 100, 240, ${ (isMobile ? 0.05 : 0.03) * (glowSteps + 1 - i)})`
-        ctx.lineWidth = isMobile ? 20 : 15
+        ctx.arc(cx, cy, pr + i * glowRadius, 0, Math.PI * 2)
+        ctx.strokeStyle = `rgba(${(14 + hueShift) | 0},100,240,${glowAlpha * (glowSteps + 1 - i)})`
+        ctx.lineWidth = glowWidth
         ctx.stroke()
       }
-      
-      // Planet body — hue-shifted gradient
+
+      // Planet body
       const pg = ctx.createRadialGradient(cx - 30, cy - 30, 0, cx, cy, pr)
-      pg.addColorStop(0, `hsl(${210 + hueShift}, 60%, 35%)`)
-      pg.addColorStop(0.3, `hsl(${220 + hueShift}, 65%, 22%)`)
-      pg.addColorStop(0.7, `hsl(${230 + hueShift}, 70%, 10%)`)
-      pg.addColorStop(1, '#000000')
+      pg.addColorStop(0,   `hsl(${210 + hueShift},60%,35%)`)
+      pg.addColorStop(0.3, `hsl(${220 + hueShift},65%,22%)`)
+      pg.addColorStop(0.7, `hsl(${230 + hueShift},70%,10%)`)
+      pg.addColorStop(1,   '#000')
       ctx.beginPath()
       ctx.arc(cx, cy, pr, 0, Math.PI * 2)
       ctx.fillStyle = pg
       ctx.fill()
 
-      // Surface lines
+      // Surface lines (clipped)
       ctx.save()
       ctx.beginPath()
       ctx.arc(cx, cy, pr, 0, Math.PI * 2)
@@ -130,7 +132,6 @@ export default function CosmosHero(): JSX.Element {
         ctx.lineWidth = 0.8
         ctx.stroke()
       }
-      
       // Shimmer
       const sg = ctx.createRadialGradient(cx - 45, cy - 45, 0, cx - 20, cy - 20, 75)
       sg.addColorStop(0, 'rgba(100,160,255,0.18)')
@@ -141,7 +142,7 @@ export default function CosmosHero(): JSX.Element {
       ctx.fill()
       ctx.restore()
 
-      // Ring (with parallax)
+      // Rings
       ctx.save()
       ctx.translate(cx, cy)
       ctx.scale(1, 0.22)
@@ -158,16 +159,16 @@ export default function CosmosHero(): JSX.Element {
       }
       ctx.restore()
 
-      ctx.restore() // end global opacity/scale
+      ctx.restore()
 
       t++
       raf = requestAnimationFrame(draw)
     }
 
     resize()
-    requestAnimationFrame(draw)
-    window.addEventListener('resize', resize)
-    window.addEventListener('mousemove', onMouseMove)
+    raf = requestAnimationFrame(draw)
+    window.addEventListener('resize', resize, { passive: true })
+    window.addEventListener('mousemove', onMouseMove, { passive: true })
     window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
@@ -179,7 +180,7 @@ export default function CosmosHero(): JSX.Element {
   }, [])
 
   return (
-    <div className="relative w-full h-full overflow-hidden bg-black">
+    <div className="relative w-full h-full overflow-hidden">
       <canvas ref={canvasRef} className="block w-full h-full" />
     </div>
   )

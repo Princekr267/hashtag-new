@@ -28,8 +28,7 @@ interface TeamCard3DProps {
 }
 
 const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa' }) => {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const isFlippedRef = useRef(false)
+  const tiltRef = useRef<HTMLDivElement>(null)
   const [isFlipped, setIsFlipped] = useState(false)
   const [isTouch, setIsTouch] = useState(false)
 
@@ -39,37 +38,27 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
 
   /* ── Desktop: hover → flip + tilt ─────────────────────────────── */
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isTouch || isFlippedRef.current) return
-    const el = containerRef.current
+    if (isTouch) return
+    const el = tiltRef.current
     if (!el) return
-    const rect = el.getBoundingClientRect()
+    const rect = e.currentTarget.getBoundingClientRect()
     const mx = e.clientX - (rect.left + rect.width / 2)
     const my = e.clientY - (rect.top + rect.height / 2)
-    const rotX = (-my / (rect.height / 2)) * 5
-    const rotY = (mx / (rect.width / 2)) * 5
-    el.style.transform = `rotateX(${rotX}deg) rotateY(${isFlipped ? 180 + rotY : rotY}deg)`
+    const rotX = (-my / (rect.height / 2)) * 8
+    const rotY = (mx / (rect.width / 2)) * 8
+    el.style.transform = `rotateX(${rotX}deg) rotateY(${rotY}deg)`
   }
 
   const handleMouseEnter = () => {
     if (isTouch) return
     setIsFlipped(true)
-    isFlippedRef.current = true
-    const el = containerRef.current
-    if (el) {
-      el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
-      el.style.transform = 'rotateX(0deg) rotateY(180deg)'
-    }
   }
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseLeave = () => {
     if (isTouch) return
-    const related = e.relatedTarget as Node | null
-    if (e.currentTarget.contains(related)) return
     setIsFlipped(false)
-    isFlippedRef.current = false
-    const el = containerRef.current
+    const el = tiltRef.current
     if (el) {
-      el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
       el.style.transform = 'rotateX(0deg) rotateY(0deg)'
     }
   }
@@ -77,35 +66,38 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
   /* ── Mobile: tap → toggle flip ─────────────────────────────────── */
   const handleTap = () => {
     if (!isTouch) return
-    const next = !isFlipped
-    setIsFlipped(next)
-    isFlippedRef.current = next
-    const el = containerRef.current
-    if (el) {
-      el.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
-      el.style.transform = `rotateX(0deg) rotateY(${next ? 180 : 0}deg)`
-    }
+    setIsFlipped(!isFlipped)
   }
 
   return (
     <div
       className="group h-[220px] min-[400px]:h-[250px] sm:h-[320px]"
-      style={{ perspective: '900px', width: '100%' }}
+      style={{ perspective: '1200px', width: '100%' }}
       onClick={handleTap}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
     >
+      {/* Tilt Container (Fast transition for smooth cursor tracking) */}
       <div
-        ref={containerRef}
-        className="card-shadow"
-        onMouseMove={handleMouseMove}
+        ref={tiltRef}
         style={{
           position: 'relative', width: '100%', height: '100%',
           transformStyle: 'preserve-3d', willChange: 'transform',
-          transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
-          '--glow-color': `${accentColor}80`,
-        } as React.CSSProperties}
+          transition: 'transform 0.15s ease-in-out',
+        }}
       >
+        {/* Flip Container (Slow transition for smooth 180deg flip) */}
+        <div
+          className="card-shadow"
+          style={{
+            position: 'absolute', inset: 0,
+            transformStyle: 'preserve-3d',
+            transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
+            transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
+            '--glow-color': `${accentColor}80`,
+          } as React.CSSProperties}
+        >
         {/* ── FRONT FACE ───────────────────────────────────────────── */}
         <div
           className="animated-gradient group-hover-gradient-move glare-effect"
@@ -120,8 +112,8 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             display: 'flex', flexDirection: 'column',
           }}
         >
-          {/* Photo — top 62% */}
-          <div style={{ flex: '0 0 62%', overflow: 'hidden', position: 'relative' }}>
+          {/* Photo — top 60% with contain for full photo */}
+          <div style={{ flex: '0 0 60%', overflow: 'hidden', position: 'relative', padding: '12px', background: 'rgba(0,0,0,0.2)' }}>
             <img
               src={member.avatarUrl}
               alt={member.name}
@@ -129,13 +121,14 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
               decoding="async"
               style={{
                 width: '100%', height: '100%',
-                objectFit: 'cover', objectPosition: 'center top',
+                objectFit: 'contain', 
                 display: 'block',
                 transition: 'transform 0.6s ease',
               }}
+              className="group-hover:scale-105"
             />
             {/* Title badge */}
-            <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 2 }}>
+            <div style={{ position: 'absolute', top: '10px', right: '10px', zIndex: 2 }}>
               <span style={{
                 display: 'inline-block', padding: '3px 9px',
                 borderRadius: '999px', fontSize: '9px', fontWeight: 700,
@@ -149,7 +142,7 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             </div>
             {/* Bottom fade */}
             <div style={{
-              position: 'absolute', bottom: 0, left: 0, right: 0, height: '56px',
+              position: 'absolute', bottom: 0, left: 0, right: 0, height: '30px',
               background: 'linear-gradient(to bottom, transparent, #0a0a0a)',
               pointerEvents: 'none',
             }} />
@@ -161,7 +154,6 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '4px',
             overflow: 'hidden', minHeight: 0,
           }}>
-            {/* Name — allow wrapping, no truncation */}
             <h3 style={{
               fontWeight: 700,
               fontSize: 'clamp(0.82rem, 3.5vw, 1rem)',
@@ -170,7 +162,6 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             }}>
               {member.name}
             </h3>
-            {/* Department — single line with ellipsis */}
             <p style={{
               fontSize: '9px', fontWeight: 600, letterSpacing: '0.16em',
               textTransform: 'uppercase', color: `${accentColor}bb`,
@@ -178,7 +169,6 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             }}>
               {member.department}
             </p>
-            {/* Interaction hint — adapts to device */}
             <p className="hidden sm:block" style={{
               fontSize: '8px', color: 'rgba(255,255,255,0.22)', marginTop: '2px',
               letterSpacing: '0.1em', textTransform: 'uppercase',
@@ -186,12 +176,6 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
               {isTouch ? 'Tap to flip ✦' : 'Hover to flip ✦'}
             </p>
           </div>
-
-          {/* Top glow edge */}
-          <div style={{
-            position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-            background: `linear-gradient(90deg, transparent, ${accentColor}50, transparent)`,
-          }} />
         </div>
 
         {/* ── BACK FACE ────────────────────────────────────────────── */}
@@ -314,6 +298,7 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
 
       </div>
     </div>
+  </div>
   )
 }
 
