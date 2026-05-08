@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, Suspense, lazy } from 'react' // HYDRATION FIX
+import React, { useEffect, useRef, useState, Suspense, lazy } from 'react' // HYDRATION FIX
 import { motion, Variants } from 'framer-motion'
 import { ChevronDown, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -226,8 +226,6 @@ export default function Home(): JSX.Element {
           ════════════════════════════════════════════════════ */}
       <section className="hero-section min-h-screen flex px-6 pt-24 pb-12 relative overflow-hidden" style={{ backgroundColor: 'var(--bg-base)' }}>
 
-        {/* Removed AmbientOrbs to fix heavy lag */}
-        
         {/* Subtle Grid pattern for tech feel */}
         <div className="absolute inset-0 pointer-events-none opacity-40" style={{
           backgroundImage: `
@@ -370,33 +368,40 @@ export default function Home(): JSX.Element {
             {FEATURES.map((f, idx) => (
               <div key={f.title} className="feature-card-wrapper h-full" style={{ transformStyle: 'preserve-3d' }}>
                 <InteractiveCard3D accentColor={f.accent} className="h-full">
-                  <div className="p-10 flex flex-col gap-6 h-full">
-                    <div className="flex flex-col gap-3">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex items-center gap-2">
-                          <span
-                            className="text-4xl font-mono-custom flex-shrink-0"
-                            style={{ color: f.accent, textShadow: `0 0 20px ${f.accent}66` }}
-                          >
-                            {f.icon}
-                          </span>
-                          <h3
-                            className="text-2xl font-display font-bold m-0"
-                            style={{ color: f.accent }}
-                          >
-                            {f.title}
-                          </h3>
-                        </div>
-                        <span
-                          className="text-[10px] font-label tracking-widest px-2 py-1 border rounded flex-shrink-0 mt-1"
-                          style={{ color: `${f.accent}99`, borderColor: `${f.accent}25` }}
-                        >
-                          {f.tag}
-                        </span>
-                      </div>
-                      <p className="text-text-muted leading-relaxed text-sm font-body mt-2">{f.desc}</p>
+                  <div className="p-10 flex flex-col gap-6 h-full relative">
+                    {/* Badge — absolutely positioned top-left */}
+                    <div className="absolute top-6 left-10">
+                      <span
+                        className="text-[9px] font-label tracking-widest px-2 py-1 border rounded bg-white/5 backdrop-blur-sm"
+                        style={{ color: `${f.accent}cc`, borderColor: `${f.accent}33` }}
+                      >
+                        {f.tag}
+                      </span>
                     </div>
 
+                    <div className="flex flex-col gap-4 mt-8">
+                      {/* Icon + Title */}
+                      <div className="flex items-center gap-3">
+                        <span
+                          className="text-4xl font-mono-custom flex-shrink-0"
+                          style={{ color: f.accent, textShadow: `0 0 20px ${f.accent}44` }}
+                        >
+                          {f.icon}
+                        </span>
+                        <h3
+                          className="text-2xl font-display font-bold m-0 leading-tight"
+                          style={{ color: f.accent }}
+                        >
+                          {f.title}
+                        </h3>
+                      </div>
+                      {/* Description */}
+                      <p className="text-text-muted leading-relaxed text-[13px] font-body opacity-80">
+                        {f.desc}
+                      </p>
+                    </div>
+
+                    {/* Bottom accent line */}
                     <div
                       className="h-px mt-auto transition-all duration-500 group-hover:w-full"
                       style={{ width: '3rem', background: `linear-gradient(90deg, ${f.accent}, transparent)` }}
@@ -413,67 +418,6 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           ARTIFACTS SECTION
           ════════════════════════════════════════════════════ */}
-      <section className="artifacts-section section px-6 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-16 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
-            <div>
-              <h2 data-reveal className="text-4xl md:text-5xl font-display font-bold mb-4">
-                Live <span className="text-gradient">Artifacts</span>
-              </h2>
-              <p className="text-text-muted font-body max-w-xl" data-reveal>
-                Open-source projects and internal tools built by the Hashtag community. 
-                We don't just learn tech, we ship it to production.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-10 items-stretch">
-            {/* Artifact 1 */}
-            <div className="artifact-card group h-full">
-              <div className="surface-card p-6 md:p-8 h-full flex flex-col bg-[#030b1a]/40 border border-primary/20 hover:border-primary/50 transition-colors rounded-3xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-primary/10 to-transparent pointer-events-none" />
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="w-2 h-2 rounded-full bg-primary animate-pulse flex-shrink-0" />
-                    <span className="text-xs font-mono-custom tracking-widest text-primary leading-none">STATUS.ONLINE</span>
-                  </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-2">HashDash Finance</h3>
-                  <p className="text-text-muted mb-6 text-sm flex-grow">
-                    A full-stack React and Node.js finance dashboard with role-based access control and live data streaming.
-                  </p>
-                  <div className="flex flex-wrap gap-2 font-mono-custom text-[10px] text-primary/50 uppercase mt-auto">
-                    <span className="px-2 py-1 bg-primary/10 rounded border border-primary/20">React</span>
-                    <span className="px-2 py-1 bg-primary/10 rounded border border-primary/20">Node.js</span>
-                    <span className="px-2 py-1 bg-primary/10 rounded border border-primary/20">MongoDB</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Artifact 2 */}
-            <div className="artifact-card group h-full">
-              <div className="surface-card p-6 md:p-8 h-full flex flex-col bg-[#030b1a]/40 border border-secondary/20 hover:border-secondary/50 transition-colors rounded-3xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-secondary/10 to-transparent pointer-events-none" />
-                <div className="relative z-10 flex flex-col h-full">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="w-2 h-2 rounded-full bg-secondary opacity-50 flex-shrink-0" />
-                    <span className="text-xs font-mono-custom tracking-widest text-secondary leading-none">V2.BETA</span>
-                  </div>
-                  <h3 className="text-2xl font-display font-bold text-white mb-2">CodeTrek Platform</h3>
-                  <p className="text-text-muted mb-6 text-sm flex-grow">
-                    An automated judging platform built for our relay coding hackathons, capable of evaluating 100+ submissions per minute.
-                  </p>
-                  <div className="flex flex-wrap gap-2 font-mono-custom text-[10px] text-secondary/50 uppercase mt-auto">
-                    <span className="px-2 py-1 bg-secondary/10 rounded border border-secondary/20">Python</span>
-                    <span className="px-2 py-1 bg-secondary/10 rounded border border-secondary/20">Docker</span>
-                    <span className="px-2 py-1 bg-secondary/10 rounded border border-secondary/20">Redis</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* ════════════════════════════════════════════════════════
           SCROLLING MARQUEE
@@ -565,3 +509,5 @@ export default function Home(): JSX.Element {
     </div>
   )
 }
+
+

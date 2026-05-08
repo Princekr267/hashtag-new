@@ -18,7 +18,9 @@ import BlogDetail from './pages/BlogDetail'
 import PageLoader from './components/ui/PageLoader'
 
 import { useSmoothScroll } from './hooks/useSmoothScroll'
-import { useScroll, useSpring } from 'framer-motion'
+
+// Only show the loader when the user lands directly on the home page
+const INITIAL_PATH = typeof window !== 'undefined' ? window.location.pathname : '/'
 
 function AnimatedRoutes(): JSX.Element {
   const location = useLocation()
@@ -50,23 +52,14 @@ function AnimatedRoutes(): JSX.Element {
 function AppInner(): JSX.Element {
   useSmoothScroll()
 
-  const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
-    restDelta: 0.001,
-  })
-
+  // Native scroll progress bar — zero React re-renders, no spring overhead
   useEffect(() => {
-    let ticking = false
+    const bar = document.getElementById('scroll-progress') as HTMLElement | null
+    if (!bar) return
     const onScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          document.documentElement.style.setProperty('--scroll-y', String(window.scrollY))
-          ticking = false
-        })
-        ticking = true
-      }
+      const scrolled = window.scrollY
+      const total = document.documentElement.scrollHeight - window.innerHeight
+      bar.style.transform = `scaleX(${total > 0 ? scrolled / total : 0})`
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -74,7 +67,7 @@ function AppInner(): JSX.Element {
 
   return (
     <>
-      <motion.div id="scroll-progress" style={{ scaleX }} />
+      <div id="scroll-progress" />
       <ConstellationBackground />
 
       <Navbar />
@@ -91,7 +84,9 @@ function AppInner(): JSX.Element {
 }
 
 export default function App(): JSX.Element {
-  const [loading, setLoading] = useState(true)
+  // Only show the loader on the initial home page visit — not on sub-pages
+  const isHomeLanding = INITIAL_PATH === '/' || INITIAL_PATH === ''
+  const [loading, setLoading] = useState(isHomeLanding)
 
   return (
     <BrowserRouter
@@ -105,14 +100,7 @@ export default function App(): JSX.Element {
         {loading ? (
           <PageLoader key="loader" onComplete={() => setLoading(false)} />
         ) : (
-          <motion.div
-            key="content"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <AppInner />
-          </motion.div>
+          <AppInner />
         )}
       </AnimatePresence>
     </BrowserRouter>
