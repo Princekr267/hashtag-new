@@ -12,7 +12,7 @@ export default function MagneticButton({
   children,
   className = '',
   onClick,
-  as: Tag = 'button',
+  as: Tag = 'div',
 }: MagneticButtonProps): JSX.Element {
   const ref = useRef<HTMLDivElement>(null)
 

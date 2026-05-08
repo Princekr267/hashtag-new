@@ -72,9 +72,7 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
       data: Record<string, unknown>,
       runId = 'initial',
     ) => {
-      // #region agent log
-      fetch('http://127.0.0.1:7680/ingest/76688da9-d7ac-46f6-b318-0af7b3c91abc',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8d80e5'},body:JSON.stringify({sessionId:'8d80e5',runId,hypothesisId,location:'HorizontalGallery.tsx',message,data,timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
+      // Removed debug fetch call
     };
 
     const measure = () => {
@@ -162,10 +160,14 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
       if (hijackActiveRef.current === active) return;
       hijackActiveRef.current = active;
       
+      const isTouch = window.matchMedia('(pointer: coarse)').matches;
+      
       // HYDRATION FIX: Robust body scroll lock for non-Lenis devices (native scroll)
       if (active) {
-        document.body.style.overflow = 'hidden';
-        document.body.style.touchAction = 'none';
+        if (!isTouch) {
+          document.body.style.overflow = 'hidden';
+        }
+        document.body.style.touchAction = isTouch ? 'pan-y' : 'none';
       } else {
         document.body.style.overflow = '';
         document.body.style.touchAction = '';
@@ -314,23 +316,23 @@ const HorizontalGallery: React.FC<HorizontalGalleryProps> = ({ images, label }) 
     const maxOffset = maxOffsetRef.current;
     const safeOffset = Math.max(0, Math.min(maxOffset, horizontalOffset));
     trackRef.current.style.transform = `translateX(${-safeOffset}px)`;
-    setProgress(maxOffset > 0 ? safeOffset / maxOffset : 0);
 
-    const centerOffset = safeOffset + window.innerWidth / 2;
-    let closestIndex = 0;
-    let minDistance = Infinity;
+    // Batch progress + centeredIndex into one rAF so we don't force layout
+    requestAnimationFrame(() => {
+      setProgress(maxOffset > 0 ? safeOffset / maxOffset : 0);
 
-    const items = Array.from(trackRef.current.children) as HTMLElement[];
-    items.forEach((item, index) => {
-      const itemCenter = item.offsetLeft + item.offsetWidth / 2;
-      const dist = Math.abs(centerOffset - itemCenter);
-      if (dist < minDistance) {
-        minDistance = dist;
-        closestIndex = index;
-      }
+      if (!trackRef.current) return;
+      const centerOffset = safeOffset + window.innerWidth / 2;
+      let closestIndex = 0;
+      let minDistance = Infinity;
+      const items = Array.from(trackRef.current.children) as HTMLElement[];
+      items.forEach((item, index) => {
+        const itemCenter = item.offsetLeft + item.offsetWidth / 2;
+        const dist = Math.abs(centerOffset - itemCenter);
+        if (dist < minDistance) { minDistance = dist; closestIndex = index; }
+      });
+      setCenteredIndex(closestIndex);
     });
-
-    setCenteredIndex(closestIndex);
   }, [horizontalOffset, images]);
 
   if (prefersReduced) {
