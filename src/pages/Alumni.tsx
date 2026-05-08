@@ -1,25 +1,22 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import AlumniCard3D from '../components/ui/AlumniCard3D'
 
 const ALUMNI = [
-  { name: 'Harsh Nainwaya',  batch: '2024', role: 'SDE Intern @ Microsoft', quote: 'Hashtag gave me my first real product experience.', photo: '/Photos/Harsh_Nainwaya.jpg', accent: '#8ff5ff', email: 'harsh@example.com', linkedin: 'https://linkedin.com/in/harsh' },
-  { name: 'Mayank',          batch: '2024', role: 'Full Stack Developer',     quote: 'The community here is unmatched — real builders.',    photo: '/Photos/Mayank.jpg',         accent: '#00fc40', email: 'mayank@example.com', linkedin: 'https://linkedin.com/in/mayank' },
-  { name: 'Nikhil',          batch: '2023', role: 'UX Designer @ Startup',    quote: 'Design thinking at Hashtag changed my career.',       photo: '/Photos/Nikhil.jpg',         accent: '#ac89ff', email: 'nikhil@example.com', linkedin: 'https://linkedin.com/in/nikhil' },
-  { name: 'Neelesh',         batch: '2024', role: 'Backend Engineer',          quote: 'CodeTrek pushed me beyond my comfort zone every time.', photo: '/Photos/Neelesh.png',       accent: '#00fc40', email: 'neelesh@example.com', linkedin: 'https://linkedin.com/in/neelesh' },
-  { name: 'Tanuja',          batch: '2023', role: 'Product Manager Intern',    quote: 'IdeaUtsav was where I found my passion for product.', photo: '/Photos/Tanuja.jpg',         accent: '#ff6b9b', email: 'tanuja@example.com', linkedin: 'https://linkedin.com/in/tanuja' },
-  { name: 'Rishabh',         batch: '2024', role: 'Data Science Intern',       quote: 'Hashtag taught me to build, not just study.',         photo: '/Photos/Rishabh.png',        accent: '#8ff5ff', email: 'rishabh@example.com', linkedin: 'https://linkedin.com/in/rishabh' },
+  { name: 'Nishit Mehta', role: 'Application Engineer @Quadrafort', quote: 'Building the future, one line of code at a time.', photo: '/Photos/Nishit.png', accent: '#8ff5ff', email: 'nishit@example.com', linkedin: 'https://linkedin.com/in/nishit' },
+  { name: 'Manav Sharma', role: 'Software Engineer @ Irdeto', quote: 'Innovation through collaboration and creativity.', photo: '/Photos/Manav.jpeg', accent: '#00fc40', email: 'manav@example.com', linkedin: 'https://linkedin.com/in/manav' },
+  { name: 'Agamjot Singh', role: 'Full Stack Developer @ Mojo Web', quote: 'Turning ideas into reality with technology.', photo: '/Photos/Agamjot.jpg', accent: '#ac89ff', email: 'agamjot@example.com', linkedin: 'https://linkedin.com/in/agamjot' },
+  { name: 'Divyanshu S', role: 'Founder @2ByteCode', quote: 'Empowering developers, one byte at a time.', photo: '/Photos/Divyanshu.jpeg', accent: '#ff6b9b', email: 'divyanshu@example.com', linkedin: 'https://linkedin.com/in/divyanshu' },
+  { name: 'Satyajeet Sau', role: 'Engineer @IUS Digital Solutions', quote: 'Code is poetry written in logic.', photo: '/Photos/satya.jpg', accent: '#8ff5ff', email: 'satyajeet@example.com', linkedin: 'https://linkedin.com/in/satyajeet' },
+  { name: 'Mayank Pruthi', role: 'Frontend Dev @White Light IT', quote: 'Creating beautiful user experiences.', photo: '/Photos/Mayank.jpg', accent: '#00fc40', email: 'mayank@example.com', linkedin: 'https://linkedin.com/in/mayank' },
+  { name: 'Mehul Anand', role: 'Intern @IIT Delhi', quote: 'Learning and growing every day.', photo: '/Photos/Mehul.jpeg', accent: '#ac89ff', email: 'mehul@example.com', linkedin: 'https://linkedin.com/in/mehul' },
+  { name: 'Harsh Nainwaya', role: 'Intern @BirchStreet Systems', quote: 'Building scalable solutions for tomorrow.', photo: '/Photos/Harsh_Nainwaya.jpg', accent: '#ff6b9b', email: 'harsh@example.com', linkedin: 'https://linkedin.com/in/harsh' },
+  { name: 'Tanuja Pujari', role: 'Ex Software Dev Intern @SUEZ', quote: 'Passionate about clean code and innovation.', photo: '/Photos/Tanuja.jpg', accent: '#8ff5ff', email: 'tanuja@example.com', linkedin: 'https://linkedin.com/in/tanuja' },
+  { name: 'Charu Aggarwal', role: 'System Engineer @TCS', quote: 'Bridging the gap between technology and business.', photo: '/Photos/charu.jpeg', accent: '#00fc40', email: 'charu@example.com', linkedin: 'https://linkedin.com/in/charu' },
+  { name: 'Nikhil Aswal', role: 'Frontend Dev @Staar Payout', quote: 'Crafting intuitive digital experiences.', photo: '/Photos/Nikhil.jpg', accent: '#ac89ff', email: 'nikhil@example.com', linkedin: 'https://linkedin.com/in/nikhil' },
+  { name: 'Kunal Singh', role: 'Tech Intern @ Spay India', quote: 'Exploring the endless possibilities of technology.', photo: '/Photos/Kunal.jpg', accent: '#ff6b9b', email: 'kunal@example.com', linkedin: 'https://linkedin.com/in/kunal' },
 ]
 
-const BATCHES = ['All', '2023', '2024'] as const
-type Batch = typeof BATCHES[number]
-
 export default function Alumni(): JSX.Element {
-  const [activeBatch, setActiveBatch] = useState<Batch>('All')
-
-  const filtered = ALUMNI.filter((a) =>
-    activeBatch === 'All' ? true : a.batch === activeBatch
-  )
 
   return (
     <div className="relative z-10 pt-20">
@@ -52,28 +49,11 @@ export default function Alumni(): JSX.Element {
       {/* ── ALUMNI GRID ───────────────────────────────────────── */}
       <section className="section px-6">
         <div className="max-w-7xl mx-auto">
-          {/* Filter */}
-          <div className="flex gap-2 mb-12">
-            {BATCHES.map((b) => (
-              <button
-                key={b}
-                onClick={() => setActiveBatch(b)}
-                className={`px-4 py-2 text-xs font-label tracking-widest uppercase transition-all duration-200 ${
-                  activeBatch === b
-                    ? 'bg-secondary text-bg-base'
-                    : 'text-text-muted border border-outline-var hover:text-secondary hover:border-secondary'
-                }`}
-              >
-                {b === 'All' ? 'All Batches' : `Batch ${b}`}
-              </button>
-            ))}
-          </div>
-
           <motion.div
             layout
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
           >
-            {filtered.map((a, idx) => (
+            {ALUMNI.map((a, idx) => (
               <motion.div
                 key={a.name}
                 layout

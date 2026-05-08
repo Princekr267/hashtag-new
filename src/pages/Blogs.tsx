@@ -5,8 +5,7 @@ import { Link } from 'react-router-dom'
 
 export default function Blogs(): JSX.Element {
   
-  const featured = BLOGS.find((b) => b.featured)!
-  const others   = BLOGS.filter((b) => !b.featured)
+  const others = BLOGS.filter((b) => b.id === 'welcome-to-hashtag' || b.id === 'defuse-or-die-the-ultimate-valorant-showdown')
 
   return (
     <div className="relative z-10 pt-20">
@@ -20,11 +19,11 @@ export default function Blogs(): JSX.Element {
           >
             <span className="pill pill-cyan mb-6 inline-flex">Blog</span>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-display font-bold leading-tight mb-6">
-              Ideas Worth<br />
-              <span className="text-gradient">Sharing</span>
+              Welcome to Hashtag<br />
+              <span className="text-gradient">Blogs</span>
             </h1>
             <p className="text-text-muted text-base md:text-lg max-w-xl font-body leading-relaxed">
-              Thoughts on tech, design, careers, and culture — from the Hashtag team.
+              Discover our latest stories from HashTag — gaming, events, culture, and campus impact.
             </p>
           </motion.div>
 
@@ -34,76 +33,12 @@ export default function Blogs(): JSX.Element {
         </div>
       </section>
 
-      {/* ── FEATURED POST ─────────────────────────────────────── */}
-      <section className="section-sm px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-6">
-            <span className="text-xs font-label text-primary tracking-widest">FEATURED</span>
-          </div>
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="p-[1px] rounded-3xl group cursor-pointer hover:shadow-2xl transition-shadow"
-            style={{ 
-              background: `linear-gradient(135deg, ${featured.accent}70, transparent 60%, ${featured.accent}20)`,
-              boxShadow: `0 10px 40px ${featured.accent}15`
-            }}
-          >
-            <Link to={`/blogs/${featured.id}`} className="w-full block bg-bg-container rounded-3xl h-full transition-all duration-500 group-hover:bg-[#060d1c]">
-              <div className="p-6 md:p-12 flex flex-col md:flex-row md:items-end justify-between gap-8 h-full relative overflow-hidden">
-                {/* Neon corner accent */}
-                <div
-                  className="absolute top-0 left-0 w-24 h-24 pointer-events-none"
-                  style={{
-                    background: `radial-gradient(circle at 0% 0%, ${featured.accent}20, transparent 70%)`,
-                  }}
-                />
-                {/* Bottom right accent */}
-                <div
-                  className="absolute bottom-0 right-0 w-48 h-48 pointer-events-none"
-                  style={{
-                    background: `radial-gradient(circle at 100% 100%, ${featured.accent}10, transparent 70%)`,
-                  }}
-                />
-                {/* Hover glow */}
-                <div 
-                  className="absolute -inset-24 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none rounded-full blur-3xl"
-                  style={{ background: `radial-gradient(circle at 30% 50%, ${featured.accent}18, transparent 50%)` }}
-                />
-                
-                <div className="flex-1 relative z-10">
-                  <span
-                    className="text-xs font-label tracking-widest mb-4 block"
-                    style={{ color: featured.accent }}
-                  >
-                    {featured.tag.toUpperCase()} · {featured.date} · {featured.readTime}
-                  </span>
-                  <h2 className="text-3xl md:text-5xl font-display font-bold text-text-primary mb-6 leading-tight">
-                    {featured.title}
-                  </h2>
-                  <p className="text-text-muted font-body leading-relaxed max-w-2xl">
-                    {featured.excerpt}
-                  </p>
-                </div>
-                <button
-                  className="btn-ghost flex items-center gap-[8px] self-end flex-shrink-0 relative z-10 hover:-translate-y-1 transition-transform"
-                  style={{ color: featured.accent, borderColor: `${featured.accent}50` }}
-                >
-                  <span className="leading-none">Read More</span> <ArrowRight size={14} className="flex-shrink-0" />
-                </button>
-              </div>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
       {/* ── OTHER POSTS GRID ──────────────────────────────────── */}
       <section className="section px-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-10">
             <h2 className="text-3xl font-display font-bold mb-12">
-              More <span className="text-gradient-green">Posts</span>
+              <span className="text-gradient-green">Posts</span>
             </h2>
           </div>
 
@@ -135,6 +70,15 @@ export default function Blogs(): JSX.Element {
                   }}
                 >
                   <div className="p-6 md:p-8 flex flex-col h-full">
+                    {blog.coverImage ? (
+                      <div className="mb-6 overflow-hidden rounded-3xl h-56 bg-slate-950">
+                        <img
+                          src={blog.coverImage}
+                          alt={blog.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      </div>
+                    ) : null}
                     {/* Accent bar */}
                     <div
                       className="h-0.5 w-12 mb-6"

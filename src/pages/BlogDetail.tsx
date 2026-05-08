@@ -60,24 +60,101 @@ export default function BlogDetail(): JSX.Element {
 
         <div className="w-16 h-1 mb-10 mt-6" style={{ background: blog.accent, opacity: 0.8 }} />
 
+        {blog.coverImage && (
+          <div className="mb-8">
+            <img
+              src={blog.coverImage}
+              alt={blog.title}
+              className="w-full h-auto rounded-lg"
+            />
+          </div>
+        )}
+
         <div className="prose prose-invert max-w-none font-body text-text-muted leading-relaxed">
           <p className="text-xl text-white/90 font-medium mb-8">
             {blog.excerpt}
           </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-            nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-          </p>
-          <br />
-          <h3 className="text-2xl text-white font-bold mb-4 font-display">Going Deeper</h3>
-          <p>
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, 
-            est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.
-            Donec accumsan mauris a vehicula faucibus.
-          </p>
+          
+          {blog.id === 'welcome-to-hashtag' && (
+            <div className="space-y-6">
+              <p>
+                Founded in the year 2019, HashTag aims to nurture knowledge, opportunities,
+                experience and collaborations within students. With a vision rooted in enriching the
+                student coding culture, Hashtag pulses with ideas, energy and moments that
+                unite learners. Hashtag is not just a technical society, it's a platform that
+                welcomes students across all levels of experience, fostering a culture of peer
+                learning and inclusive growth. The society welcomes participants from all technical
+                domains eager to build, learn and grow. The society has been actively organizing
+                events, hackathons, and tech competitions felicitating its participants and the
+                winners for their efforts and creativity. With every passing year, Hashtag
+                continues to grow- inspiring creativity, building a community and shaping the future of
+                student innovation.
+              </p>
+            </div>
+          )}
+
+          {blog.id === 'defuse-or-die-the-ultimate-valorant-showdown' && (
+            <div className="space-y-6">
+              <p>
+                The HashTag Technical Society's event, "VCT Hashtag", was held on 24th March,
+                2025, from 11:00 AM to 3:00 PM. It was a competitive Valorant gaming event that
+                brought together five teams, each consisting of five players, competing in a
+                series of matches to determine the champion. The atmosphere was vibrant and
+                energetic, with both participants and spectators enjoying the thrilling gameplay. The
+                event showcased the strategic skills, teamwork, and coordination of the players.
+                The enthusiastic cheers and encouragement from the audience further enhanced the
+                competitive spirit.
+              </p>
+              
+              <img
+                src="https://cdn.sanity.io/images/4czbk8j7/production/0f5efc840ca8f95588a42cdb4f14c6a817aa04a3-4032x3024.jpg"
+                alt="Event venue"
+                className="w-full h-auto rounded-lg mb-4"
+              />
+              
+              <h3 className="text-2xl text-white font-bold mb-4 font-display">Key Outcomes</h3>
+              <ul className="list-disc list-inside space-y-2 mb-6">
+                <li>Promote Esports Culture: To encourage participation in esports and build a competitive gaming environment.</li>
+                <li>Enhance Teamwork and Strategy: To provide players an opportunity to showcase their strategic thinking and teamwork in Valorant.</li>
+                <li>Skill Development: To offer a platform for students to enhance their gaming and decision-making skills.</li>
+                <li>Community Engagement: To foster connections among gaming enthusiasts, promoting collaboration and sportsmanship.</li>
+              </ul>
+              
+              <img
+                src="https://cdn.sanity.io/images/4czbk8j7/production/d9b6f6ee5b850f06796536c9b74eac0aa069551b-4080x3072.jpg"
+                alt="Event participants"
+                className="w-full h-auto rounded-lg mb-4"
+              />
+              
+              <h3 className="text-2xl text-white font-bold mb-4 font-display">Event Details</h3>
+              <div className="bg-white/5 p-6 rounded-lg mb-6">
+                <p className="mb-2"><strong>Department:</strong> Computer Science & Engineering</p>
+                <p className="mb-2"><strong>Event Name:</strong> VCT HASHTAG - Defuse Or Die: The Ultimate Valorant Showdown</p>
+                <p className="mb-2"><strong>Date:</strong> 24 March 2025</p>
+                <p className="mb-2"><strong>Timings:</strong> 11 AM TO 3 PM</p>
+                <p className="mb-2"><strong>Venue:</strong> AI Lab</p>
+                <p className="mb-2"><strong>Team Size:</strong> 5 Members</p>
+                <p className="mb-2"><strong>Registration Fees:</strong> Rs. 150</p>
+                <p className="mb-2"><strong>Prizes:</strong> Exciting prizes for winners, with E-Certificates & custom stickers for all.</p>
+              </div>
+              
+              <img
+                src="https://cdn.sanity.io/images/4czbk8j7/production/2acd87e8c6c88d79101fd92c71c9f74719697329-1600x900.jpg"
+                alt="Faculty coordinators"
+                className="w-full h-auto rounded-lg mb-4"
+              />
+              
+              <h3 className="text-2xl text-white font-bold mb-4 font-display">Feedback & Conclusion</h3>
+              <p className="mb-4">
+                Participants and spectators praised the event for its smooth execution and
+                competitive spirit. The event successfully achieved its objective of fostering an
+                esports culture and providing a platform for players to showcase their skills. The
+                HashTag Technical Society looks forward to organizing more engaging and
+                inclusive events in the future.
+              </p>
+              <p><strong>Total number of students:</strong> 50 students</p>
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

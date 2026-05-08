@@ -56,15 +56,15 @@
     ]
   },
   "events": {
-    "upcoming": {
-      "title": "TroubleShoot Ideathon",
-      "description": "The TroubleShoot ideathon is an event one of its kind. \n  Students from all over the region will be submitting their ideas along with a detailed presentation till 22nd August out of which final teams will be selected for the final round at Microsoft Office Noida on 30th August 2025. \n  Where they will have the opportunity to Pitch their ideas in front of Microsoft Employees and attend valuable Knowledge Sessions. \n  Winners will be awarded an attractive cash prize as well as certificates and swags to flaunt.",
-      "image": "/eventposters/cs.jpg",
-      "registerUrl": "https://reskilll.com/hack/troubleshoot"
-    },
+   "upcoming": null,
     "past": [
       {
-        "title": "Hack Battle",
+         
+  "title": "TroubleShoot Ideathon",
+  "description": "The TroubleShoot ideathon is an event one of its kind. Students from all over the region will be submitting their ideas along with a detailed presentation till 22nd August out of which final teams will be selected for the final round at Microsoft Office Noida on 30th August 2025. Where they will have the opportunity to pitch their ideas in front of Microsoft employees and attend valuable knowledge sessions. Winners will be awarded an attractive cash prize as well as certificates and swags to flaunt.",
+  "image": "/eventposters/cs.jpg"
+},    
+  {        "title": "Hack Battle",
         "description": "Hashtag successfully hosted VCT Hashtag, a high-energy Valorant Tournament, bringing competitive spirit to the forefront. The event highlighted teamwork, strategic thinking, and sportsmanship throughout. Top performers were awarded for their excellence. This tournament marks Hashtag’s commitment to promoting tech and e-sports culture on campus.",
         "image": "/eventposters/vct.jpg"
       },

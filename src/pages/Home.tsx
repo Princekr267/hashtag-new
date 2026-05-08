@@ -43,6 +43,26 @@ const FEATURES = [
   },
 ]
 
+const SPONSORS = [
+  { name: "Microsoft Azure", image: "/Photos/Sponsors/Microsoft Azure.png" },
+  { name: "AZD", image: "/Photos/Sponsors/AZD.png" },
+  { name: "Reskilll", image: "/Photos/Sponsors/Reskill.png" },
+  { name: "Softmart", image: "/Photos/Sponsors/Softmart solutions_title sponser 1.png" },
+  { name: "Physics Wallah", image: "/Photos/Sponsors/Physics wallah.png" },
+  { name: "Finlatics", image: "/Photos/Sponsors/Finlatics.png" },
+  { name: "Click a Diet", image: "/Photos/Sponsors/clickadiet.png" },
+  { name: "Genesis", image: "/Photos/Sponsors/genesis.png" },
+  { name: "Interview Buddy", image: "/Photos/Sponsors/interview buddy.png" },
+  { name: "LinkedOut", image: "/Photos/Sponsors/LinkedOut_Bg_removed.png" },
+  { name: "Julep AI", image: "/Photos/Sponsors/julep.png" },
+  { name: "Events Info", image: "/Photos/Sponsors/Events Info.png" },
+  { name: "Give My Certificates", image: "/Photos/Sponsors/Givemycert.png" },
+  { name: "Advertising Point Line", image: "/Photos/Sponsors/adv point line.png" },
+  { name: "Meraj's Creatives", image: "/Photos/Sponsors/meraj's creatives.png" },
+  { name: "Navras Jemtec", image: "/Photos/Sponsors/NAVRAS LOGO (Original).png" },
+  { name: ".xyz Domain Registry", image: "/Photos/Sponsors/.xyz.png" }
+]
+
 // ── Animated stat counter ─────────────────────────────────────
 function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   const ref       = useRef<HTMLSpanElement>(null)
@@ -418,6 +438,8 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           ARTIFACTS SECTION
           ════════════════════════════════════════════════════ */}
+
+     
 
       {/* ════════════════════════════════════════════════════════
           SCROLLING MARQUEE

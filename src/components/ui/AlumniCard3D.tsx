@@ -3,7 +3,7 @@ import { motion, useSpring, useTransform } from 'framer-motion'
 
 interface AlumniMember {
   name: string
-  batch: string
+  batch?: string
   role: string
   quote: string
   photo: string
@@ -17,7 +17,7 @@ interface AlumniCardProps {
 }
 
 const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
-  const { name, batch, role, quote, photo, accent } = member
+  const { name, role, quote, photo, accent, email, linkedin } = member
   const containerRef = useRef<HTMLDivElement>(null)
   
   // Spring-based 3D rotation
@@ -141,14 +141,7 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
           <h3 className="text-2xl font-display font-bold text-white tracking-tight">
             {name}
           </h3>
-          <div className="flex items-center justify-center gap-3">
-            <span 
-              className="text-[10px] font-label font-bold tracking-[0.2em] px-2.5 py-1 rounded-full border"
-              style={{ color: accent, borderColor: `${accent}40`, background: `${accent}10` }}
-            >
-              BATCH {batch}
-            </span>
-          </div>
+
           <p className="text-primary/90 font-label text-sm font-semibold tracking-wide uppercase">
             {role}
           </p>
@@ -166,10 +159,10 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
           style={{ transform: 'translateZ(50px)' }} 
           className="mt-auto flex items-center gap-4 py-2"
         >
-          <MagneticIconButton href="#" accent={accent}>
+          <MagneticIconButton href={`mailto:${email}`} accent={accent}>
             <EnvelopeIcon />
           </MagneticIconButton>
-          <MagneticIconButton href="#" accent={accent}>
+          <MagneticIconButton href={linkedin || '#'} accent={accent}>
             <LinkedInIcon />
           </MagneticIconButton>
         </div>
