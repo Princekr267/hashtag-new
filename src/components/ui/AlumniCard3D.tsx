@@ -93,7 +93,7 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
         />
 
         {/* Noise Overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        {/* Noise overlay removed due to broken external asset */}
 
         {/* Dynamic Glowing Border */}
         <div 

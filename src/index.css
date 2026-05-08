@@ -895,7 +895,7 @@ a:hover .alumni-btn-icon { color: #ffffff !important; }
 /* PREMIUM GRAIN OVERLAY */
 .grain-overlay {
   position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  /* background-image: url("https://grainy-gradients.vercel.app/noise.svg"); -- Broken Asset */
   opacity: 0.05; pointer-events: none; z-index: 9999;
   filter: contrast(150%) brightness(100%);
 }

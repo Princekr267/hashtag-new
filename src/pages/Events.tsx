@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowRight, ExternalLink } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { EVENTS, type Event } from '../constants/data'
 import CountdownTimer from '../components/ui/CountdownTimer'
 
@@ -69,9 +69,10 @@ function getPolaroidRotation(idx: number): number {
 function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
   const isPast   = event.status === 'past'
   const rotation = getPolaroidRotation(idx)
-  const cardRef  = React.useRef<HTMLAnchorElement>(null)
+  const navigate = useNavigate()
+  const cardRef  = React.useRef<HTMLDivElement>(null)
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return
     const el = cardRef.current
     if (!el) return
@@ -92,10 +93,10 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
       className={`p-4 ${isPast ? 'polaroid-card' : ''}`}
       style={isPast ? { transform: `rotate(${rotation}deg)`, zIndex: 1 } : undefined}
     >
-      <Link
+      <div
         ref={cardRef}
-        className="h-full block"
-        to={`/events/${event.id}`}
+        className="h-full block cursor-pointer"
+        onClick={() => navigate(`/events/${event.id}`)}
         onMouseMove={handleMouseMove}
         onMouseEnter={e => {
           if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return
@@ -191,7 +192,7 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
             )}
           </div>
         </div>
-      </Link>
+      </div>
     </motion.div>
   )
 }
@@ -199,9 +200,15 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
 
 // ── Featured upcoming event card with animated gradient border ─
 function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
+  const navigate = useNavigate()
   return (
-    <Link to={`/events/${event.id}`} className="event-gradient-border block">
-      <div className="event-gradient-inner surface-card p-10 cursor-pointer">
+    <motion.div 
+      whileHover={{ scale: 1.01, y: -4 }}
+      whileTap={{ scale: 0.98 }}
+      onClick={() => navigate(`/events/${event.id}`)}
+      className="event-gradient-border block cursor-pointer h-full"
+    >
+      <div className="event-gradient-inner surface-card p-10 h-full flex flex-col">
         <div className="flex flex-wrap items-start justify-between gap-6 mb-6">
           <div>
             <span className="pill pill-live inline-flex mb-4">LIVE SOON</span>
@@ -216,17 +223,19 @@ function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
           />
         </div>
 
-        <p className="text-text-muted font-body leading-relaxed mb-8 max-w-lg">
+        <p className="text-text-muted font-body leading-relaxed mb-8 max-w-lg flex-grow">
           {event.description}
         </p>
 
-        {event.registerUrl && (
-          <MagneticRegisterBtn href={event.registerUrl}>
-            <span className="leading-none">Register Now</span> <ExternalLink size={15} className="flex-shrink-0" />
-          </MagneticRegisterBtn>
-        )}
+        <div className="mt-auto">
+          {event.registerUrl && (
+            <MagneticRegisterBtn href={event.registerUrl}>
+              <span className="leading-none">Register Now</span> <ExternalLink size={15} className="flex-shrink-0" />
+            </MagneticRegisterBtn>
+          )}
+        </div>
       </div>
-    </Link>
+    </motion.div>
   )
 }
 
