@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import { useEffect, useRef, useCallback, useState } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -91,7 +91,7 @@ function MissionVisionCard({
     
     setRipples(prev => [...prev, { id, x, y }])
     setTimeout(() => {
-      setRipples(prev => prev.filter(r => r.id !== id))
+      setRipples(prev => prev.filter((r: { id: number }) => r.id !== id))
     }, 800)
   }
 
@@ -103,7 +103,7 @@ function MissionVisionCard({
     
     gsap.to(glowRef.current, {
       opacity: 1,
-      background: `radial-gradient(400px circle at ${x}px ${y}px, ${accentColor}20, transparent 80%)`,
+      background: `radial-gradient(400px circle at ${x}px ${y}px, ${accentColor}25, transparent 80%)`,
       duration: 0.4
     })
   }
@@ -123,6 +123,7 @@ function MissionVisionCard({
   }
 
   const handleMouseLeave = () => {
+    setIsPressed(false)
     if (!glowRef.current) return
     gsap.to(glowRef.current, {
       opacity: 0,
@@ -141,9 +142,6 @@ function MissionVisionCard({
 
   const handlePressEnd = () => {
     setIsPressed(false)
-    if (glowRef.current) {
-      gsap.to(glowRef.current, { opacity: 0, duration: 0.8 })
-    }
   }
 
   return (
@@ -157,26 +155,29 @@ function MissionVisionCard({
       onTouchMove={handleTouchMove}
       onTouchEnd={handlePressEnd}
       onMouseUp={handlePressEnd}
-      onMouseEnter={() => setIsPressed(true)}
       style={{
-        background: `linear-gradient(135deg, rgba(10,14,24,0.95) 0%, rgba(6,10,20,0.98) 100%)`,
-        border: `1px solid ${accentColor}${isPressed ? '50' : '28'}`,
+        background: `linear-gradient(135deg, rgba(10,14,24,0.98) 0%, ${accentColor}15 50%, rgba(6,10,20,0.98) 100%)`,
+        border: `1px solid ${accentColor}${isPressed ? '70' : '40'}`,
         borderRadius: '24px',
-        padding: 'clamp(24px, 5vw, 40px)',
-        minHeight: '320px',
+        padding: 'clamp(20px, 4vw, 32px)',
+        minHeight: '260px',
         transition: 'all 0.5s cubic-bezier(0.16,1,0.3,1)',
-        transform: isPressed ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
+        transform: isPressed ? 'scale(0.98)' : 'scale(1)',
         boxShadow: isPressed 
-          ? `0 30px 60px rgba(0,0,0,0.6), 0 0 30px ${accentColor}25, inset 0 0 20px ${accentColor}10` 
-          : '0 10px 30px rgba(0,0,0,0.2)',
-        cursor: 'default',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
+          ? `0 15px 30px rgba(0,0,0,0.5), 0 0 30px ${accentColor}30` 
+          : `0 8px 24px rgba(0,0,0,0.3), inset 0 0 20px ${accentColor}10`,
+        cursor: 'pointer',
       }}
     >
+      {/* ── Background Colorful Glow ── */}
+      <div className="absolute top-0 right-0 w-48 h-48 blur-[100px] opacity-30 pointer-events-none"
+           style={{ background: `radial-gradient(circle, ${accentColor} 0%, transparent 70%)` }} />
+      
+      <div className="absolute bottom-0 left-0 w-48 h-48 blur-[100px] opacity-20 pointer-events-none"
+           style={{ background: `radial-gradient(circle, ${accentColor} 0%, transparent 70%)` }} />
+
       {/* ── Ripple Layer ── */}
-      {ripples.map(r => (
+      {ripples.map((r: { id: number; x: number; y: number }) => (
         <span
           key={r.id}
           className="absolute rounded-full pointer-events-none animate-ripple"
@@ -190,94 +191,62 @@ function MissionVisionCard({
           }}
         />
       ))}
-      {/* ── Interactive Glow Overlay ── */}
+
       <div 
         ref={glowRef}
-        className="absolute inset-0 pointer-events-none z-10 opacity-0 transition-opacity duration-500"
+        className="absolute inset-0 pointer-events-none opacity-0 transition-opacity duration-500"
         style={{ mixBlendMode: 'plus-lighter' }}
       />
 
-      {/* Mesh gradient background glow (static) */}
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: `radial-gradient(ellipse 80% 60% at 10% 0%, ${accentColor}12, transparent 70%)`,
-        borderRadius: '24px',
-      }} />
-
-      {/* Top glowing line */}
-      <div style={{
-        position: 'absolute', top: 0, left: '10%', right: '10%',
-        height: '1px',
-        background: `linear-gradient(90deg, transparent, ${accentColor}70, transparent)`,
-      }} />
-
-      {/* Icon + Badge row */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
-        <div style={{
-          width: '56px', height: '56px',
-          borderRadius: '16px',
-          background: `linear-gradient(135deg, ${accentColor}25, ${accentColor}10)`,
-          border: `1px solid ${accentColor}40`,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontSize: '24px',
-          boxShadow: `0 0 30px ${accentColor}25, inset 0 1px 0 rgba(255,255,255,0.1)`,
-          flexShrink: 0,
-        }}>
-          {icon}
+      <div className="relative z-10 flex flex-col h-full">
+        {/* Top bar with Icon and Type - Reduced bottom margin to fix gap */}
+        <div className="flex items-center justify-between mb-2">
+          <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3"
+               style={{ 
+                 background: `linear-gradient(135deg, ${accentColor}30, ${accentColor}10)`, 
+                 color: accentColor, 
+                 border: `1px solid ${accentColor}40`, 
+                 boxShadow: `0 0 15px ${accentColor}20` 
+               }}>
+            {icon}
+          </div>
+          <span className="px-3 py-1 rounded-full text-[9px] font-label font-bold tracking-[0.2em] uppercase"
+                style={{ background: `${accentColor}15`, color: accentColor, border: `1px solid ${accentColor}30` }}>
+            {type === 'MISSION' ? 'Mission' : 'Vision'}
+          </span>
         </div>
 
-        <span style={{
-          padding: '5px 14px',
-          borderRadius: '999px',
-          fontSize: '10px',
-          fontWeight: 700,
-          letterSpacing: '0.25em',
-          textTransform: 'uppercase',
-          background: `${accentColor}14`,
-          color: accentColor,
-          border: `1px solid ${accentColor}35`,
-        }}>
-          {type === 'MISSION' ? 'Our Mission' : 'Our Vision'}
-        </span>
+        {/* Heading Area - Reduced min-height and margin to fix gap */}
+        <div className="min-h-[60px] md:min-h-[80px] flex flex-col justify-end mb-4">
+          <h2 
+            className="text-2xl md:text-3xl font-display font-black leading-[1.2] transition-all duration-500 group-hover:tracking-tight"
+            style={{ 
+              background: `linear-gradient(to bottom right, #fff 40%, ${accentColor} 100%)`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              filter: `drop-shadow(0 0 10px ${accentColor}15)`
+            }}
+          >
+            {heading}
+          </h2>
+          
+          <div 
+            className="h-1 w-10 mt-3 rounded-full transition-all duration-500 group-hover:w-20"
+            style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }}
+          />
+        </div>
+
+        {/* Body Text */}
+        <p className="text-text-muted text-sm md:text-base leading-relaxed opacity-70 font-body flex-grow">
+          {body}
+        </p>
       </div>
-
-      <h2 style={{
-        fontFamily: 'var(--font-display, Inter, sans-serif)',
-        fontWeight: 800,
-        fontSize: 'clamp(1.5rem, 3.5vw, 2.2rem)',
-        lineHeight: 1.2,
-        color: '#fff',
-        margin: 0,
-        position: 'relative',
-        zIndex: 2,
-      }}>
-        {heading}
-      </h2>
-
-      <div style={{
-        height: '1px',
-        background: `linear-gradient(90deg, ${accentColor}50, transparent)`,
-        position: 'relative', zIndex: 2, flexShrink: 0,
-      }} />
-
-      <p style={{
-        fontSize: '15px',
-        lineHeight: 1.75,
-        color: 'rgba(148,163,196,0.85)',
-        margin: 0,
-        position: 'relative',
-        zIndex: 2,
-        flex: 1,
-      }}>
-        {body}
-      </p>
     </div>
   )
 }
 
 
 
-// ── Interactive Spotlight Section for Values Cards ────────────
 function AboutValuesSection() {
   const containerRef = useRef<HTMLElement>(null)
   const spotlightRef = useRef<HTMLDivElement>(null)
@@ -289,14 +258,12 @@ function AboutValuesSection() {
     const container = containerRef.current
     const spotlight = spotlightRef.current
 
-    // Set initial spotlight state
     gsap.set(spotlight, { 
       opacity: 0, 
       background: 'radial-gradient(600px circle at center, rgba(96, 165, 250, 0.15), transparent 80%)' 
     })
 
     const ctx = gsap.context(() => {
-      // 1. Scroll-triggered entrance/exit for the light intensity
       gsap.to(spotlight, {
         opacity: 1,
         scrollTrigger: {
@@ -307,7 +274,6 @@ function AboutValuesSection() {
         }
       })
 
-      // 2. Mouse tracking logic
       const handleMouseMove = (e: MouseEvent) => {
         const rect = container.getBoundingClientRect()
         const x = e.clientX - rect.left
@@ -332,17 +298,14 @@ function AboutValuesSection() {
       container.addEventListener('mouseleave', handleMouseLeave)
     }, containerRef)
 
-    return () => {
-      ctx.revert()
-    }
+    return () => ctx.revert()
   }, [])
 
   return (
     <section 
-      ref={containerRef} 
+      ref={containerRef}
       className="section px-6 relative overflow-hidden bg-[#020617] border-y border-white/[0.02]"
     >
-      {/* ── Interactive Spotlight (On Top) ── */}
       <div 
         ref={spotlightRef}
         className="absolute inset-0 pointer-events-none z-20 will-change-[background,opacity]"
@@ -568,52 +531,111 @@ export default function About(): JSX.Element {
       </section>
 
       {/* ── ABOUT HASHTAG ───────────────────────────────── */}
-<section className="section px-6">
-  <div className="max-w-5xl mx-auto">
-    <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">
-      The <span className="text-gradient">HASHTAG Society</span>
-    </h2>
+<section className="section px-6 relative overflow-hidden">
+  {/* Decorative Background Element */}
+  <div className="absolute top-0 left-0 w-full h-full -z-10 opacity-20 pointer-events-none">
+    <div className="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 bg-primary/10 blur-[100px] rounded-full" />
+    <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/5 blur-[120px] rounded-full" />
+  </div>
 
-    <p className="text-text-muted leading-relaxed text-lg whitespace-pre-line">
-      {ABOUT_CONTENT}
-    </p>
+  <div className="max-w-6xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+    >
+      <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-10 tracking-tight">
+        The <span className="text-gradient">HASHTAG Society</span>
+      </h2>
+
+      <div className="relative">
+        <div className="absolute -left-6 top-0 bottom-0 w-px bg-gradient-to-b from-primary/50 to-transparent hidden md:block" />
+        <p className="text-text-muted leading-relaxed text-lg md:text-xl font-body whitespace-pre-line opacity-90">
+          {ABOUT_CONTENT}
+        </p>
+      </div>
+    </motion.div>
   </div>
 </section>
 
 {/* ── RELATION WITH JIMS ───────────────────────────── */}
-<section className="section px-6">
-  <div className="max-w-5xl mx-auto">
-    <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">
-      Our Relation with <span className="text-gradient">JIMS</span>
-    </h2>
+<section className="section px-6 bg-white/[0.01] border-y border-white/[0.02]">
+  <div className="max-w-6xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+    >
+      <h2 className="text-4xl md:text-5xl font-display font-bold mb-8 tracking-tight">
+        Our Relation with <span className="text-gradient-violet">JIMS</span>
+      </h2>
 
-    <p className="text-text-muted leading-relaxed text-lg whitespace-pre-line">
-      {JIMS_RELATION}
-    </p>
+      <p className="text-text-muted leading-relaxed text-lg md:text-xl font-body whitespace-pre-line opacity-90">
+        {JIMS_RELATION}
+      </p>
+    </motion.div>
   </div>
 </section>
 
 {/* ── SPONSORS ─────────────────────────────────────── */}
 <section className="section px-6">
   <div className="max-w-7xl mx-auto">
-    <div className="mb-16 text-center">
-      <h2 className="text-4xl md:text-6xl font-display font-bold">
+    <div className="mb-20 text-center">
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-4xl md:text-6xl font-display font-bold"
+      >
         Our <span className="text-gradient">Sponsors</span>
-      </h2>
+      </motion.h2>
+      <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-6 rounded-full opacity-50" />
     </div>
 
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {SPONSORS.map((sponsor) => (
-        <div
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      {SPONSORS.map((sponsor, idx) => (
+        <motion.div
           key={sponsor.name}
-          className="surface-card p-6 rounded-2xl border border-outline-var/30 flex items-center justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: idx * 0.05 }}
+          whileHover={{ y: -8, scale: 1.05, filter: 'brightness(1.15)' }}
+          whileTap={{ scale: 0.95, filter: 'brightness(1.3)' }}
+          className="group relative cursor-pointer"
         >
-          <img
-            src={sponsor.image}
-            alt={sponsor.name}
-            className="max-h-16 object-contain"
-          />
-        </div>
+          {/* Outer Glow Effect */}
+          <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 blur-[30px] transition-opacity duration-500 rounded-2xl" />
+          
+          <div
+            className="relative h-32 md:h-40 p-6 rounded-3xl border border-white/[0.05] bg-[#0A0F1A] flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:border-primary/40 group-hover:bg-white/[0.05] shadow-2xl"
+          >
+            {/* White center gradient for logo visibility — Increased intensity */}
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.2),transparent_70%)] opacity-100 transition-opacity duration-500 group-hover:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.35),transparent_70%)]" />
+            
+            {/* Subtle Surface overlay to lift black logos */}
+            <div className="absolute inset-0 bg-white/[0.02] pointer-events-none" />
+            
+            {/* Dynamic Glass Reflection */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/[0.01] to-white/[0.05] pointer-events-none" />
+            
+            <img
+              src={sponsor.image}
+              alt={sponsor.name}
+              className="max-h-16 md:max-h-20 w-auto object-contain transition-all duration-700 group-hover:scale-110 group-hover:brightness-125 relative z-10"
+              style={{ filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.5)) contrast(1.1)' }}
+            />
+            
+            {/* Floating Label */}
+            <div className="absolute inset-0 flex items-end justify-center pb-3 opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0 z-20">
+              <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[9px] font-label text-white/50 tracking-[0.2em] uppercase font-bold">
+                {sponsor.name}
+              </span>
+            </div>
+          </div>
+        </motion.div>
       ))}
     </div>
   </div>

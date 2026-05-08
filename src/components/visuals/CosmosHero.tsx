@@ -9,7 +9,7 @@ export default function CosmosHero(): JSX.Element {
     const ctx = cv.getContext('2d', { alpha: true })
     if (!ctx) return
 
-    let W: number, H: number, stars: any[] = []
+    let W = 0, H = 0, stars: any[] = []
     let t = 0
     let raf: number
     // Cache isMobile once — never re-query in draw loop
@@ -20,7 +20,7 @@ export default function CosmosHero(): JSX.Element {
     const glowWidth  = isMobile ? 20 : 15
 
     // Mouse / scroll state — updated only by events
-    let mouseX = W ? W / 2 : 0, mouseY = H ? H / 2 : 0
+    let mouseX = 0, mouseY = 0
     let rotX = 0, rotY = 0
     let targetRotX = 0, targetRotY = 0
     let scrollY = 0
@@ -41,6 +41,11 @@ export default function CosmosHero(): JSX.Element {
         twinkle: Math.random() * Math.PI * 2,
         speed: 0.015 + Math.random() * 0.025,  // slightly slower
       }))
+      // Center mouse initially
+      if (mouseX === 0 && mouseY === 0) {
+        mouseX = W / 2
+        mouseY = H / 2
+      }
     }
 
     // Throttled mouse — only fire at most once per rAF via a flag
