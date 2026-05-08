@@ -1,9 +1,9 @@
-import { useEffect, useRef, useCallback, useState } from 'react'
+import { useEffect, useRef, useCallback } from 'react'
 import { motion } from 'framer-motion'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import FlipCard from '../components/ui/FlipCard'
-import { MILESTONES } from '../constants/data'
+import { MILESTONES, ABOUT_CONTENT, JIMS_RELATION } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -40,6 +40,26 @@ const VALUES = [
     stat: '5 hackathons won',
     quote: 'The best projects start with "what if?"',
   },
+]
+
+const SPONSORS = [
+  { name: "Microsoft Azure", image: "/Photos/Sponsors/Microsoft Azure.png" },
+  { name: "AZD", image: "/Photos/Sponsors/AZD.png" },
+  { name: "Reskilll", image: "/Photos/Sponsors/Reskill.png" },
+  { name: "Softmart", image: "/Photos/Sponsors/Softmart solutions_title sponser 1.png" },
+  { name: "Physics Wallah", image: "/Photos/Sponsors/Physics wallah.png" },
+  { name: "Finlatics", image: "/Photos/Sponsors/Finlatics.png" },
+  { name: "Click a Diet", image: "/Photos/Sponsors/clickadiet.png" },
+  { name: "Genesis", image: "/Photos/Sponsors/genesis.png" },
+  { name: "Interview Buddy", image: "/Photos/Sponsors/interview buddy.png" },
+  { name: "LinkedOut", image: "/Photos/Sponsors/LinkedOut_Bg_removed.png" },
+  { name: "Julep AI", image: "/Photos/Sponsors/julep.png" },
+  { name: "Events Info", image: "/Photos/Sponsors/Events Info.png" },
+  { name: "Give My Certificates", image: "/Photos/Sponsors/Givemycert.png" },
+  { name: "Advertising Point Line", image: "/Photos/Sponsors/adv point line.png" },
+  { name: "Meraj's Creatives", image: "/Photos/Sponsors/meraj's creatives.png" },
+  { name: "Navras Jemtec", image: "/Photos/Sponsors/NAVRAS LOGO (Original).png" },
+  { name: ".xyz Domain Registry", image: "/Photos/Sponsors/.xyz.png" }
 ]
 
 // Fix 2: Premium Mission/Vision card — glass surface, gradient mesh, glowing icon, readable text
@@ -183,6 +203,7 @@ function MissionVisionCard({
     </div>
   )
 }
+
 
 
 // ── Interactive Spotlight Section for Values Cards ────────────
@@ -474,6 +495,58 @@ export default function About(): JSX.Element {
           />
         </div>
       </section>
+
+      {/* ── ABOUT HASHTAG ───────────────────────────────── */}
+<section className="section px-6">
+  <div className="max-w-5xl mx-auto">
+    <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">
+      The <span className="text-gradient">HASHTAG Society</span>
+    </h2>
+
+    <p className="text-text-muted leading-relaxed text-lg whitespace-pre-line">
+      {ABOUT_CONTENT}
+    </p>
+  </div>
+</section>
+
+{/* ── RELATION WITH JIMS ───────────────────────────── */}
+<section className="section px-6">
+  <div className="max-w-5xl mx-auto">
+    <h2 className="text-4xl md:text-5xl font-display font-bold mb-8">
+      Our Relation with <span className="text-gradient">JIMS</span>
+    </h2>
+
+    <p className="text-text-muted leading-relaxed text-lg whitespace-pre-line">
+      {JIMS_RELATION}
+    </p>
+  </div>
+</section>
+
+{/* ── SPONSORS ─────────────────────────────────────── */}
+<section className="section px-6">
+  <div className="max-w-7xl mx-auto">
+    <div className="mb-16 text-center">
+      <h2 className="text-4xl md:text-6xl font-display font-bold">
+        Our <span className="text-gradient">Sponsors</span>
+      </h2>
+    </div>
+
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      {SPONSORS.map((sponsor) => (
+        <div
+          key={sponsor.name}
+          className="surface-card p-6 rounded-2xl border border-outline-var/30 flex items-center justify-center"
+        >
+          <img
+            src={sponsor.image}
+            alt={sponsor.name}
+            className="max-h-16 object-contain"
+          />
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* ── MISSION / VISION ─────────────────────────────────── */}
       <section className="section-sm px-6">

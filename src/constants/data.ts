@@ -351,7 +351,8 @@ export const EVENTS: Event[] = [
     description:
       'An ideathon one of its kind — students pitch ideas in front of Microsoft Employees at Microsoft Office Noida. Winners earn cash prizes, certificates, and swags.',
     tag: 'Ideathon',
-    status: 'upcoming',
+    status: 'past',
+    poster: 'https://hashtag-official.vercel.app/assets/cs-CL4FeSij.jpg',
     registerUrl: 'https://reskilll.com/hack/troubleshoot',
     gradientFrom: '#8ff5ff',
     gradientTo: '#00fc40',
@@ -363,6 +364,7 @@ export const EVENTS: Event[] = [
       'A high-energy Valorant Tournament bringing competitive spirit to the forefront. The event highlighted teamwork, strategic thinking, and sportsmanship. Hashtag commitment to promoting tech & e-sports culture on campus.',
     tag: 'Gaming',
     status: 'past',
+    poster: 'https://hashtag-official.vercel.app/assets/vct-CFqoO1u7.jpg',
     gradientFrom: '#ac89ff',
     gradientTo: '#ff6b9b',
   },
@@ -373,6 +375,7 @@ export const EVENTS: Event[] = [
       'Hashtag flagship ideation event where creativity met real-world tech challenges. Teams pitched smart, feasible solutions. Top teams earned trophies, certificates, and recognition — a celebration of innovation!',
     tag: 'Ideathon',
     status: 'past',
+    poster: 'https://hashtag-official.vercel.app/assets/ideautsav-1JXVl_ej.jpg',
     gradientFrom: '#00fc40',
     gradientTo: '#8ff5ff',
   },
@@ -383,6 +386,7 @@ export const EVENTS: Event[] = [
       'A coding fest — a challenge to design websites with a unique and captivating style. Participants chose any tech stack, picked from themes, and brought them to life with creativity and innovation.',
     tag: 'Design',
     status: 'past',
+    poster: 'https://hashtag-official.vercel.app/assets/brandbrawl-XMbxOCOp.jpg',
     gradientFrom: '#ac89ff',
     gradientTo: '#8ff5ff',
   },
@@ -393,6 +397,7 @@ export const EVENTS: Event[] = [
       'Not just a hunt — a mental battlefield. Put your logic to the test and solve your way through the rounds. Start online, crack codes, and pave the way to the real-world treasure!',
     tag: 'Hunt',
     status: 'past',
+    poster: 'https://hashtag-official.vercel.app/assets/cryptichunt-DwtjWL7t.jpg',
     gradientFrom: '#ff6b9b',
     gradientTo: '#ac89ff',
   },
@@ -403,6 +408,7 @@ export const EVENTS: Event[] = [
       'A mystery-filled adventure full of suspense and twists. Participants showcased cleverness solving carefully curated puzzles and riddles. Twists at every step pushed participants to find the ultimate treasure.',
     tag: 'Hunt',
     status: 'past',
+    poster: 'https://hashtag-official.vercel.app/assets/treasurehunt-eDbFKxXs.jpg',
     gradientFrom: '#8ff5ff',
     gradientTo: '#ac89ff',
   },
@@ -413,6 +419,7 @@ export const EVENTS: Event[] = [
       'CodeTrek\'25 — participants tackled a series of coding tasks under tight time constraints. The event tested not just technical knowledge but critical thinking and time management.',
     tag: 'Coding',
     status: 'past',
+    poster: 'https://hashtag-official.vercel.app/assets/codetrekrelay-Dv_602Cy.jpg',
     gradientFrom: '#00fc40',
     gradientTo: '#ac89ff',
   },
@@ -423,6 +430,7 @@ export const EVENTS: Event[] = [
       'Teams raced to solve real-time challenges with speed and precision. The event blended logic, pressure, and teamwork — pushing coders to bring their A-game.',
     tag: 'Coding',
     status: 'past',
+    poster: 'https://hashtag-official.vercel.app/assets/codetrek-CNHi5dxE.jpg',
     gradientFrom: '#ac89ff',
     gradientTo: '#00fc40',
   },
@@ -438,6 +446,7 @@ export interface Blog {
   accent: string
   date: string
   featured: boolean
+  coverImage?: string
 }
 
 export const BLOGS: Blog[] = [
@@ -490,6 +499,28 @@ export const BLOGS: Blog[] = [
     accent: '#00fc40',
     date: 'Nov 2024',
     featured: false,
+  },
+  {
+    id: 'defuse-or-die-the-ultimate-valorant-showdown',
+    title: 'Defuse Or Die: The Ultimate Valorant Showdown',
+    excerpt: 'A competitive Valorant event hosted by Hashtag Technical Society, showcasing team strategy, esports spirit, and campus gaming culture.',
+    tag: 'Gaming',
+    readTime: '6 min read',
+    accent: '#ff8b5a',
+    date: 'March 2025',
+    featured: false,
+    coverImage: 'https://cdn.sanity.io/images/4czbk8j7/production/deea2612b2b9021206ababb56515bfca0f466cee-4032x2268.jpg',
+  },
+  {
+    id: 'welcome-to-hashtag',
+    title: 'Welcome To Hashtag',
+    excerpt: 'An introduction to HashTag Technical Society, its mission, culture, and student-led innovation at JIMS Greater Noida.',
+    tag: 'Culture',
+    readTime: '5 min read',
+    accent: '#6f82ff',
+    date: '2024',
+    featured: false,
+    coverImage: 'https://cdn.sanity.io/images/4czbk8j7/production/6badacb22cf366eb5b2e366feceb6a5090d0a626-128x74.png',
   },
 ]
 
@@ -558,3 +589,11 @@ export const DEPARTMENTS = [
 ] as const
 
 export type Department = (typeof DEPARTMENTS)[number]
+
+// ── About Content ──────────────────────────────────────────────
+
+export const ABOUT_CONTENT = `We are a passionate community of developers, designers, and innovators united by the goal of pushing the boundaries of technology. At #Hashtag, we believe in open collaboration, continuous learning, and creating impactful solutions for the future.
+
+Our mission is to bridge the gap between academic learning and industry standards, empowering students to build real-world projects, host exciting hackathons, and foster a thriving community of tech enthusiasts.`
+
+export const JIMS_RELATION = `Hashtag is JIMS Greater Noida's premier technical society, dedicated to cultivating a thriving community of developers, designers, and innovators. We work closely with the institution to provide students with opportunities to learn cutting-edge technologies, collaborate on meaningful projects, and prepare for successful careers in the tech industry.`
