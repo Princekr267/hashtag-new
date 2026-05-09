@@ -9,14 +9,6 @@ gsap.registerPlugin(ScrollTrigger)
 
 const VALUES = [
   {
-    icon: '◈',
-    title: 'Build Real Things',
-    desc: 'We ship projects that matter. From hackathons to industry partnerships — everything we do has real-world impact.',
-    accent: '#8ff5ff',
-    stat: '12+ projects shipped',
-    quote: 'Real code. Real impact. Every semester.',
-  },
-  {
     icon: '⚡',
     title: 'Learn Together',
     desc: 'Workshops, seminars, and peer learning. Knowledge grows when shared — we believe in collaborative growth.',
@@ -29,16 +21,8 @@ const VALUES = [
     title: 'Lead with Purpose',
     desc: "We don't just participate — we organize, lead, and inspire. Every member is a potential leader.",
     accent: '#ac89ff',
-    stat: '50+ members leading',
+    stat: '20+ members leading',
     quote: 'Every builder started as a beginner.',
-  },
-  {
-    icon: '∞',
-    title: 'Stay Curious',
-    desc: 'Tech evolves fast. We celebrate curiosity, experimentation, and the bold willingness to try new things.',
-    accent: '#ff6b9b',
-    stat: '5 hackathons won',
-    quote: 'The best projects start with "what if?"',
   },
 ]
 
@@ -513,7 +497,7 @@ export default function About(): JSX.Element {
               <span className="text-gradient">Tech Society</span>
             </h1>
             <p className="text-text-muted text-base md:text-lg leading-relaxed max-w-2xl font-body">
-              Founded in 2023 at JIMS Greater Noida, Hashtag Official is where technical ambition
+              Founded in 2019 at JIMS Greater Noida, Hashtag Official is where technical ambition
               meets creative culture. We are a community of builders, designers, and dreamers
               committed to making real impact through technology.
             </p>
@@ -640,47 +624,6 @@ export default function About(): JSX.Element {
     </div>
   </div>
 </section>
-
-      {/* ── MISSION / VISION ─────────────────────────────────── */}
-      <section className="section-sm px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Mission — left */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-              className="h-full"
-            >
-              <MissionVisionCard
-                type="MISSION"
-                icon="🎯"
-                heading="Bridge the Gap"
-                body="To bridge the gap between academic learning and industry reality by giving students hands-on experience, real mentorship, and a tribe that pushes them forward."
-                accentColor="#38bdf8"
-              />
-            </motion.div>
-
-            {/* Vision — right */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
-              className="h-full"
-            >
-              <MissionVisionCard
-                type="VISION"
-                icon="🚀"
-                heading="Shape Tomorrow's Leaders"
-                body="To cultivate a generation of technically proficient, creatively bold, and ethically grounded leaders who define the future of technology in India."
-                accentColor="#818cf8"
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
       {/* ── VALUES — FLIP CARDS ──────────────────────────────── */}
       <AboutValuesSection />

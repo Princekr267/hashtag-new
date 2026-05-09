@@ -41,6 +41,22 @@ const FEATURES = [
     tag: 'IMPACT',
     back: '5 hackathons won. Countless ideas born here.',
   },
+  {
+    icon: '🛠️',
+    title: 'Technical Workshops',
+    desc: 'Hands-on sessions focused on trending technologies, tools, and live coding exercises for deep practical learning.',
+    accent: '#22c55e',
+    tag: 'WORKSHOP',
+    back: 'Practical skills gained in every session.',
+  },
+  {
+    icon: '🤝',
+    title: 'Industry Connections',
+    desc: 'We bridge students with real-world professionals through mentor sessions, live talks, and partner-led events.',
+    accent: '#f97316',
+    tag: 'NETWORK',
+    back: 'Connecting campus talent with industry opportunity.',
+  },
 ]
 
 const SPONSORS = [
@@ -172,19 +188,6 @@ export default function Home(): JSX.Element {
         end: 'bottom top',
         scrub: true,
       }
-    });
-
-    gsap.utils.toArray('.artifact-card').forEach((el: any) => {
-      gsap.to(el, {
-        y: -60, // Same speed for both — keeps them aligned
-        ease: 'none',
-        scrollTrigger: {
-          trigger: '.artifacts-section',
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        }
-      });
     });
 
     gsap.fromTo('.feature-card-wrapper',
@@ -384,7 +387,7 @@ export default function Home(): JSX.Element {
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {FEATURES.map((f, idx) => (
               <div key={f.title} className="feature-card-wrapper h-full" style={{ transformStyle: 'preserve-3d' }}>
                 <InteractiveCard3D accentColor={f.accent} className="h-full">
@@ -435,9 +438,7 @@ export default function Home(): JSX.Element {
       </section>
 
 
-      {/* ════════════════════════════════════════════════════════
-          ARTIFACTS SECTION
-          ════════════════════════════════════════════════════ */}
+
 
      
 

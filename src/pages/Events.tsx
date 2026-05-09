@@ -105,7 +105,7 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
-      className={`p-4 min-h-[400px] ${isPast ? 'polaroid-card' : ''}`}
+      className={`p-4 h-full min-h-[420px] event-card ${isPast ? 'polaroid-card' : ''}`}
       style={isPast ? { transform: `rotate(${rotation}deg)`, zIndex: 1 } : undefined}
     >
       <div
@@ -159,7 +159,7 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
             )}
           </div>
 
-          <div className="p-5 md:p-7 flex flex-col flex-1 gap-4">
+          <div className="p-5 md:p-7 flex flex-col flex-1 gap-4 event-card-content">
             {/* Header row */}
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -336,12 +336,13 @@ export default function Events(): JSX.Element {
           {/* Cards grid — past events have polaroid tilt */}
           <motion.div
             layout
-            className="grid grid-cols-1 md:grid-cols-2 gap-0"
+            className="events-grid grid grid-cols-1 md:grid-cols-2 gap-6"
           >
             <AnimatePresence mode="popLayout">
               {filtered.map((event, idx) => (
                 <div
                   key={event.id}
+                  className="h-full"
                   style={{
                     borderRight: (idx % 2 === 0) ? '1px solid rgba(143,245,255,0.05)' : 'none',
                     borderBottom: '1px solid rgba(143,245,255,0.05)',

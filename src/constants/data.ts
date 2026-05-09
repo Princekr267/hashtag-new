@@ -193,7 +193,11 @@ export const TEAM: TeamMember[] = [
     title: 'Content Co-Head',
     avatarUrl: '/Photos/Rimi.png',
     department: 'Content',
-    social: {},
+    social: {
+      github: 'https://github.com/rimikumari',
+      linkedin: 'https://www.linkedin.com/in/rimi-kumari-technical/',
+      instagram: 'https://www.instagram.com/rimikumari.tech/',
+    },
   },
   // Social Media
   {
@@ -349,7 +353,7 @@ export const EVENTS: Event[] = [
     id: 'troubleshoot',
     title: 'TroubleShoot Ideathon',
     description:
-      'An ideathon one of its kind — students pitch ideas in front of Microsoft Employees at Microsoft Office Noida. Winners earn cash prizes, certificates, and swags.',
+      'A flagship ideathon hosted with Microsoft where students pitched real product ideas to industry experts. Attendees sharpened their problem framing, delivery, and presentation skills under professional mentorship.',
     tag: 'Ideathon',
     status: 'past',
     poster: 'https://hashtag-official.vercel.app/assets/cs-CL4FeSij.jpg',
@@ -361,7 +365,7 @@ export const EVENTS: Event[] = [
     id: 'hack-battle',
     title: 'Hack Battle',
     description:
-      'A high-energy Valorant Tournament bringing competitive spirit to the forefront. The event highlighted teamwork, strategic thinking, and sportsmanship. Hashtag commitment to promoting tech & e-sports culture on campus.',
+      'A high-energy Valorant tournament that brought competitive tech culture to campus. The event reinforced teamwork, strategy, and community spirit while celebrating the energy of student gaming culture.',
     tag: 'Gaming',
     status: 'past',
     poster: 'https://hashtag-official.vercel.app/assets/vct-CFqoO1u7.jpg',
@@ -372,7 +376,7 @@ export const EVENTS: Event[] = [
     id: 'ideautsav',
     title: 'IdeaUtsav',
     description:
-      'Hashtag flagship ideation event where creativity met real-world tech challenges. Teams pitched smart, feasible solutions. Top teams earned trophies, certificates, and recognition — a celebration of innovation!',
+      'Our flagship innovation festival where teams turned insights into solutions. Participants pitched creative technology concepts and received expert feedback, recognition, and growth opportunities.',
     tag: 'Ideathon',
     status: 'past',
     poster: 'https://hashtag-official.vercel.app/assets/ideautsav-1JXVl_ej.jpg',
@@ -383,7 +387,7 @@ export const EVENTS: Event[] = [
     id: 'brand-brawl',
     title: 'Brand Brawl',
     description:
-      'A coding fest — a challenge to design websites with a unique and captivating style. Participants chose any tech stack, picked from themes, and brought them to life with creativity and innovation.',
+      'A design-driven build challenge where students created websites with bold themes and strong brand storytelling. Teams were evaluated on usability, visual polish, and creativity under tight timelines.',
     tag: 'Design',
     status: 'past',
     poster: 'https://hashtag-official.vercel.app/assets/brandbrawl-XMbxOCOp.jpg',
@@ -394,7 +398,7 @@ export const EVENTS: Event[] = [
     id: 'cryptic-hunt',
     title: 'Cryptic Hunt',
     description:
-      'Not just a hunt — a mental battlefield. Put your logic to the test and solve your way through the rounds. Start online, crack codes, and pave the way to the real-world treasure!',
+      'A strategic puzzle challenge that tested logic, teamwork, and problem solving. Participants decoded clues across multiple rounds, sharpening analytical thinking and rapid decision-making.',
     tag: 'Hunt',
     status: 'past',
     poster: 'https://hashtag-official.vercel.app/assets/cryptichunt-DwtjWL7t.jpg',
@@ -405,7 +409,7 @@ export const EVENTS: Event[] = [
     id: 'treasure-hunt',
     title: 'Treasure Hunt',
     description:
-      'A mystery-filled adventure full of suspense and twists. Participants showcased cleverness solving carefully curated puzzles and riddles. Twists at every step pushed participants to find the ultimate treasure.',
+      'A campus adventure designed around suspense and clever challenges. Teams navigated hidden clues, collaborated under pressure, and competed for the final prize with sharp problem solving.',
     tag: 'Hunt',
     status: 'past',
     poster: 'https://hashtag-official.vercel.app/assets/treasurehunt-eDbFKxXs.jpg',
@@ -416,7 +420,7 @@ export const EVENTS: Event[] = [
     id: 'relay-coding',
     title: 'Relay Coding',
     description:
-      'CodeTrek\'25 — participants tackled a series of coding tasks under tight time constraints. The event tested not just technical knowledge but critical thinking and time management.',
+      'CodeTrek 25 challenged participants with relay-style coding rounds. Teams collaborated to solve timed problems, balancing speed, clarity, and accuracy under event pressure.',
     tag: 'Coding',
     status: 'past',
     poster: 'https://hashtag-official.vercel.app/assets/codetrekrelay-Dv_602Cy.jpg',
@@ -427,7 +431,7 @@ export const EVENTS: Event[] = [
     id: 'codetrek',
     title: 'CodeTrek',
     description:
-      'Teams raced to solve real-time challenges with speed and precision. The event blended logic, pressure, and teamwork — pushing coders to bring their A-game.',
+      'A flagship coding competition where teams raced through real-time algorithmic challenges. The event highlighted technical skill, teamwork, and a strong drive to deliver polished solutions.',
     tag: 'Coding',
     status: 'past',
     poster: 'https://hashtag-official.vercel.app/assets/codetrek-CNHi5dxE.jpg',
@@ -477,23 +481,20 @@ export const BLOGS: Blog[] = [
 
 // ── Stats ──────────────────────────────────────────────────────
 export const STATS: Stat[] = [
-  { value: 50, suffix: '+', label: 'Members' },
-  { value: 12, suffix: '+', label: 'Events Hosted' },
-  { value: 15, suffix: 'K+', label: 'Lines of Code' },
-  { value: 20, suffix: '+', label: 'Live Artifacts' },
-  { value: 5, suffix: '', label: 'Hackathons Won' },
-  { value: 8, suffix: '+', label: 'Industry Partners' },
+  { value: 24, suffix: '', label: 'Members' },
+  { value: 5, suffix: '+', label: 'Events' },
+  { value: 10, suffix: '+', label: 'Industry Partners' },
 ]
 
 // ── Timeline Milestones ────────────────────────────────────────
 export const MILESTONES: Milestone[] = [
   {
-    year: '2023',
+    year: '2019',
     title: 'Founded',
     description: 'Hashtag Official was born at JIMS Greater Noida with a vision to bridge the gap between academics and industry.',
   },
   {
-    year: '2023',
+    year: '2019',
     title: 'First Event — Treasure Hunt',
     description: 'Our debut event was a mystery-filled adventure that set the tone for everything that followed.',
   },
@@ -542,7 +543,7 @@ export type Department = (typeof DEPARTMENTS)[number]
 
 // ── About Content ──────────────────────────────────────────────
 
-export const ABOUT_CONTENT = `We are a passionate community of developers, designers, and innovators united by the goal of pushing the boundaries of technology. At #Hashtag, we believe in open collaboration, continuous learning, and creating impactful solutions for the future.
+export const ABOUT_CONTENT = `Hashtag Society is a student-run technical community at JIMS Greater Noida that stands for hands-on learning, collaborative problem-solving, and inclusive tech leadership. We are committed to empowering members through workshops, projects, and partnerships that make technology education more accessible and career-ready.
 
 Our mission is to bridge the gap between academic learning and industry standards, empowering students to build real-world projects, host exciting hackathons, and foster a thriving community of tech enthusiasts.`
 
