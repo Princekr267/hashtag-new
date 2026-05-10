@@ -71,19 +71,6 @@ export default function DetailModal({
             <div className="prose prose-invert max-w-none">
               <p className="text-lg text-white/80 font-medium mb-6">{content}</p>
               <div className="w-16 h-1 mb-8" style={{ background: accentColor, opacity: 0.5 }} />
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis
-                nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              </p>
-              <br />
-              <h3 className="text-xl text-white font-bold mb-4 font-display">Deeper Dive</h3>
-              <p>
-                Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, 
-                est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida.
-              </p>
             </div>
           </div>
         </motion.div>

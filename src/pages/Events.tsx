@@ -105,8 +105,8 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
-      className={`p-4 h-full min-h-[420px] event-card ${isPast ? 'polaroid-card' : ''}`}
-      style={isPast ? { transform: `rotate(${rotation}deg)`, zIndex: 1 } : undefined}
+      className={`p-4 h-full event-card ${isPast ? 'polaroid-card' : ''}`}
+      style={isPast ? { transform: `rotate(${rotation}deg)`, zIndex: 1, height: '420px' } : { height: '420px' }}
     >
       <div
         ref={cardRef}
