@@ -57,16 +57,12 @@ function ContactModal({ onClose }: { onClose: () => void }) {
     if (!name.trim() || !email.trim() || !message.trim()) return
     setState('sending')
 
-    // Build mailto: link — send via user's email client
-    // For a real form submission you'd POST to a backend/formspree endpoint here
     const mailtoHref = `mailto:hashtag@jims.edu.in?subject=${encodeURIComponent(subject || `Message from ${name}`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`
 
-    // Simulate async (open mailto + show success)
     await new Promise(r => setTimeout(r, 600))
     window.open(mailtoHref, '_blank')
     setState('success')
 
-    // Auto-close after 2.5s
     setTimeout(onClose, 2500)
   }
 
@@ -78,85 +74,45 @@ function ContactModal({ onClose }: { onClose: () => void }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
       onClick={e => { if (e.target === overlayRef.current) onClose() }}
-      style={{
-        position: 'fixed', inset: 0, zIndex: 200,
-        background: 'rgba(0,0,0,0.75)',
-        backdropFilter: 'blur(8px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        padding: '24px',
-      }}
+      className="fixed inset-0 z-[200] flex items-center justify-center p-6 backdrop-blur-md bg-black/75"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.94, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-[520px] rounded-[24px] p-9 relative overflow-hidden gpu-accel"
         style={{
-          width: '100%', maxWidth: '520px',
-          background: 'linear-gradient(145deg, #080e1c 0%, #060a16 100%)',
-          border: '1px solid rgba(96,165,250,0.20)',
-          borderRadius: '24px',
-          padding: '36px',
-          position: 'relative',
-          boxShadow: '0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px rgba(96,165,250,0.08)',
-          overflow: 'hidden',
+          background: 'linear-gradient(145deg, var(--bg-container-hi) 0%, var(--bg-container) 100%)',
+          border: '1px solid var(--primary-glow)',
+          boxShadow: '0 40px 100px rgba(0,0,0,0.8), 0 0 0 1px var(--outline-var)',
         }}
       >
         {/* Background glow */}
-        <div style={{
-          position: 'absolute', top: '-60px', left: '-60px',
-          width: '280px', height: '280px',
-          background: 'radial-gradient(circle, rgba(96,165,250,0.10), transparent 70%)',
-          pointerEvents: 'none',
-        }} />
-        <div style={{
-          position: 'absolute', bottom: '-40px', right: '-40px',
-          width: '200px', height: '200px',
-          background: 'radial-gradient(circle, rgba(129,140,248,0.08), transparent 70%)',
-          pointerEvents: 'none',
-        }} />
+        <div className="absolute top-[-60px] left-[-60px] w-[280px] h-[280px] pointer-events-none" style={{ background: 'radial-gradient(circle, var(--primary-glow), transparent 70%)' }} />
+        <div className="absolute bottom-[-40px] right-[-40px] w-[200px] h-[200px] pointer-events-none" style={{ background: 'radial-gradient(circle, var(--secondary-glow), transparent 70%)' }} />
 
         {/* Top glow line */}
-        <div style={{
-          position: 'absolute', top: 0, left: '15%', right: '15%', height: '1px',
-          background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.6), transparent)',
-        }} />
+        <div className="absolute top-0 left-[15%] right-[15%] h-px" style={{ background: 'linear-gradient(90deg, transparent, var(--primary), transparent)' }} />
 
         {/* Close button */}
         <button
           onClick={onClose}
           aria-label="Close contact form"
-          style={{
-            position: 'absolute', top: '16px', right: '16px',
-            width: '36px', height: '36px',
-            borderRadius: '50%', border: '1px solid rgba(255,255,255,0.1)',
-            background: 'rgba(255,255,255,0.05)',
-            color: 'rgba(255,255,255,0.6)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer', transition: 'all 0.2s ease',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.color = '#fff' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)'; e.currentTarget.style.color = 'rgba(255,255,255,0.6)' }}
+          className="absolute top-4 right-4 w-11 h-11 rounded-full border border-white/10 bg-white/5 text-white/60 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-white/12 hover:text-white"
         >
-          <X size={16} />
+          <X size={18} />
         </button>
 
         {/* Header */}
-        <div style={{ marginBottom: '28px', position: 'relative', zIndex: 2 }}>
-          <div style={{
-            display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
-            width: '48px', height: '48px', borderRadius: '14px',
-            background: 'linear-gradient(135deg, rgba(96,165,250,0.2), rgba(96,165,250,0.08))',
-            border: '1px solid rgba(96,165,250,0.3)',
-            marginBottom: '16px',
-            boxShadow: '0 0 30px rgba(96,165,250,0.15)',
-          }}>
-            <Mail size={22} color="#60a5fa" />
+        <div className="mb-7 relative z-[2]">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[14px] mb-4 border border-primary/30 bg-primary/10 shadow-[0_0_30px_var(--primary-glow)]">
+            <Mail size={22} className="text-primary" />
           </div>
-          <h2 style={{ fontWeight: 800, fontSize: '1.6rem', color: '#fff', margin: '0 0 6px', lineHeight: 1.2 }}>
+          <h2 className="font-display font-black text-[1.6rem] text-white m-0 leading-[1.2]">
             Get in Touch
           </h2>
-          <p style={{ fontSize: '14px', color: 'rgba(148,163,196,0.8)', margin: 0 }}>
+          <p className="text-sm text-text-muted/80 m-0 font-body">
             Have a question or want to collaborate? Send us a message.
           </p>
         </div>
@@ -166,19 +122,18 @@ function ContactModal({ onClose }: { onClose: () => void }) {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            style={{ textAlign: 'center', padding: '32px 0', position: 'relative', zIndex: 2 }}
+            className="text-center py-8 relative z-[2]"
           >
-            <CheckCircle size={52} color="#00fc40" style={{ margin: '0 auto 16px' }} />
-            <h3 style={{ fontWeight: 700, fontSize: '1.2rem', color: '#fff', marginBottom: '8px' }}>
+            <CheckCircle size={52} className="text-primary mb-4 mx-auto" />
+            <h3 className="font-bold text-xl text-white mb-2 font-display">
               Message Sent!
             </h3>
-            <p style={{ fontSize: '14px', color: 'rgba(148,163,196,0.8)' }}>
+            <p className="text-sm text-text-muted/80 font-body">
               Your email client has opened with the message pre-filled. We'll get back to you soon!
             </p>
           </motion.div>
         ) : (
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px', position: 'relative', zIndex: 2 }}>
-            {/* Name + Email row */}
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-[2]">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <FormField
                 label="Name"
@@ -204,10 +159,9 @@ function ContactModal({ onClose }: { onClose: () => void }) {
               onChange={setSubject}
             />
 
-            {/* Message textarea */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-              <label style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', color: 'rgba(148,163,196,0.9)', textTransform: 'uppercase' }}>
-                Message <span style={{ color: '#60a5fa' }}>*</span>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[12px] font-semibold tracking-wider text-text-muted/90 uppercase">
+                Message <span className="text-primary">*</span>
               </label>
               <textarea
                 placeholder="Tell us what's on your mind..."
@@ -215,64 +169,26 @@ function ContactModal({ onClose }: { onClose: () => void }) {
                 onChange={e => setMessage(e.target.value)}
                 required
                 rows={4}
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.1)',
-                  borderRadius: '12px', padding: '12px 14px',
-                  color: '#e8f0ff', fontSize: '14px',
-                  resize: 'vertical', outline: 'none',
-                  transition: 'border-color 0.2s ease',
-                  fontFamily: 'inherit', lineHeight: 1.6,
-                  minHeight: '100px',
-                }}
-                onFocus={e => { e.currentTarget.style.borderColor = 'rgba(96,165,250,0.5)' }}
-                onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
+                className="bg-white/5 border border-white/10 rounded-[12px] px-3.5 py-3 text-text-primary text-sm outline-none transition-colors duration-200 focus:border-primary/50 font-body leading-relaxed min-h-[100px]"
               />
             </div>
 
-            {/* Error state */}
             {state === 'error' && (
-              <div style={{
-                display: 'flex', alignItems: 'center', gap: '8px',
-                padding: '10px 14px', borderRadius: '10px',
-                background: 'rgba(255,80,80,0.1)', border: '1px solid rgba(255,80,80,0.3)',
-                color: '#ff8080', fontSize: '13px',
-              }}>
+              <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-[10px] bg-red-500/10 border border-red-500/30 text-red-400 text-[13px]">
                 <AlertCircle size={16} />
                 Something went wrong. Please try again.
               </div>
             )}
 
-            {/* Submit button */}
             <button
               type="submit"
               disabled={state === 'sending'}
-              style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                gap: '8px', padding: '14px 24px',
-                borderRadius: '12px', border: 'none',
-                background: state === 'sending'
-                  ? 'rgba(96,165,250,0.4)'
-                  : 'linear-gradient(135deg, #60a5fa, #3b82f6)',
-                color: '#fff', fontWeight: 700, fontSize: '14px',
-                letterSpacing: '0.04em', cursor: state === 'sending' ? 'wait' : 'pointer',
-                transition: 'all 0.25s ease',
-                boxShadow: state === 'sending' ? 'none' : '0 4px 20px rgba(96,165,250,0.3)',
-              }}
-              onMouseEnter={e => {
-                if (state !== 'sending') {
-                  e.currentTarget.style.transform   = 'translateY(-1px)'
-                  e.currentTarget.style.boxShadow   = '0 8px 30px rgba(96,165,250,0.45)'
-                }
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.transform = 'translateY(0)'
-                e.currentTarget.style.boxShadow   = '0 4px 20px rgba(96,165,250,0.3)'
-              }}
+              className="btn-primary w-full py-3.5 rounded-[12px] text-sm font-bold tracking-wider gpu-accel"
+              style={{ minHeight: '44px' }}
             >
               {state === 'sending' ? (
                 <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" style={{ animation: 'spin 1s linear infinite' }}>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" className="animate-spin">
                     <path d="M21 12a9 9 0 1 1-6.219-8.56" />
                   </svg>
                   Sending…
@@ -286,9 +202,6 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             </button>
           </form>
         )}
-
-        {/* Spin keyframe */}
-        <style>{`@keyframes spin { to { transform: rotate(360deg) } }`}</style>
       </motion.div>
     </motion.div>
   )
@@ -302,9 +215,9 @@ function FormField({
   type?: string; required?: boolean
 }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-      <label style={{ fontSize: '12px', fontWeight: 600, letterSpacing: '0.06em', color: 'rgba(148,163,196,0.9)', textTransform: 'uppercase' }}>
-        {label} {required && <span style={{ color: '#60a5fa' }}>*</span>}
+    <div className="flex flex-col gap-1.5">
+      <label className="text-[12px] font-semibold tracking-wider text-text-muted/90 uppercase">
+        {label} {required && <span className="text-primary">*</span>}
       </label>
       <input
         type={type}
@@ -312,16 +225,7 @@ function FormField({
         value={value}
         onChange={e => onChange(e.target.value)}
         required={required}
-        style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.1)',
-          borderRadius: '12px', padding: '10px 14px',
-          color: '#e8f0ff', fontSize: '14px',
-          outline: 'none', transition: 'border-color 0.2s ease',
-          fontFamily: 'inherit', width: '100%',
-        }}
-        onFocus={e => { e.currentTarget.style.borderColor = 'rgba(96,165,250,0.5)' }}
-        onBlur={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)' }}
+        className="bg-white/5 border border-white/10 rounded-[12px] px-3.5 py-2.5 text-text-primary text-sm outline-none transition-colors duration-200 focus:border-primary/50 font-body w-full"
       />
     </div>
   )
@@ -331,10 +235,21 @@ function FormField({
 export default function Navbar(): JSX.Element {
   const [scrolled, setScrolled]         = useState(false)
   const [mobileOpen, setMobileOpen]     = useState(false)
+  const [revealed, setRevealed]         = useState(() => {
+    // If not landing on home, reveal immediately
+    if (typeof window === 'undefined') return true
+    return window.location.pathname !== '/' && window.location.pathname !== ''
+  })
   const [navVisible, setNavVisible]     = useState(true)
   const [contactOpen, setContactOpen]   = useState(false)
   const lastScrollY                     = useRef(0)
   const location                        = useLocation()
+
+  useEffect(() => {
+    const onReveal = () => setRevealed(true)
+    window.addEventListener('site-revealed', onReveal)
+    return () => window.removeEventListener('site-revealed', onReveal)
+  }, [])
 
   useEffect(() => {
     const onScroll = () => {
@@ -376,37 +291,39 @@ export default function Navbar(): JSX.Element {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 right-0 z-[100] transition-all duration-500"
+        className="fixed top-0 left-0 right-0 z-[100] transition-all duration-500 gpu-accel"
         style={{
           backdropFilter:       scrolled ? 'blur(12px) saturate(180%)' : 'none',
           WebkitBackdropFilter: scrolled ? 'blur(12px) saturate(180%)' : 'none',
-          background:           scrolled ? 'rgba(10, 10, 15, 0.85)' : 'transparent',
-          borderBottom:         scrolled ? '1px solid rgba(96,165,250,0.08)' : 'none',
-          transform:            navVisible ? 'translateY(0)' : 'translateY(-110%)',
-          transition:           'transform 0.4s cubic-bezier(0.2, 0, 0, 1), backdrop-filter 0.4s ease, background 0.4s ease, border-bottom 0.4s ease',
+          background:           scrolled ? 'var(--bg-container)' : 'transparent',
+          borderBottom:         scrolled ? '1px solid var(--outline-var)' : 'none',
+          opacity:              revealed ? 1 : 0,
+          transform:            !revealed ? 'translateY(-100%)' : navVisible ? 'translateY(0)' : 'translateY(-110%)',
+          filter:               revealed ? 'blur(0px)' : 'blur(12px)',
+          transition:           'transform 0.8s var(--ease-expo), opacity 0.8s var(--ease-expo), filter 0.8s var(--ease-expo), background 0.4s ease, border-bottom 0.4s ease',
         }}
       >
         <div
           className="max-w-7xl mx-auto px-6 flex items-center justify-between transition-all duration-400"
-          style={{ padding: scrolled ? '10px 24px' : '16px 24px' }}
+          style={{ padding: scrolled ? '12px 24px' : '20px 24px' }}
         >
 
           {/* ── Left: Hashtag logo + JIMS logo ── */}
-          <div className="flex items-center gap-3">
-            <NavLink to="/" className="flex items-center group" aria-label="Home">
+          <div className="flex items-center gap-4">
+            <NavLink to="/" className="flex items-center group px-1" aria-label="Home">
               <img
                 src="/hashtag-logo.png"
                 alt="Hashtag Official Logo"
-                className="h-10 w-auto object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_12px_rgba(143,245,255,0.6)]"
-                style={{ height: scrolled ? '36px' : '40px', transition: 'height 0.4s ease' }}
+                className="h-10 w-auto object-contain transition-all duration-300 group-hover:drop-shadow-[0_0_12px_var(--primary-glow)]"
+                style={{ height: scrolled ? '36px' : '44px', transition: 'height 0.4s var(--ease-expo)' }}
               />
             </NavLink>
-            <div className="h-6 w-px hidden max-[749px]:block lg:block" style={{ background: 'rgba(143,245,255,0.2)' }} />
+            <div className="h-6 w-px hidden max-[749px]:block lg:block bg-primary/20" />
             <a 
               href="https://jimsgn.org/" 
               target="_blank" 
               rel="noopener noreferrer" 
-              className="hidden max-[749px]:block lg:block group"
+              className="hidden max-[749px]:block lg:block group p-2"
               aria-label="JIMS Greater Noida"
             >
               <img
@@ -418,15 +335,15 @@ export default function Navbar(): JSX.Element {
           </div>
 
           {/* ── Center: Desktop nav links ── */}
-          <div className="hidden min-[750px]:flex items-center gap-1">
+          <div className="hidden min-[750px]:flex items-center gap-2">
             {NAV_ITEMS.map(({ label, path }, idx) => (
               <motion.div
                 key={path}
-                initial={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ 
-                  delay: 2.2 + (idx * 0.1), 
-                  duration: 0.6, 
+                  delay: 2 + (idx * 0.08), 
+                  duration: 0.8, 
                   ease: [0.16, 1, 0.3, 1] 
                 }}
               >
@@ -434,8 +351,8 @@ export default function Navbar(): JSX.Element {
                   to={path}
                   end={path === '/'}
                   className={({ isActive }) =>
-                    `relative px-4 py-2 text-sm font-medium transition-all duration-200 font-label nav-link-desktop
-                    ${isActive ? 'text-primary' : 'text-text-muted text-hover-primary'}`
+                    `relative px-5 py-3 text-xs font-bold tracking-widest transition-all duration-200 font-label uppercase
+                    ${isActive ? 'text-primary' : 'text-text-muted hover:text-white'}`
                   }
                 >
                   {({ isActive }) => (
@@ -444,8 +361,7 @@ export default function Navbar(): JSX.Element {
                       {isActive && (
                         <motion.div
                           layoutId="nav-underline"
-                          className="absolute bottom-0 left-3 right-3 h-px"
-                          style={{ background: 'linear-gradient(90deg, transparent, #60a5fa, transparent)' }}
+                          className="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-primary to-transparent"
                           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                         />
                       )}

@@ -10,7 +10,6 @@
    Base:      #030b1a  (Deep Navy)
    ══════════════════════════════════════════════════════════════ */
 
-/* ── Design Tokens ───────────────────────────────────────────── */
 :root {
   --bg-base:          #000000;
   --bg-container:     #0a0a0a;
@@ -25,6 +24,8 @@
   --secondary-glow:   rgba(129, 140, 248, 0.14);
   --tertiary:         #38bdf8;
   --tertiary-glow:    rgba(56, 189, 248, 0.14);
+  --accent-cyan:      #22d3ee;
+  --accent-cyan-glow: rgba(34, 211, 238, 0.5);
 
   --text-primary:     #e8f0ff;
   --text-muted:       #94a3c4;
@@ -32,12 +33,18 @@
   --outline:          #1b3261;
   --outline-var:      #14254b;
 
-  /* Change 9: scroll position var for orb parallax */
-  --scroll-y: 0;
+  --ease-expo:        cubic-bezier(0.16, 1, 0.3, 1);
+  --scroll-y:         0;
 }
 
 /* ── Base Reset ──────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  /* Performance: Manipulation remove 300ms delay */
+  touch-action: manipulation;
+}
 
 html { cursor: none; }
 
@@ -50,44 +57,22 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
 }
 
-html.lenis, html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-.lenis.lenis-smooth iframe {
-  pointer-events: none;
+/* ── GPU Acceleration Utility ────────────────────────────────── */
+.gpu-accel {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity, filter;
 }
 
-@media (pointer: coarse) {
-  html { cursor: auto; }
-  * { cursor: auto !important; }
-  .custom-cursor { display: none !important; }
-}
+/* ── Typography (Fluid Scaling) ──────────────────────────────── */
+h1 { font-size: clamp(2.5rem, 8vw, 6rem); }
+h2 { font-size: clamp(2rem, 6vw, 4rem); }
+h3 { font-size: clamp(1.5rem, 4vw, 2.5rem); }
 
-/* ── Subtle noise grain ──────────────────────────────────────── */
-body::before {
-  content: '';
-  position: absolute;   /* was fixed — fixed layers repaint on every scroll */
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0.025;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-  background-repeat: repeat;
-  background-size: 128px 128px;
-}
-
-/* ── Typography ──────────────────────────────────────────────── */
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', sans-serif;
   font-weight: 700;
@@ -102,38 +87,35 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Gradient Text ───────────────────────────────────────────── */
 .text-gradient {
-  background: linear-gradient(135deg, #60a5fa, #38bdf8);
+  background: linear-gradient(135deg, var(--primary), var(--tertiary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-.text-gradient-indigo {
-  background: linear-gradient(135deg, #818cf8, #60a5fa);
+.text-gradient-premium {
+  background: linear-gradient(90deg, #60a5fa, #818cf8, #38bdf8, #818cf8, #60a5fa);
+  background-size: 400% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: shine 12s ease-in-out infinite;
 }
 
-.text-gradient-sky {
-  background: linear-gradient(135deg, #38bdf8, #818cf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+@keyframes shine {
+  to { background-position: 200% center; }
 }
 
-.text-gradient-green {
-  background: linear-gradient(135deg, #60a5fa, #818cf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* ── Entrance Safety ─────────────────────────────────────────── */
+.reveal-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
-.text-gradient-violet {
-  background: linear-gradient(135deg, #818cf8, #38bdf8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.reveal-visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* ── Glass / Surface ─────────────────────────────────────────── */
@@ -143,6 +125,10 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+@media (max-width: 640px) {
+  .glass { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 }
 
 .glass-premium {
@@ -494,18 +480,20 @@ h1, h2, h3, h4, h5, h6 {
 /* ══════════════════════════════════════════════════════════════
    SCROLL REVEAL — data-reveal system
    ══════════════════════════════════════════════════════════════ */
-.reveal-hidden {
+.reveal-blur {
   opacity: 0;
-  transform: translateY(32px);
-  /* Non-animated fallback: content is at final position if JS fails
-     because 'reveal-hidden' is only added after JS runs */
+  filter: blur(20px);
+  transform: scale(0.96) translateY(20px);
+  will-change: opacity, filter, transform;
 }
 
-.reveal-visible {
+.reveal-blur-visible {
   opacity: 1;
-  transform: translateY(0);
-  transition: opacity 0.7s cubic-bezier(0.2, 0, 0, 1),
-              transform 0.7s cubic-bezier(0.2, 0, 0, 1);
+  filter: blur(0px);
+  transform: scale(1) translateY(0px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ══════════════════════════════════════════════════════════════

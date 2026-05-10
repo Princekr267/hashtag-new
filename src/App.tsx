@@ -30,9 +30,10 @@ function AnimatedRoutes(): JSX.Element {
       <motion.div
         key={location.pathname}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { duration: 0.3 } }}
-        exit={{ opacity: 0, transition: { duration: 0.2 } }}
-        style={{ willChange: 'opacity' }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        className="gpu-accel"
       >
         <Routes location={location}>
           <Route path="/"       element={<Home />} />
@@ -49,10 +50,13 @@ function AnimatedRoutes(): JSX.Element {
   )
 }
 
+// Global flag to track if the site has been revealed once in the current session
+let siteRevealedOnce = false
+
 function AppInner(): JSX.Element {
   useSmoothScroll()
 
-  // Native scroll progress bar — zero React re-renders, no spring overhead
+  // Native scroll progress bar
   useEffect(() => {
     const bar = document.getElementById('scroll-progress') as HTMLElement | null
     if (!bar) return
@@ -84,9 +88,19 @@ function AppInner(): JSX.Element {
 }
 
 export default function App(): JSX.Element {
-  // Only show the loader on the initial home page visit — not on sub-pages
+  // Check if we're on the home page AND haven't revealed yet
   const isHomeLanding = INITIAL_PATH === '/' || INITIAL_PATH === ''
-  const [loading, setLoading] = useState(isHomeLanding)
+  const [loading, setLoading] = useState(isHomeLanding && !siteRevealedOnce)
+
+  const handleLoaderComplete = () => {
+    siteRevealedOnce = true
+    if (typeof window !== 'undefined') (window as any).siteRevealedOnce = true
+    setLoading(false)
+    // Small delay to synchronize with loader exit animation
+    setTimeout(() => {
+      window.dispatchEvent(new Event('site-revealed', { bubbles: true }))
+    }, 200)
+  }
 
   return (
     <BrowserRouter
@@ -96,13 +110,16 @@ export default function App(): JSX.Element {
       }}
     >
       <CustomCursor />
-      <AnimatePresence mode="wait">
-        {loading ? (
-          <PageLoader key="loader" onComplete={() => setLoading(false)} />
-        ) : (
-          <AppInner />
-        )}
-      </AnimatePresence>
+      <div className="relative w-full h-full">
+        {/* Main content is always rendered underneath */}
+        <AppInner />
+
+        <AnimatePresence mode="wait">
+          {loading && (
+            <PageLoader key="loader" onComplete={handleLoaderComplete} />
+          )}
+        </AnimatePresence>
+      </div>
     </BrowserRouter>
   )
 }

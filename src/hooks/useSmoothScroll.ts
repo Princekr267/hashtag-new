@@ -73,12 +73,19 @@ export function useSmoothScroll(): void {
       }
     }
 
+    const onRevealed = () => {
+      // Small delay to allow DOM to settle
+      setTimeout(() => lenis.resize(), 100)
+    }
+
     document.addEventListener('click', handleClick)
     window.addEventListener('horizontal-gallery-hijack', handleGalleryHijack as EventListener)
+    window.addEventListener('site-revealed', onRevealed)
 
     return () => {
       document.removeEventListener('click', handleClick)
       window.removeEventListener('horizontal-gallery-hijack', handleGalleryHijack as EventListener)
+      window.removeEventListener('site-revealed', onRevealed)
       cancelAnimationFrame(rafId)
       lenis.destroy()
       lenisRef.current = null

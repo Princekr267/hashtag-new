@@ -19,46 +19,28 @@ gsap.registerPlugin(ScrollTrigger)
 const FEATURES = [
   {
     icon: '</',
-    title: 'Development',
-    desc: 'HashTag aims to nurture knowledge, opportunities, experience and collaborations within students.',
+    title: 'Core Development',
+    desc: 'Nurturing technical skills through hands-on workshops, algorithmic challenges, and live coding sessions focused on industry standards.',
     accent: '#60a5fa',
     tag: 'TECHNICAL',
   },
   {
     icon: '◈',
-    title: 'Design',
-    desc: 'With a vision rooted in enriching the student coding culture, Hashtag pulses with ideas, energy and moments that unite learners.',
+    title: 'Creative Design',
+    desc: 'Enriching student culture with bold visual storytelling, UI/UX mastery, and creative brand challenges that push design limits.',
     accent: '#818cf8',
     tag: 'CREATIVE',
   },
   {
     icon: '⚡',
-    title: 'Innovation',
-    desc: 'The society welcomes participants from all technical domains eager to build, learn and grow.',
+    title: 'Innovation & Impact',
+    desc: 'Solving real-world problems and bridging students with industry through hackathons, mentor sessions, and professional networking.',
     accent: '#38bdf8',
     tag: 'IMPACT',
   },
 ]
 
-const SPONSORS = [
-  { name: "Microsoft Azure", image: "/Photos/Sponsors/Microsoft Azure.png" },
-  { name: "AZD", image: "/Photos/Sponsors/AZD.png" },
-  { name: "Reskilll", image: "/Photos/Sponsors/Reskill.png" },
-  { name: "Softmart", image: "/Photos/Sponsors/Softmart solutions_title sponser 1.png" },
-  { name: "Physics Wallah", image: "/Photos/Sponsors/Physics wallah.png" },
-  { name: "Finlatics", image: "/Photos/Sponsors/Finlatics.png" },
-  { name: "Click a Diet", image: "/Photos/Sponsors/clickadiet.png" },
-  { name: "Genesis", image: "/Photos/Sponsors/genesis.png" },
-  { name: "Interview Buddy", image: "/Photos/Sponsors/interview buddy.png" },
-  { name: "LinkedOut", image: "/Photos/Sponsors/LinkedOut_Bg_removed.png" },
-  { name: "Julep AI", image: "/Photos/Sponsors/julep.png" },
-  { name: "Events Info", image: "/Photos/Sponsors/Events Info.png" },
-  { name: "Give My Certificates", image: "/Photos/Sponsors/Givemycert.png" },
-  { name: "Advertising Point Line", image: "/Photos/Sponsors/adv point line.png" },
-  { name: "Meraj's Creatives", image: "/Photos/Sponsors/meraj's creatives.png" },
-  { name: "Navras Jemtec", image: "/Photos/Sponsors/NAVRAS LOGO (Original).png" },
-  { name: ".xyz Domain Registry", image: "/Photos/Sponsors/.xyz.png" }
-]
+
 
 // ── Animated stat counter ─────────────────────────────────────
 function StatCounter({ stat }: { stat: typeof STATS[0] }) {
@@ -103,61 +85,109 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   )
 }
 
-function BlurHeading() {
-  const line1 = 'Explore the cosmos'
-  const line2 = 'of technology'
+function RevealSection({ children, className = "", delay = 0, revealed = false }: { children: React.ReactNode, className?: string, delay?: number, revealed?: boolean }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const blurVal = isMobile ? '6px' : '12px'
+
+  const variants = {
+    hidden: { opacity: 0, y: 20, scale: 0.98 },
+    visible: { opacity: 1, y: 0, scale: 1 }
+  }
+
+  return (
+    <motion.div
+      variants={variants}
+      initial="hidden"
+      animate={revealed ? "visible" : "hidden"}
+      transition={{ 
+        duration: 1.2, 
+        delay: delay,
+        ease: [0.16, 1, 0.3, 1] 
+      }}
+      className={`${className} gpu-accel`}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function BlurHeading({ text, className, revealed }: { text: string, className?: string, revealed: boolean }) {
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
+  const blurVal = isMobile ? '6px' : '12px'
 
   const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+      transition: { 
+        staggerChildren: 0.08, 
+        delayChildren: 1.4
+      },
     },
   }
 
   const item: Variants = {
-    hidden: { opacity: 0, y: 30, filter: 'blur(8px)', scale: 0.95 },
-    show: { opacity: 1, y: 0, filter: 'blur(0px)', scale: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } },
+    hidden: { 
+      opacity: 0, 
+      y: 30, 
+      filter: `blur(${blurVal})`,
+      scale: 0.95
+    },
+    show: { 
+      opacity: 1, 
+      y: 0, 
+      filter: 'blur(0px)',
+      scale: 1,
+      transition: { 
+        duration: 1.2, 
+        ease: [0.16, 1, 0.3, 1] 
+      } 
+    },
   }
 
   return (
     <motion.h1
-      className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[100px] font-display font-bold leading-[1.0] tracking-tight text-white max-w-5xl text-center mx-auto"
+      className={`font-display font-bold leading-[1.1] tracking-tight ${className} gpu-accel`}
+      style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)' }}
       variants={container}
       initial="hidden"
-      animate="show"
+      animate={revealed ? "show" : "hidden"}
     >
-      <span className="block" style={{ minHeight: '1.1em' }}>
-        {line1.split(' ').map((word, i) => (
-          <motion.span key={i} variants={item} className="inline-block mr-[0.25em] last:mr-0">
-            {word}
-          </motion.span>
-        ))}
-      </span>
-      <span className="block" style={{ minHeight: '1.1em' }}>
-        {line2.split(' ').map((word, i) => {
-          const isLast = i === line2.split(' ').length - 1;
-          return (
-            <motion.span
-              key={i}
-              variants={item}
-              className={`inline-block mr-[0.25em] last:mr-0 ${isLast ? 'text-gradient-gold' : ''}`}
-            >
-              {word}
+      {text.split(' ').map((word, i) => (
+        <span key={i} className="inline-block whitespace-nowrap mr-[0.3em] last:mr-0">
+          {word.split('').map((char, j) => (
+            <motion.span key={j} variants={item} className="inline-block">
+              {char}
             </motion.span>
-          );
-        })}
-      </span>
+          ))}
+        </span>
+      ))}
     </motion.h1>
   )
 }
 
-
-
 export default function Home(): JSX.Element {
+  const [revealed, setRevealed] = useState(false)
   const marqueeDoubled = [...MARQUEE_EVENTS, ...MARQUEE_EVENTS]
 
   useEffect(() => {
+    // If skipping the loader, trigger reveal animation after a tiny delay to ensure fade-in is visible
+    if ((window as any).siteRevealedOnce || window.location.pathname !== '/') {
+      const timer = setTimeout(() => setRevealed(true), 200)
+      return () => clearTimeout(timer)
+    }
+
+    const onReveal = () => {
+      // Buffer for curtain slide up (matching the 1.8s PageLoader exit)
+      // Starts at 800ms total (200ms from App.tsx + 600ms here)
+      setTimeout(() => setRevealed(true), 600)
+    }
+    window.addEventListener('site-revealed', onReveal)
+    return () => window.removeEventListener('site-revealed', onReveal)
+  }, [])
+
+  useEffect(() => {
+    // Hero Parallax Scrub (Keep this)
     gsap.to('.hero-content', {
       y: 150,
       scale: 0.95,
@@ -171,66 +201,18 @@ export default function Home(): JSX.Element {
       }
     });
 
-    gsap.fromTo('.feature-card-wrapper',
-      { opacity: 0, y: 60, scale: 0.9, rotateX: -15 },
-      {
-        opacity: 1,
-        y: 0,
-        scale: 1,
-        rotateX: 0,
-        duration: 1.2,
-        ease: 'power3.out',
-        stagger: 0.2,
-        scrollTrigger: {
-          trigger: '.features-section',
-          start: 'top 80%',
-        }
-      }
-    );
-
-    gsap.fromTo('.stat-block',
-      { opacity: 0, scale: 0.8, y: 30 },
-      {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        duration: 0.8,
-        ease: 'back.out(1.5)',
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: '.stats-section',
-          start: 'top 85%',
-        }
-      }
-    );
-
-    document.querySelectorAll('[data-reveal]').forEach((el) => {
-      gsap.fromTo(el,
-        { clipPath: 'polygon(0 100%, 100% 100%, 100% 100%, 0 100%)', opacity: 0, y: 50 },
-        {
-          clipPath: 'polygon(-5% -5%, 105% -5%, 105% 105%, -5% 105%)',
-          opacity: 1, y: 0, duration: 1.4, ease: 'power4.out',
-          scrollTrigger: { trigger: el, start: 'top 85%' },
-        },
-      )
-    })
+    // Redundant GSAP entrances removed; now handled by RevealSection
     return () => ScrollTrigger.getAll().forEach(t => t.kill())
-  }, [])
+  }, []);
 
   return (
-    <div className="relative z-10">
-
-      {/* Subtle mascot watermark */}
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70vw] h-[70vw] opacity-[0.03] pointer-events-none -z-10 mix-blend-screen overflow-hidden">
-         <img src="/mascot.png" alt="" className="w-full h-full object-contain filter grayscale invert" />
-      </div>
-
+    <div className={`relative w-full ${revealed ? 'reveal-visible' : 'reveal-hidden'}`}>
       {/* ════════════════════════════════════════════════════════
           HERO SECTION
           ════════════════════════════════════════════════════ */}
-      <section className="hero-section min-h-screen flex px-6 pt-24 pb-12 relative overflow-hidden" style={{ backgroundColor: 'var(--bg-base)' }}>
-
-        {/* Subtle Grid pattern for tech feel */}
+      <section className="hero-section relative w-full min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-6 overflow-hidden gpu-accel">
+        
+        {/* Subtle Grid pattern for tech feel (restoring from original) */}
         <div className="absolute inset-0 pointer-events-none opacity-40" style={{
           backgroundImage: `
             linear-gradient(rgba(96,165,250,0.04) 1px, transparent 1px),
@@ -239,138 +221,111 @@ export default function Home(): JSX.Element {
           backgroundSize: '100px 100px',
         }} />
 
-        {/* Lightweight Cosmos Hero background instead of Orbs */}
-        <div className="absolute inset-0 z-0 pointer-events-none mix-blend-screen opacity-70">
-          <CosmosHero />
+        {/* Abstract Background Layer */}
+        <div className="absolute inset-0 z-0">
+          <motion.div
+            className="w-full h-full"
+            initial={{ opacity: 0, scale: 1.2 }}
+            animate={revealed ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.2 }}
+            transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+          >
+            <CosmosHero />
+          </motion.div>
         </div>
 
-        {/* Gradient overlay to ensure text readability */}
-        <div 
-          className="absolute inset-0 pointer-events-none z-0" 
-          style={{
-            background: 'radial-gradient(circle at center, transparent 0%, var(--bg-base) 80%)'
-          }} 
-        />
-
-        <div className="hero-content max-w-7xl mx-auto w-full flex flex-col items-center text-center relative z-10 flex-1">
-
-          {/* Eyebrow — pinned near the top of the hero, right below navbar */}
+        {/* Hero Content */}
+        <div className="hero-content relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center text-center">
+          
           <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0, ease: 'easeOut' }}
-            style={{ animationFillMode: 'both' }}
-            className="pt-2"
+            initial={{ opacity: 0, y: 20 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 1.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-8"
           >
-            <div className="flex items-center gap-3">
-              <span
-                className="font-label font-bold tracking-[0.4em] uppercase"
-                style={{
-                  fontSize: '0.75rem',
-                  color: 'var(--tertiary)',
-                  letterSpacing: '0.15em',
-                }}
-              >
-                JIMS Greater Noida
-              </span>
-              <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '10px' }}>✦</span>
-              <span
-                className="font-label font-bold tracking-[0.4em] uppercase px-3 py-1 rounded-full border"
-                style={{
-                  fontSize: '0.7rem',
-                  color: 'var(--primary)',
-                  borderColor: 'rgba(96,165,250,0.25)',
-                  background: 'rgba(96,165,250,0.07)',
-                  letterSpacing: '0.15em',
-                }}
-              >
-                Tech Society
-              </span>
-            </div>
+            <span className="badge-glow inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-primary text-[10px] font-label tracking-[0.2em] uppercase">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
+              Empowering Next-Gen Innovators
+            </span>
           </motion.div>
 
-          {/* Centered hero content block */}
-          <div className="flex flex-col items-center gap-6 max-w-5xl relative z-10 my-auto">
-            {/* Main headline with modern blur reveal */}
-            <BlurHeading />
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+            transition={{ duration: 2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="text-white text-5xl md:text-8xl font-black mb-8 leading-[1.05] tracking-tight relative gpu-accel"
+          >
+            Explore the cosmos <br /> of <span className="text-gradient-premium">Technologies</span>
+          </motion.h1>
 
-            {/* Subheadline — Change 4A actual description */}
-            <motion.p
-              className="font-body leading-relaxed max-w-[620px]"
-              style={{
-                fontSize: 'clamp(1rem, 2vw, 1.25rem)',
-                color: 'rgba(148,163,196,0.9)',
-                fontWeight: 400,
-                letterSpacing: '0.01em',
-              }}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.7, ease: 'easeOut' }}
-            >
-              JIMS Greater Noida's premier technical society — where builders,
-              designers, and dreamers turn ideas into real-world impact through
-              hackathons, workshops, and cross-disciplinary collaboration.
-            </motion.p>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 1.5, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-2xl text-text-muted text-lg md:text-xl font-body leading-relaxed mb-12 px-4"
+          >
+            A community-driven tech hub at <span className="text-primary font-bold">JIMS Greater Noida</span> dedicated to building, learning, and leading the future of technology.
+          </motion.p>
 
-            {/* CTA row */}
-            <motion.div
-              className="mt-6 flex flex-col sm:flex-row items-center gap-6"
-              initial={{ opacity: 0, y: 20, filter: 'blur(5px)' }}
-              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              transition={{ delay: 1.2, duration: 1, ease: 'easeOut' }}
-            >
-              <MagneticButton>
-                <Link
-                  to="/events"
-                  className="btn-primary flex-shrink-0 text-sm"
-                  style={{ padding: '13px 32px' }}
-                >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            transition={{ duration: 1.5, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+            className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto"
+          >
+            <MagneticButton>
+              <Link to="/events" className="w-full sm:w-auto">
+                <button className="btn-primary w-full sm:w-auto min-w-[180px] p-4 text-sm font-bold tracking-wider">
                   Explore Events
-                </Link>
-              </MagneticButton>
-              <Link
-                to="/about"
-                className="text-white/40 hover:text-white transition-colors text-xs font-label tracking-[0.3em] uppercase flex items-center gap-3"
-              >
-                <div className="w-6 h-px bg-white/15" />
-                Our Story
-                <div className="w-6 h-px bg-white/15" />
+                </button>
               </Link>
-            </motion.div>
-          </div>
-
-          {/* Spacer to balance the mb-auto above and keep content centered */}
-          <div className="mb-auto" />
+            </MagneticButton>
+            <MagneticButton>
+              <Link to="/about" className="w-full sm:w-auto">
+                <button className="btn-ghost w-full sm:w-auto min-w-[180px] p-4 text-sm font-bold tracking-wider">
+                  Our Story
+                </button>
+              </Link>
+            </MagneticButton>
+          </motion.div>
         </div>
 
+        {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-text-faint"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.6 }}
+          animate={revealed ? { opacity: 0.5 } : { opacity: 0 }}
+          transition={{ delay: 2.2, duration: 1.2 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
-          <span className="text-xs font-label tracking-widest">SCROLL</span>
-          <ChevronDown size={18} className="animate-bounce-arrow" />
+          <span className="text-[10px] uppercase tracking-[0.2em] font-label text-white/50">Scroll</span>
+          <div className="w-px h-12 bg-gradient-to-b from-primary/50 to-transparent" />
         </motion.div>
       </section>
 
+
+
       {/* ════════════════════════════════════════════════════════
-          WHAT WE DO
+          WHAT WE BUILD (FEATURES)
           ════════════════════════════════════════════════════ */}
-      <section className="features-section section px-6" style={{ perspective: '1000px' }}>
+      <section className="features-section section px-6 relative gpu-accel">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16 flex items-end justify-between">
-            <h2 data-reveal className="text-4xl md:text-6xl font-display font-bold">
-              What We <span className="text-gradient">Build</span>
-            </h2>
-            <Link to="/about" className="hidden md:flex items-center gap-[8px] text-text-muted hover:text-primary transition-colors text-sm font-label tracking-wider">
+          <RevealSection revealed={revealed} className="mb-16 flex flex-col md:flex-row items-end justify-between gap-6" delay={0.2}>
+            <div className="max-w-2xl">
+              <h2 className="text-4xl md:text-6xl font-display font-bold leading-tight">
+                What We <span className="text-gradient">Build</span>
+              </h2>
+              <p className="text-text-muted mt-4 font-body text-base md:text-lg">
+                Hashtag pulses with ideas, energy, and moments that unite learners. 
+                We don't just learn tech—we build it.
+              </p>
+            </div>
+            <Link to="/about" className="group flex items-center gap-3 text-primary text-xs font-label tracking-widest uppercase mb-2">
               <span className="leading-none">Learn more</span> <ArrowRight size={14} className="flex-shrink-0" />
             </Link>
-          </div>
+          </RevealSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {FEATURES.map((f, idx) => (
-              <div key={f.title} className="feature-card-wrapper h-full" style={{ transformStyle: 'preserve-3d' }}>
+              <RevealSection revealed={revealed} key={f.title} delay={0.4 + idx * 0.12} className="feature-card-wrapper h-full" style={{ transformStyle: 'preserve-3d' }}>
                 <InteractiveCard3D accentColor={f.accent} className="h-full">
                   <div className="p-10 flex flex-col gap-6 h-full relative">
                     {/* Badge — absolutely positioned top-left */}
@@ -412,21 +367,16 @@ export default function Home(): JSX.Element {
                     />
                   </div>
                 </InteractiveCard3D>
-              </div>
+              </RevealSection>
             ))}
           </div>
         </div>
       </section>
 
-
-
-
-     
-
       {/* ════════════════════════════════════════════════════════
           SCROLLING MARQUEE
           ════════════════════════════════════════════════════ */}
-      <div className="py-8 overflow-hidden">
+      <RevealSection revealed={revealed} className="py-8 overflow-hidden gpu-accel" delay={0.2}>
         <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.15), transparent)' }} />
         <div className="flex overflow-hidden py-6">
           <div className="marquee-track animate-marquee">
@@ -447,68 +397,68 @@ export default function Home(): JSX.Element {
           </div>
         </div>
         <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(129,140,248,0.15), transparent)' }} />
-      </div>
+      </RevealSection>
 
       {/* ════════════════════════════════════════════════════════
           STATS
           ════════════════════════════════════════════════════ */}
-      <section className="stats-section section px-6">
+      <section className="stats-section section px-6 gpu-accel">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-16 text-center">
-            <h2 data-reveal className="text-4xl md:text-6xl font-display font-bold">
+          <RevealSection revealed={revealed} className="mb-16 text-center" delay={0.2}>
+            <h2 className="text-4xl md:text-6xl font-display font-bold">
               By the <span className="text-gradient">Numbers</span>
             </h2>
-            <p data-reveal className="text-text-muted mt-4 max-w-lg mx-auto font-body text-base">
+            <p className="text-text-muted mt-4 max-w-lg mx-auto font-body text-base">
               A community that grows, builds, and makes things happen every semester.
             </p>
-          </div>
+          </RevealSection>
 
-          <div className="grid grid-cols-2 lg:grid-cols-3 border border-outline-var/30 overflow-hidden rounded-2xl">
-            {STATS.map((stat) => (
-              <div
+          <div className="grid grid-cols-1 md:grid-cols-3 border border-outline-var/30 overflow-hidden rounded-2xl">
+            {STATS.map((stat, idx) => (
+              <RevealSection revealed={revealed}
                 key={stat.label}
-                className="stat-block p-10 md:p-12 surface-card border-b border-r border-outline-var/30 hover:bg-white/[0.01] transition-colors duration-500"
+                delay={0.3 + idx * 0.12}
+                className="stat-block p-10 md:p-12 surface-card border-b md:border-b-0 border-outline-var/30 md:border-r last:border-r-0 last:border-b-0 hover:bg-white/[0.01] transition-colors duration-500"
               >
                 <StatCounter stat={stat} />
-              </div>
+              </RevealSection>
             ))}
           </div>
 
-          <motion.div
+          <RevealSection revealed={revealed}
             className="mt-20 flex flex-col md:flex-row items-center gap-6 justify-center"
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            delay={0.5}
           >
             <p className="text-text-muted text-lg font-body max-w-md text-center md:text-left">
               Whether you code, design, or just love being around people who build —
               there's a place for you.
             </p>
             <MagneticButton>
-              <Link to="/about" className="btn-primary flex-shrink-0 flex items-center gap-[8px] justify-center">
+              <Link to="/about" className="btn-primary flex-shrink-0 flex items-center gap-[8px] justify-center p-4">
                 <span className="leading-none">Our Story</span> <ArrowRight size={15} className="flex-shrink-0" />
               </Link>
             </MagneticButton>
-          </motion.div>
+          </RevealSection>
         </div>
       </section>
 
       {/* HYDRATION FIX: Wrap in Suspense to handle lazy loading and prevent layout shift */}
-      <Suspense fallback={<HorizontalScrollSkeleton />}>
-        <HorizontalGallery 
-          label="Event Moments"
-          images={[
-            { src: '/images/Event/img1.png', alt: 'Event Moment 1' },
-            { src: '/images/Event/img2.png', alt: 'Event Moment 2' },
-            { src: '/images/Event/img3.png', alt: 'Event Moment 3' },
-            { src: '/images/Event/img4.png', alt: 'Event Moment 4' },
-            { src: '/images/Event/img5.png', alt: 'Event Moment 5' },
-            { src: '/images/Event/img6.png', alt: 'Event Moment 6' },
-            { src: '/images/Event/img7.png', alt: 'Event Moment 7' },
-          ]}
-        />
-      </Suspense>
+      <RevealSection revealed={revealed} className="gpu-accel" delay={0.2}>
+        <Suspense fallback={<HorizontalScrollSkeleton />}>
+          <HorizontalGallery 
+            label="Event Moments"
+            images={[
+              { src: '/images/Event/img1.png', alt: 'Event Moment 1' },
+              { src: '/images/Event/img2.png', alt: 'Event Moment 2' },
+              { src: '/images/Event/img3.png', alt: 'Event Moment 3' },
+              { src: '/images/Event/img4.png', alt: 'Event Moment 4' },
+              { src: '/images/Event/img5.png', alt: 'Event Moment 5' },
+              { src: '/images/Event/img6.png', alt: 'Event Moment 6' },
+              { src: '/images/Event/img7.png', alt: 'Event Moment 7' },
+            ]}
+          />
+        </Suspense>
+      </RevealSection>
 
     </div>
   )

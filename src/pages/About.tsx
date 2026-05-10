@@ -319,13 +319,13 @@ function AboutValuesSection() {
           </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-10 max-w-5xl mx-auto">
           {VALUES.map((v, idx) => (
             <motion.div 
               key={v.title}
-              initial={{ opacity: 0, y: 40, filter: 'grayscale(100%) brightness(0.5)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'grayscale(0%) brightness(1)' }}
-              viewport={{ margin: "-100px" }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ 
                 duration: 0.8, 
                 delay: idx * 0.1,
@@ -333,41 +333,46 @@ function AboutValuesSection() {
               }}
             >
               <FlipCard
-                height="300px"
+                height="260px"
                 front={
                   <div
-                    className="w-full h-full surface-card p-10 flex flex-col gap-6 rounded-[32px] border border-white/[0.05] bg-[#0A0F1A]/80 backdrop-blur-sm hover:border-primary/30 transition-colors group"
+                    className="w-full h-full relative overflow-hidden flex flex-col gap-5 p-8 rounded-[24px] border border-white/[0.05] bg-[#0A0F1A]/80 backdrop-blur-md hover:border-primary/30 transition-all duration-500 group"
                   >
+                    {/* Background glow orb */}
+                    <div className="absolute -top-10 -right-10 w-32 h-32 blur-[60px] opacity-20 pointer-events-none"
+                         style={{ background: v.accent }} />
+                    
                     <div 
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl transition-transform duration-500 group-hover:scale-110"
+                      className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl transition-transform duration-500 group-hover:scale-110"
                       style={{ 
-                        background: `${v.accent}10`, 
+                        background: `${v.accent}15`, 
                         color: v.accent,
-                        border: `1px solid ${v.accent}20` 
+                        border: `1px solid ${v.accent}30`,
+                        boxShadow: `0 0 20px ${v.accent}15`
                       }}
                     >
                       {v.icon}
                     </div>
                     <div>
-                      <h3 className="text-2xl font-display font-bold mb-3" style={{ color: v.accent }}>{v.title}</h3>
-                      <p className="text-text-muted text-sm font-body leading-relaxed">{v.desc}</p>
+                      <h3 className="text-xl font-display font-bold mb-2" style={{ color: v.accent }}>{v.title}</h3>
+                      <p className="text-text-muted text-[13px] font-body leading-relaxed opacity-80">{v.desc}</p>
                     </div>
                   </div>
                 }
                 back={
                   <div
-                    className="w-full h-full rounded-[32px] flex flex-col items-center justify-center p-10 text-center gap-6"
+                    className="w-full h-full rounded-[24px] flex flex-col items-center justify-center p-8 text-center gap-5"
                     style={{
                       background: `linear-gradient(145deg, #0A0F1A 0%, #050810 100%)`,
                       border: `1px solid ${v.accent}30`,
-                      boxShadow: `0 20px 50px rgba(0,0,0,0.5), inset 0 0 30px ${v.accent}10`
+                      boxShadow: `0 15px 40px rgba(0,0,0,0.5), inset 0 0 25px ${v.accent}10`
                     }}
                   >
-                    <div className="px-4 py-1.5 rounded-full bg-white/5 border border-white/10">
-                      <span className="text-[10px] font-label tracking-[0.2em] text-primary-dim uppercase">Metric</span>
+                    <div className="px-3 py-1 rounded-full bg-white/5 border border-white/10">
+                      <span className="text-[9px] font-label tracking-[0.2em] text-primary-dim uppercase">Impact</span>
                     </div>
-                    <span className="text-5xl font-display font-black tracking-tighter" style={{ color: v.accent }}>{v.stat}</span>
-                    <p className="text-text-muted text-sm font-body italic leading-relaxed">"{v.quote}"</p>
+                    <span className="text-4xl font-display font-black tracking-tighter" style={{ color: v.accent }}>{v.stat}</span>
+                    <p className="text-text-muted text-[12px] font-body italic leading-relaxed">"{v.quote}"</p>
                   </div>
                 }
               />
