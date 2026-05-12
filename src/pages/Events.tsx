@@ -82,18 +82,16 @@ function getPolaroidRotation(idx: number): number {
 
 // ── Event card — shiny matte gradient finish ───────────────────
 function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
-  const isPast   = event.status === 'past'
-  const rotation = getPolaroidRotation(idx)
   const navigate = useNavigate()
-  const cardRef  = React.useRef<HTMLDivElement>(null)
+  const cardRef = React.useRef<HTMLDivElement>(null)
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches) return
     const el = cardRef.current
     if (!el) return
     const rect = el.getBoundingClientRect()
-    const x = ((e.clientX - rect.left) / rect.width)  * 100
-    const y = ((e.clientY - rect.top)  / rect.height) * 100
+    const x = ((e.clientX - rect.left) / rect.width) * 100
+    const y = ((e.clientY - rect.top) / rect.height) * 100
     el.style.setProperty('--mx', `${x}%`)
     el.style.setProperty('--my', `${y}%`)
   }
@@ -104,110 +102,72 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ duration: 0.4, ease: [0.2, 0, 0, 1] }}
-      className={`p-4 h-full event-card ${isPast ? 'polaroid-card' : ''}`}
-      style={isPast ? { transform: `rotate(${rotation}deg)`, zIndex: 1, height: '420px' } : { height: '420px' }}
+      transition={{ duration: 0.35, ease: [0.2, 0, 0, 1] }}
+      className="h-full"
     >
       <div
         ref={cardRef}
-        className="h-full block cursor-pointer"
+        className="relative group h-full flex flex-col overflow-hidden rounded-[28px] border border-white/10 bg-[#08101d]/95 shadow-[0_18px_50px_rgba(0,0,0,0.24)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_22px_70px_rgba(0,0,0,0.26)] cursor-pointer"
         onClick={() => navigate(`/events/${event.id}`)}
         onMouseMove={handleMouseMove}
-        onMouseEnter={e => {
-          e.currentTarget.style.boxShadow = `0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px ${event.gradientFrom}30`
-          e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'
-          e.currentTarget.style.background = `radial-gradient(circle at 50% 100%, ${event.gradientFrom}15, rgba(10,14,24,0.8) 70%)`
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.boxShadow = 'none'
-          e.currentTarget.style.transform = 'translateY(0) scale(1)'
-          e.currentTarget.style.background = 'rgba(10,14,24,0.8)'
-        }}
       >
-        {/* Mouse-tracking glare spotlight */}
         <div
           aria-hidden
+          className="absolute inset-0 pointer-events-none"
           style={{
-            position: 'absolute', inset: 0, borderRadius: '18px',
-            background: `radial-gradient(circle at var(--mx, 50%) var(--my, 0%), ${event.gradientFrom}20 0%, transparent 55%)`,
-            pointerEvents: 'none', zIndex: 1,
+            background: `radial-gradient(circle at var(--mx, 50%) var(--my, 0%), ${event.gradientFrom}18, transparent 35%)`,
           }}
         />
-        {/* Top sheen line */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-          background: `linear-gradient(90deg, transparent, ${event.gradientFrom}70, ${event.gradientTo}70, transparent)`,
-          zIndex: 2,
-        }} />
 
-        {/* Gradient accent bar */}
-        <div
-          className="h-[3px] w-full relative z-[3]"
-          style={{ background: `linear-gradient(90deg, ${event.gradientFrom}, ${event.gradientTo})` }}
-        />
+        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
 
-        <div className="flex flex-col md:flex-row h-full">
-          <div className="w-full h-48 md:w-48 md:h-full overflow-hidden bg-slate-950 flex-shrink-0">
-            {event.poster ? (
-              <img
-                src={event.poster}
-                alt={`${event.title} poster`}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-slate-900" />
-            )}
+        <div className="overflow-hidden h-52 sm:h-56 bg-slate-950">
+          {event.poster ? (
+            <img
+              src={event.poster}
+              alt={`${event.title} poster`}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-full bg-slate-900" />
+          )}
+        </div>
+
+        <div className="relative z-10 flex flex-col flex-1 p-5 sm:p-6 gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+            <div>
+              <span className="text-xs font-label tracking-[0.28em] uppercase" style={{ color: event.gradientFrom }}>
+                {event.tag}
+              </span>
+              <h3 className="text-xl sm:text-2xl font-display font-bold mt-3 text-white leading-tight break-words">
+                {event.title}
+              </h3>
+            </div>
+            <div className="shrink-0">
+              {event.status === 'upcoming' ? (
+                <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-white/80">
+                  Live Soon
+                </span>
+              ) : (
+                <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-white/70">
+                  Completed
+                </span>
+              )}
+            </div>
           </div>
 
-          <div className="p-5 md:p-7 flex flex-col flex-1 gap-4 event-card-content">
-            {/* Header row */}
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <span
-                  className="text-xs font-label tracking-widest"
-                  style={{ color: event.gradientFrom }}
-                >
-                  {event.tag.toUpperCase()}
-                </span>
-                <h3 className="text-xl font-display font-bold mt-1.5 text-text-primary">
-                  {event.title}
-                </h3>
-              </div>
-              {event.status === 'upcoming' && (
-                <span className="pill pill-live flex-shrink-0 text-xs">LIVE SOON</span>
-              )}
-              {event.status === 'past' && (
-                <span
-                  className="text-[10px] font-label tracking-widest px-2 py-1 rounded border opacity-50"
-                  style={{ color: event.gradientFrom, borderColor: `${event.gradientFrom}40` }}
-                >
-                  COMPLETED
-                </span>
-              )}
-            </div>
+          <p className="text-sm text-text-muted leading-relaxed flex-1 line-clamp-4 break-words">
+            {event.description}
+          </p>
 
-            {/* Description */}
-            <p className="text-text-muted text-sm font-body leading-relaxed flex-1 line-clamp-4">
-              {event.description}
-            </p>
-
-            {/* Footer */}
-            <div className="mt-auto pt-4 flex items-center justify-between">
-              {event.registerUrl && event.status === 'upcoming' && (
-                <MagneticRegisterBtn href={event.registerUrl} gradientFrom={event.gradientFrom} gradientTo={event.gradientTo}>
-                  <span className="leading-none">Register Now</span> <ExternalLink size={13} className="flex-shrink-0" />
-                </MagneticRegisterBtn>
-              )}
-              {event.status === 'past' && (
-                <div
-                  className="flex items-center gap-[8px] text-xs font-label"
-                  style={{ color: event.gradientFrom + 'aa' }}
-                >
-                  <span className="leading-none">Completed</span>
-                  <ArrowRight size={12} className="flex-shrink-0" />
-                </div>
-              )}
-            </div>
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-3">
+            {event.status === 'upcoming' && event.registerUrl ? (
+              <MagneticRegisterBtn href={event.registerUrl} gradientFrom={event.gradientFrom} gradientTo={event.gradientTo}>
+                <span className="leading-none">Register Now</span> <ExternalLink size={13} className="flex-shrink-0" />
+              </MagneticRegisterBtn>
+            ) : (
+              <span className="text-xs uppercase tracking-[0.3em] text-white/40">Past event</span>
+            )}
           </div>
         </div>
       </div>
@@ -336,21 +296,11 @@ export default function Events(): JSX.Element {
           {/* Cards grid — past events have polaroid tilt */}
           <motion.div
             layout
-            className="events-grid grid grid-cols-1 md:grid-cols-2 gap-6"
+            className="events-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
           >
             <AnimatePresence mode="popLayout">
               {filtered.map((event, idx) => (
-                <div
-                  key={event.id}
-                  className="h-full"
-                  style={{
-                    borderRight: (idx % 2 === 0) ? '1px solid rgba(143,245,255,0.05)' : 'none',
-                    borderBottom: '1px solid rgba(143,245,255,0.05)',
-                    position: 'relative',
-                  }}
-                >
-                  <EventCard event={event} idx={idx} />
-                </div>
+                <EventCard key={event.id} event={event} idx={idx} />
               ))}
             </AnimatePresence>
           </motion.div>

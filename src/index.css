@@ -161,14 +161,14 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   height: 100%;
   min-height: 420px;
-  border-radius: 24px;
+  border-radius: 28px;
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
 }
 
 .event-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.24);
+  transform: translateY(-8px);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.22);
 }
 
 .event-card-content {
@@ -176,14 +176,28 @@ h1, h2, h3, h4, h5, h6 {
   overflow: hidden;
 }
 
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .events-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .events-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.75rem;
+  }
+}
+
 @media (max-width: 768px) {
   .event-card {
     min-height: 360px;
-  }
-  .events-grid {
-    grid-template-columns: 1fr !important;
-    padding: 1rem;
-    gap: 1rem;
   }
 }
 
