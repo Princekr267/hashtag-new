@@ -33,7 +33,6 @@ function AnimatedRoutes(): JSX.Element {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="gpu-accel"
       >
         <Routes location={location}>
           <Route path="/"       element={<Home />} />
@@ -60,13 +59,28 @@ function AppInner(): JSX.Element {
   useEffect(() => {
     const bar = document.getElementById('scroll-progress') as HTMLElement | null
     if (!bar) return
+    let totalHeight = document.documentElement.scrollHeight - window.innerHeight
+    const handleResize = () => {
+      totalHeight = document.documentElement.scrollHeight - window.innerHeight
+    }
+    window.addEventListener('resize', handleResize, { passive: true })
+
+    let ticking = false
     const onScroll = () => {
-      const scrolled = window.scrollY
-      const total = document.documentElement.scrollHeight - window.innerHeight
-      bar.style.transform = `scaleX(${total > 0 ? scrolled / total : 0})`
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrolled = window.scrollY
+          bar.style.transform = `scaleX(${totalHeight > 0 ? scrolled / totalHeight : 0})`
+          ticking = false
+        })
+        ticking = true
+      }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', handleResize)
+    }
   }, [])
 
   return (

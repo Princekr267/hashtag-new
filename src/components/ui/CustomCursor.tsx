@@ -28,8 +28,7 @@ export default function CustomCursor(): JSX.Element | null {
 
       const inner = innerRef.current
       if (inner) {
-        inner.style.left = `${e.clientX}px`
-        inner.style.top = `${e.clientY}px`
+        inner.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`
       }
     }
 
@@ -61,8 +60,7 @@ export default function CustomCursor(): JSX.Element | null {
 
       const outer = outerRef.current
       if (outer) {
-        outer.style.left = `${outerX.current}px`
-        outer.style.top = `${outerY.current}px`
+        outer.style.transform = `translate3d(${outerX.current}px, ${outerY.current}px, 0) translate(-50%, -50%)`
       }
       rafId.current = requestAnimationFrame(animate)
     }
@@ -88,7 +86,7 @@ export default function CustomCursor(): JSX.Element | null {
       {/* Outer trailing ring */}
       <div
         ref={outerRef}
-        className="custom-cursor fixed pointer-events-none z-[99999] -translate-x-1/2 -translate-y-1/2 transition-[width,height,background,border-radius] duration-200 ease-out"
+        className="custom-cursor fixed pointer-events-none z-[99999] top-0 left-0 transition-[width,height,background,border-radius] duration-200 ease-out"
         style={{
           width: isHover ? '56px' : isText ? '40px' : '28px',
           height: isHover ? '56px' : isText ? '6px' : '28px',
@@ -101,7 +99,7 @@ export default function CustomCursor(): JSX.Element | null {
       {/* Inner precise dot */}
       <div
         ref={innerRef}
-        className="custom-cursor fixed pointer-events-none z-[99999] -translate-x-1/2 -translate-y-1/2 rounded-full transition-opacity duration-150"
+        className="custom-cursor fixed pointer-events-none z-[99999] top-0 left-0 rounded-full transition-opacity duration-150"
         style={{
           width: '5px',
           height: '5px',

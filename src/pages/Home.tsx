@@ -104,7 +104,7 @@ function RevealSection({ children, className = "", delay = 0, revealed = false }
         delay: delay,
         ease: [0.16, 1, 0.3, 1] 
       }}
-      className={`${className} gpu-accel`}
+      className={className}
     >
       {children}
     </motion.div>
@@ -147,7 +147,7 @@ function BlurHeading({ text, className, revealed }: { text: string, className?: 
 
   return (
     <motion.h1
-      className={`font-display font-bold leading-[1.1] tracking-tight ${className} gpu-accel`}
+      className={`font-display font-bold leading-[1.1] tracking-tight ${className}`}
       style={{ fontSize: 'clamp(2.5rem, 8vw, 6rem)' }}
       variants={container}
       initial="hidden"
@@ -210,7 +210,7 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           HERO SECTION
           ════════════════════════════════════════════════════ */}
-      <section className="hero-section relative w-full min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-6 overflow-hidden gpu-accel">
+      <section className="hero-section relative w-full min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-6 overflow-hidden">
         
         {/* Subtle Grid pattern for tech feel (restoring from original) */}
         <div className="absolute inset-0 pointer-events-none opacity-40" style={{
@@ -234,7 +234,7 @@ export default function Home(): JSX.Element {
         </div>
 
         {/* Hero Content */}
-        <div className="hero-content relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center text-center">
+        <div className="hero-content relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center text-center gpu-accel">
           
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -252,7 +252,7 @@ export default function Home(): JSX.Element {
             initial={{ opacity: 0, y: 30 }}
             animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="text-white text-5xl md:text-8xl font-black mb-8 leading-[1.05] tracking-tight relative gpu-accel"
+            className="text-white text-5xl md:text-8xl font-black mb-8 leading-[1.05] tracking-tight relative"
           >
             Explore the cosmos <br /> of <span className="text-gradient-premium">Technologies</span>
           </motion.h1>
@@ -306,7 +306,7 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           WHAT WE BUILD (FEATURES)
           ════════════════════════════════════════════════════ */}
-      <section className="features-section section px-6 relative gpu-accel">
+      <section className="features-section section px-6 relative">
         <div className="max-w-7xl mx-auto">
           <RevealSection revealed={revealed} className="mb-16 flex flex-col md:flex-row items-end justify-between gap-6" delay={0.2}>
             <div className="max-w-2xl">
@@ -376,7 +376,7 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           SCROLLING MARQUEE
           ════════════════════════════════════════════════════ */}
-      <RevealSection revealed={revealed} className="py-8 overflow-hidden gpu-accel" delay={0.2}>
+      <RevealSection revealed={revealed} className="py-8 overflow-hidden" delay={0.2}>
         <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.15), transparent)' }} />
         <div className="flex overflow-hidden py-6">
           <div className="marquee-track animate-marquee">
@@ -402,7 +402,7 @@ export default function Home(): JSX.Element {
       {/* ════════════════════════════════════════════════════════
           STATS
           ════════════════════════════════════════════════════ */}
-      <section className="stats-section section px-6 gpu-accel">
+      <section className="stats-section section px-6">
         <div className="max-w-7xl mx-auto">
           <RevealSection revealed={revealed} className="mb-16 text-center" delay={0.2}>
             <h2 className="text-4xl md:text-6xl font-display font-bold">
@@ -443,7 +443,7 @@ export default function Home(): JSX.Element {
       </section>
 
       {/* HYDRATION FIX: Wrap in Suspense to handle lazy loading and prevent layout shift */}
-      <RevealSection revealed={revealed} className="gpu-accel" delay={0.2}>
+      <RevealSection revealed={revealed} delay={0.2}>
         <Suspense fallback={<HorizontalScrollSkeleton />}>
           <HorizontalGallery 
             label="Event Moments"

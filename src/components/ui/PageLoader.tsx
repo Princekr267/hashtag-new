@@ -102,7 +102,7 @@ export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element
               fontFamily: 'Outfit, sans-serif',
               fontSize: 'clamp(2rem, 8vw, 6rem)',
               fontWeight: 900,
-              lineHeight: 1,
+              lineHeight: 1.2,
               letterSpacing: '-0.02em',
               color: 'var(--text-primary)'
             }}
@@ -129,6 +129,8 @@ export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element
                   backgroundClip: 'text',
                   whiteSpace: char === ' ' ? 'pre' : 'normal',
                   textShadow: '0 20px 40px var(--primary-glow)',
+                  paddingBottom: '0.2em',
+                  marginBottom: '-0.2em',
                 }}
               >
                 {char === ' ' ? '\u00A0' : char}
