@@ -19,11 +19,10 @@ export default function CosmosHero(): JSX.Element {
     const glowAlpha  = isMobile ? 0.05 : 0.03
     const glowWidth  = isMobile ? 20 : 15
 
-    // Mouse / scroll state — updated only by events
+    // Mouse state — updated only by events
     let mouseX = 0, mouseY = 0
     let rotX = 0, rotY = 0
     let targetRotX = 0, targetRotY = 0
-    let scrollY = 0
 
     const resize = () => {
       W = cv.offsetWidth
@@ -56,9 +55,8 @@ export default function CosmosHero(): JSX.Element {
       pendingMouse = true
     }
 
-    const onScroll = () => { scrollY = window.scrollY }
-
     const draw = () => {
+      const scrollY = window.scrollY
       // Only recalculate rotation when mouse actually moved
       if (pendingMouse) {
         targetRotX = (mouseX / (W || 1) - 0.5) * 0.4
@@ -167,20 +165,39 @@ export default function CosmosHero(): JSX.Element {
       ctx.restore()
 
       t++
-      raf = requestAnimationFrame(draw)
+      if (isVisible) {
+        raf = requestAnimationFrame(draw)
+      }
     }
 
     resize()
-    raf = requestAnimationFrame(draw)
+
+    // Intersection Observer to pause/resume loop
+    let isVisible = true
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting
+          if (isVisible) {
+            cancelAnimationFrame(raf)
+            raf = requestAnimationFrame(draw)
+          } else {
+            cancelAnimationFrame(raf)
+          }
+        })
+      },
+      { threshold: 0 }
+    )
+    observer.observe(cv)
+
     window.addEventListener('resize', resize, { passive: true })
     window.addEventListener('mousemove', onMouseMove, { passive: true })
-    window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
       cancelAnimationFrame(raf)
+      observer.disconnect()
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', onMouseMove)
-      window.removeEventListener('scroll', onScroll)
     }
   }, [])
 

@@ -184,7 +184,9 @@ export default function GyroOrb(): JSX.Element {
       ctx.stroke()
 
       tRef.current += 0.003
-      animRef.current = requestAnimationFrame(draw)
+      if (isVisible) {
+        animRef.current = requestAnimationFrame(draw)
+      }
     }
 
     const onMove = (e: MouseEvent) => {
@@ -195,10 +197,27 @@ export default function GyroOrb(): JSX.Element {
       }
     }
 
-    window.addEventListener('mousemove', onMove, { passive: true })
-    draw()
+    let isVisible = true
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting
+          if (isVisible) {
+            cancelAnimationFrame(animRef.current)
+            animRef.current = requestAnimationFrame(draw)
+            window.addEventListener('mousemove', onMove, { passive: true })
+          } else {
+            cancelAnimationFrame(animRef.current)
+            window.removeEventListener('mousemove', onMove)
+          }
+        })
+      },
+      { threshold: 0 }
+    )
+    observer.observe(canvas)
 
     return () => {
+      observer.disconnect()
       window.removeEventListener('mousemove', onMove)
       cancelAnimationFrame(animRef.current)
     }

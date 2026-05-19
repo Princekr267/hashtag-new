@@ -89,15 +89,36 @@ export default function OrbitalRings(): JSX.Element {
       })
 
       t++
-      raf = requestAnimationFrame(draw)
+      if (isVisible) {
+        raf = requestAnimationFrame(draw)
+      }
     }
 
     resize()
-    draw()
+
+    // Intersection Observer to pause/resume loop
+    let isVisible = true
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisible = entry.isIntersecting
+          if (isVisible) {
+            cancelAnimationFrame(raf)
+            raf = requestAnimationFrame(draw)
+          } else {
+            cancelAnimationFrame(raf)
+          }
+        })
+      },
+      { threshold: 0 }
+    )
+    observer.observe(cv)
+
     window.addEventListener('resize', resize)
 
     return () => {
       cancelAnimationFrame(raf)
+      observer.disconnect()
       window.removeEventListener('resize', resize)
     }
   }, [])
