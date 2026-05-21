@@ -202,30 +202,26 @@ const Hero: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.8, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
         style={{ color: 'var(--color-muted)' }}
       >
+        <motion.div
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+          className="w-px h-12"
+          style={{ background: 'linear-gradient(to bottom, var(--primary), transparent)' }}
+        />
         <span
           style={{
             fontFamily: 'DM Mono, monospace',
-            fontSize: '0.65rem',
+            fontSize: '0.6rem',
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
+            opacity: 0.6
           }}
         >
           Scroll
         </span>
-        {/* Animated draw-down line */}
-        <div className="w-px relative overflow-hidden" style={{ height: '40px', background: 'rgba(255,255,255,0.15)' }}>
-          <motion.div
-            className="absolute top-0 w-full"
-            style={{ background: 'var(--primary)' }}
-            animate={{ y: ['-100%', '200%'] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <div style={{ height: '40px' }} />
-          </motion.div>
-        </div>
       </motion.div>
     </section>
   );
