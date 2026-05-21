@@ -50,7 +50,11 @@ function AnimatedRoutes(): JSX.Element {
 }
 
 // Global flag to track if the site has been revealed once in the current session
-let siteRevealedOnce = false
+let siteRevealedOnce = INITIAL_PATH !== '/' && INITIAL_PATH !== ''
+
+if (typeof window !== 'undefined' && siteRevealedOnce) {
+  (window as any).siteRevealedOnce = true
+}
 
 function AppInner(): JSX.Element {
   useSmoothScroll()
