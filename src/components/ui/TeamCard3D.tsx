@@ -66,7 +66,7 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
   /* ── Mobile: tap → toggle flip ─────────────────────────────────── */
   const handleTap = () => {
     if (!isTouch) return
-    setIsFlipped(!isFlipped)
+    setIsFlipped((current) => !current)
   }
 
   return (
