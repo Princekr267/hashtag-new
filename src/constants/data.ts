@@ -335,7 +335,7 @@ export const TEAM: TeamMember[] = [
   },
   {
     id: 'bhumika',
-    name: 'Bhumika Dobha',
+    name: 'Bhumika Dobhal',
     title: 'Member',
     avatarUrl: '/Photos/Bhumika_Dobhal.png',
     department: 'Member',
