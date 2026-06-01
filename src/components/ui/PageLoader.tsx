@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, Variants } from 'framer-motion'
 import WarpSpeed from '../visuals/WarpSpeed'
 
 interface PageLoaderProps {
@@ -8,9 +8,10 @@ interface PageLoaderProps {
 
 const TITLE = '#Hashtag Official'
 
-const containerVariants = {
+const containerVariants: Variants = {
+  initial: { top: 0 },
   exit: {
-    y: '-100%',
+    y: '-100vh',
     transition: {
       duration: 0.8,
       ease: [0.16, 1, 0.3, 1] as const, // Premium ease-out-expo

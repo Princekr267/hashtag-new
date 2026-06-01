@@ -9,9 +9,10 @@ import CosmosHero from '../components/visuals/CosmosHero'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
 import HorizontalScrollSkeleton from '../components/ui/HorizontalScrollSkeleton' // HYDRATION FIX
 
+import { STATS, MARQUEE_EVENTS } from '../constants/data'
+
 // HYDRATION FIX: Convert to dynamic import with SSR disabled (lazy loading in Vite)
 const HorizontalGallery = lazy(() => import('../components/ui/HorizontalGallery'))
-import { STATS, MARQUEE_EVENTS } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -326,9 +327,10 @@ export default function Home(): JSX.Element {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {FEATURES.map((f, idx) => (
-              <RevealSection revealed={revealed} key={f.title} delay={0.4 + idx * 0.12} className="feature-card-wrapper h-full" style={{ transformStyle: 'preserve-3d' }}>
-                <InteractiveCard3D accentColor={f.accent} className="h-full">
-                  <div className="p-10 flex flex-col gap-6 h-full relative">
+              <RevealSection revealed={revealed} key={f.title} delay={0.4 + idx * 0.12} className="feature-card-wrapper h-full">
+                <div style={{ transformStyle: 'preserve-3d', height: '100%' }}>
+                  <InteractiveCard3D accentColor={f.accent} className="h-full">
+                    <div className="p-10 flex flex-col gap-6 h-full relative">
                     {/* Badge — absolutely positioned top-left */}
                     <div className="absolute top-6 left-10">
                       <span
@@ -368,6 +370,7 @@ export default function Home(): JSX.Element {
                     />
                   </div>
                 </InteractiveCard3D>
+                </div>
               </RevealSection>
             ))}
           </div>

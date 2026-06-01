@@ -21,6 +21,10 @@ export default function ConstellationBackground(): JSX.Element {
     let lastTime = 0
     const INTERVAL = 1000 / 30
 
+    // Shooting star state
+    let shootingStar = { x: 0, y: 0, vx: 0, vy: 0, active: false }
+    let lastShootingStarTime = performance.now()
+
     const resize = () => {
       W = window.innerWidth
       H = window.innerHeight
@@ -89,6 +93,47 @@ export default function ConstellationBackground(): JSX.Element {
         ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2)
         ctx.fillStyle = `rgba(${(80 + pulse * 120) | 0},${(140 + pulse * 80) | 0},255,${0.7 + pulse * 0.3})`
         ctx.fill()
+      }
+
+      // Shooting star logic
+      if (!shootingStar.active && now - lastShootingStarTime > 8000 + Math.random() * 4000) {
+        shootingStar.active = true
+        shootingStar.x = Math.random() * W
+        shootingStar.y = 0
+        shootingStar.vx = 20 + Math.random() * 15
+        shootingStar.vy = 15 + Math.random() * 10
+        // Sometimes from right to left
+        if (Math.random() > 0.5) {
+            shootingStar.x = W
+            shootingStar.vx *= -1
+        }
+      }
+
+      if (shootingStar.active) {
+        shootingStar.x += shootingStar.vx
+        shootingStar.y += shootingStar.vy
+        
+        // Draw tail
+        const gradient = ctx.createLinearGradient(
+            shootingStar.x, shootingStar.y, 
+            shootingStar.x - shootingStar.vx * 3, shootingStar.y - shootingStar.vy * 3
+        )
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)')
+        gradient.addColorStop(0.2, 'rgba(96, 165, 250, 0.8)')
+        gradient.addColorStop(1, 'rgba(96, 165, 250, 0)')
+        
+        ctx.beginPath()
+        ctx.moveTo(shootingStar.x, shootingStar.y)
+        ctx.lineTo(shootingStar.x - shootingStar.vx * 4, shootingStar.y - shootingStar.vy * 4)
+        ctx.strokeStyle = gradient
+        ctx.lineWidth = 2.5
+        ctx.lineCap = 'round'
+        ctx.stroke()
+
+        if (shootingStar.x < -200 || shootingStar.x > W + 200 || shootingStar.y > H + 200) {
+            shootingStar.active = false
+            lastShootingStarTime = now
+        }
       }
     }
 
