@@ -127,8 +127,8 @@ export default function BlogDetail(): JSX.Element {
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-16">
-                  <img src="https://cdn.sanity.io/images/4czbk8j7/production/0f5efc840ca8f95588a42cdb4f14c6a817aa04a3-4032x3024.jpg" alt="VCT Action" className="rounded-3xl border border-white/10" />
-                  <img src="https://cdn.sanity.io/images/4czbk8j7/production/d9b6f6ee5b850f06796536c9b74eac0aa069551b-4080x3072.jpg" alt="Players" className="rounded-3xl border border-white/10" />
+                  <img src="/images/Blogs/vct-action.jpg" alt="VCT Action" className="rounded-3xl border border-white/10" />
+                  <img src="/images/Blogs/players.jpg" alt="Players" className="rounded-3xl border border-white/10" />
                 </div>
                 
                 <h3 className="text-3xl text-white font-display font-bold mt-16 mb-8">Strategic Outcomes</h3>

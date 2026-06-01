@@ -85,7 +85,7 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   )
 }
 
-function RevealSection({ children, className = "", delay = 0, revealed = false }: { children: React.ReactNode, className?: string, delay?: number, revealed?: boolean }) {
+function RevealSection({ children, className = "", delay = 0, revealed = false, style }: { children: React.ReactNode, className?: string, delay?: number, revealed?: boolean, style?: React.CSSProperties }) {
   const isMobile = typeof window !== 'undefined' && window.innerWidth < 768
   const blurVal = isMobile ? '6px' : '12px'
 
@@ -105,6 +105,7 @@ function RevealSection({ children, className = "", delay = 0, revealed = false }
         ease: [0.16, 1, 0.3, 1] 
       }}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>
@@ -178,9 +179,9 @@ export default function Home(): JSX.Element {
     }
 
     const onReveal = () => {
-      // Buffer for curtain slide up (matching the 1.8s PageLoader exit)
-      // Starts at 800ms total (200ms from App.tsx + 600ms here)
-      setTimeout(() => setRevealed(true), 600)
+      // Buffer for curtain slide up (matching the 0.8s PageLoader exit)
+      // Starts at 400ms total (200ms from App.tsx + 200ms here)
+      setTimeout(() => setRevealed(true), 200)
     }
     window.addEventListener('site-revealed', onReveal)
     return () => window.removeEventListener('site-revealed', onReveal)
@@ -227,7 +228,7 @@ export default function Home(): JSX.Element {
             className="w-full h-full"
             initial={{ opacity: 0, scale: 1.2 }}
             animate={revealed ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.2 }}
-            transition={{ duration: 2.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
           >
             <CosmosHero />
           </motion.div>
@@ -239,7 +240,7 @@ export default function Home(): JSX.Element {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 1.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             className="mb-8"
           >
             <span className="badge-glow inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5 backdrop-blur-sm text-primary text-[10px] font-label tracking-[0.2em] uppercase">
@@ -251,7 +252,7 @@ export default function Home(): JSX.Element {
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-            transition={{ duration: 2, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
             className="text-white text-5xl md:text-8xl font-black mb-8 leading-[1.05] tracking-tight relative"
           >
             Explore the cosmos <br /> of <span className="text-gradient-premium">Technologies</span>
@@ -260,7 +261,7 @@ export default function Home(): JSX.Element {
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 1.5, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl text-text-muted text-lg md:text-xl font-body leading-relaxed mb-12 px-4"
           >
             A community-driven tech hub at <span className="text-primary font-bold">JIMS Greater Noida</span> dedicated to building, learning, and leading the future of technology.
@@ -269,7 +270,7 @@ export default function Home(): JSX.Element {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 1.5, delay: 1.8, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.8, delay: 0.7, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col sm:flex-row items-center gap-6 w-full sm:w-auto"
           >
             <MagneticButton>
@@ -293,7 +294,7 @@ export default function Home(): JSX.Element {
         <motion.div
           initial={{ opacity: 0 }}
           animate={revealed ? { opacity: 0.5 } : { opacity: 0 }}
-          transition={{ delay: 2.2, duration: 1.2 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
           className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
           <span className="text-[10px] uppercase tracking-[0.2em] font-label text-white/50">Scroll</span>
@@ -448,13 +449,13 @@ export default function Home(): JSX.Element {
           <HorizontalGallery 
             label="Event Moments"
             images={[
-              { src: '/images/Event/img1.png', alt: 'Event Moment 1' },
-              { src: '/images/Event/img2.png', alt: 'Event Moment 2' },
-              { src: '/images/Event/img3.png', alt: 'Event Moment 3' },
-              { src: '/images/Event/img4.png', alt: 'Event Moment 4' },
-              { src: '/images/Event/img5.png', alt: 'Event Moment 5' },
-              { src: '/images/Event/img6.png', alt: 'Event Moment 6' },
-              { src: '/images/Event/img7.png', alt: 'Event Moment 7' },
+              { src: '/images/Events/photos/img1.png', alt: 'Event Moment 1' },
+              { src: '/images/Events/photos/img2.png', alt: 'Event Moment 2' },
+              { src: '/images/Events/photos/img3.png', alt: 'Event Moment 3' },
+              { src: '/images/Events/photos/img4.png', alt: 'Event Moment 4' },
+              { src: '/images/Events/photos/img5.png', alt: 'Event Moment 5' },
+              { src: '/images/Events/photos/img6.png', alt: 'Event Moment 6' },
+              { src: '/images/Events/photos/img7.png', alt: 'Event Moment 7' },
             ]}
           />
         </Suspense>
