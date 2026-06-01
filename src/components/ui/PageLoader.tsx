@@ -14,7 +14,7 @@ const containerVariants: Variants = {
     y: '-100vh',
     transition: {
       duration: 0.8,
-      ease: [0.76, 0, 0.24, 1] as const,
+      ease: [0.16, 1, 0.3, 1] as const, // Premium ease-out-expo
     },
   },
 }
@@ -26,14 +26,14 @@ export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element
 
   useEffect(() => {
     // Start character reveal sequence
-    const t1 = setTimeout(() => setCharStage('typing'), 200)
-    // TITLE.length * 60 is the stagger duration for the characters
-    const t2 = setTimeout(() => setCharStage('done'), 200 + TITLE.length * 60 + 200)
-    const t3 = setTimeout(() => setSubVisible(true), 1500)
+    const t1 = setTimeout(() => setCharStage('typing'), 100)
+    // TITLE.length * 30 is the stagger duration for the characters
+    const t2 = setTimeout(() => setCharStage('done'), 100 + TITLE.length * 30 + 100)
+    const t3 = setTimeout(() => setSubVisible(true), 600)
     
     // Call onComplete when we're ready to start the curtain slide-up
-    // 3.5s gives enough time for everything to be fully visible and 'settled'
-    const t4 = setTimeout(() => onComplete(), 3500)
+    // 2s gives enough time for everything to be fully visible and 'settled'
+    const t4 = setTimeout(() => onComplete(), 2000)
     
     timeoutRefs.current = [t1, t2, t3, t4]
     return () => timeoutRefs.current.forEach(clearTimeout)
@@ -118,8 +118,8 @@ export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element
                     : { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }
                 }
                 transition={{
-                  delay: idx * 0.04,
-                  duration: 0.5,
+                  delay: idx * 0.02,
+                  duration: 0.3,
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 style={{

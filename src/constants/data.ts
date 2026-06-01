@@ -51,7 +51,7 @@ export const TEAM: TeamMember[] = [
     id: 'anwesha',
     name: 'Anwesha Sen',
     title: 'President',
-    avatarUrl: '/Photos/Anwesha.png',
+    avatarUrl: '/images/Team/Anwesha.png',
     department: 'Leadership',
     isLeader: true,
     social: {
@@ -64,7 +64,7 @@ export const TEAM: TeamMember[] = [
     id: 'abdullah',
     name: 'M. Abdullah Meraj',
     title: 'Vice President',
-    avatarUrl: '/Photos/Abdullah.png',
+    avatarUrl: '/images/Team/Abdullah.png',
     department: 'Leadership',
     isLeader: true,
     social: {
@@ -77,7 +77,7 @@ export const TEAM: TeamMember[] = [
     id: 'priyal',
     name: 'Priyal Jain',
     title: 'Secretary',
-    avatarUrl: '/Photos/Priyal.png',
+    avatarUrl: '/images/Team/Priyal.png',
     department: 'Leadership',
     isLeader: true,
     social: {
@@ -90,7 +90,7 @@ export const TEAM: TeamMember[] = [
     id: 'vanshika',
     name: 'Vanshika S.',
     title: 'Treasurer',
-    avatarUrl: '/Photos/Vanshika.png',
+    avatarUrl: '/images/Team/Vanshika.png',
     department: 'Leadership',
     isLeader: true,
     social: {
@@ -104,7 +104,7 @@ export const TEAM: TeamMember[] = [
     id: 'ayush-kumar',
     name: 'Ayush Kumar S.',
     title: 'Technical Head',
-    avatarUrl: '/Photos/Ayush_Kumar.png',
+    avatarUrl: '/images/Team/Ayush_Kumar.png',
     department: 'Technical',
     social: {
       github: 'https://github.com/ayushkumarsingh14',
@@ -116,7 +116,7 @@ export const TEAM: TeamMember[] = [
     id: 'ankit',
     name: 'Ankit Choudhary',
     title: 'Technical Co-Head',
-    avatarUrl: '/Photos/Ankit.png',
+    avatarUrl: '/images/Team/Ankit.png',
     department: 'Technical',
     social: {
       github: 'https://github.com/ankit77003',
@@ -129,7 +129,7 @@ export const TEAM: TeamMember[] = [
     id: 'avishka',
     name: 'Avishka Bhardwaj',
     title: 'Graphics Head',
-    avatarUrl: '/Photos/Avishka.png',
+    avatarUrl: '/images/Team/Avishka.png',
     department: 'Graphics',
     social: {
       github: 'https://github.com/avishkabhardwaj',
@@ -141,7 +141,7 @@ export const TEAM: TeamMember[] = [
     id: 'arin',
     name: 'Anantabh Kashyap',
     title: 'Graphics Co-Head',
-    avatarUrl: '/Photos/Arin.png',
+    avatarUrl: '/images/Team/Arin.png',
     department: 'Graphics',
     social: {
       github: 'https://github.com/arxnkshyp/',
@@ -154,7 +154,7 @@ export const TEAM: TeamMember[] = [
     id: 'atulya',
     name: 'Atulya Mukesh',
     title: 'Management Head',
-    avatarUrl: '/Photos/Atulya.png',
+    avatarUrl: '/images/Team/Atulya.png',
     department: 'Management',
     social: {
       github: 'https://github.com/atulya-mukesh',
@@ -166,7 +166,7 @@ export const TEAM: TeamMember[] = [
     id: 'akshat-jain',
     name: 'Akshat Jain',
     title: 'Management Co-Head',
-    avatarUrl: '/Photos/Akshat_Jain.png',
+    avatarUrl: '/images/Team/Akshat_Jain.png',
     department: 'Management',
     social: {
       github: 'https://github.com/Akshatjain2411',
@@ -179,7 +179,7 @@ export const TEAM: TeamMember[] = [
     id: 'shreya',
     name: 'Shreya Sai',
     title: 'Content Head',
-    avatarUrl: '/Photos/Shreya.png',
+    avatarUrl: '/images/Team/Shreya.png',
     department: 'Content',
     social: {
       github: 'https://github.com/sst2105',
@@ -191,7 +191,7 @@ export const TEAM: TeamMember[] = [
     id: 'rimi',
     name: 'Rimi Kumari',
     title: 'Content Co-Head',
-    avatarUrl: '/Photos/Rimi.png',
+    avatarUrl: '/images/Team/Rimi.png',
     department: 'Content',
     social: {
       github: 'https://github.com/rimikumari',
@@ -204,7 +204,7 @@ export const TEAM: TeamMember[] = [
     id: 'pratyush',
     name: 'Pratyush Patwal',
     title: 'Social Media Head',
-    avatarUrl: '/Photos/Pratyush.png',
+    avatarUrl: '/images/Team/Pratyush.png',
     department: 'Social Media',
     social: {
       github: 'https://github.com/pratyush1279',
@@ -216,7 +216,7 @@ export const TEAM: TeamMember[] = [
     id: 'ayush-parashar',
     name: 'Ayush Parashar',
     title: 'Social Media Co-Head',
-    avatarUrl: '/Photos/Ayush_Parashar.png',
+    avatarUrl: '/images/Team/Ayush_Parashar.png',
     department: 'Social Media',
     social: {
       github: 'https://github.com/ayushparashar91',
@@ -229,7 +229,7 @@ export const TEAM: TeamMember[] = [
     id: 'amisha',
     name: 'Amisha',
     title: 'Member',
-    avatarUrl: '/Photos/Amisha.png',
+    avatarUrl: '/images/Team/Amisha.png',
     department: 'Member',
     social: {
       github: 'https://github.com/Amisha1kumari',
@@ -241,7 +241,7 @@ export const TEAM: TeamMember[] = [
     id: 'kartik',
     name: 'Kartik Mishra',
     title: 'Member',
-    avatarUrl: '/Photos/Kartik.png',
+    avatarUrl: '/images/Team/Kartik.png',
     department: 'Member',
     social: {
       github: 'https://github.com/codelawyer-max',
@@ -253,7 +253,7 @@ export const TEAM: TeamMember[] = [
     id: 'prince',
     name: 'Prince Kumar',
     title: 'Member',
-    avatarUrl: '/Photos/Prince.png',
+    avatarUrl: '/images/Team/Prince.png',
     department: 'Member',
     social: {
       github: 'https://github.com/Princekr267',
@@ -265,7 +265,7 @@ export const TEAM: TeamMember[] = [
     id: 'dilawar',
     name: 'Dilawar Ali',
     title: 'Member',
-    avatarUrl: '/Photos/Dilawar.png',
+    avatarUrl: '/images/Team/Dilawar.png',
     department: 'Member',
     social: {
       github: 'https://github.com/Dilawar-ali313',
@@ -277,7 +277,7 @@ export const TEAM: TeamMember[] = [
     id: 'suhani',
     name: 'Suhani Mittal',
     title: 'Member',
-    avatarUrl: '/Photos/Suhani.png',
+    avatarUrl: '/images/Team/Suhani.png',
     department: 'Member',
     social: {
       github: 'https://github.com/suhani-ux123',
@@ -289,7 +289,7 @@ export const TEAM: TeamMember[] = [
     id: 'kushagra',
     name: 'Kushagra Pandey',
     title: 'Member',
-    avatarUrl: '/Photos/Kushagra.png',
+    avatarUrl: '/images/Team/Kushagra.png',
     department: 'Member',
     social: {
       github: 'https://github.com/kushagra0333',
@@ -301,7 +301,7 @@ export const TEAM: TeamMember[] = [
     id: 'tanvi',
     name: 'Tanvi Salhotra',
     title: 'Member',
-    avatarUrl: '/Photos/tanvi_salhotra.png',
+    avatarUrl: '/images/Team/tanvi_salhotra.png',
     department: 'Member',
     social: {
       github: 'https://github.com/tan07vi',
@@ -313,7 +313,7 @@ export const TEAM: TeamMember[] = [
     id: 'anushka',
     name: 'Anushka Dua',
     title: 'Member',
-    avatarUrl: '/Photos/Anushka_Dua.png',
+    avatarUrl: '/images/Team/Anushka_Dua.png',
     department: 'Member',
     social: {
       github: 'https://github.com/anushkadua23',
@@ -325,7 +325,7 @@ export const TEAM: TeamMember[] = [
     id: 'rimjhim',
     name: 'Rimjhim Shukla',
     title: 'Member',
-    avatarUrl: '/Photos/Rimjhim.png',
+    avatarUrl: '/images/Team/Rimjhim.png',
     department: 'Member',
     social: {
       github: 'https://github.com/shuklarimjhim87-a11y',
@@ -337,7 +337,7 @@ export const TEAM: TeamMember[] = [
     id: 'bhumika',
     name: 'Bhumika Dobhal',
     title: 'Member',
-    avatarUrl: '/Photos/Bhumika_Dobhal.png',
+    avatarUrl: '/images/Team/Bhumika_Dobhal.png',
     department: 'Member',
     social: {
       github: 'https://github.com/dobhalbhumikaaa',
@@ -350,13 +350,24 @@ export const TEAM: TeamMember[] = [
 // ── Events Data ────────────────────────────────────────────────
 export const EVENTS: Event[] = [
   {
+    id: 'hacktivate2',
+    title: 'Hacktivate 2.0',
+    description: 'A flagship 24-hour national hackathon hosted by Hashtag Official. Gather your team, build innovative solutions to real-world challenges, and pitch to industry leaders for exciting prizes and mentorship.',
+    tag: 'Hackathon',
+    status: 'upcoming',
+    registerUrl: 'https://devfolio.co', // Placeholder URL
+    poster: '/images/Events/posters/poster.png', // Placeholder poster path
+    gradientFrom: '#8ff5ff',
+    gradientTo: '#ac89ff',
+  },
+  {
     id: 'troubleshoot',
     title: 'TroubleShoot Ideathon',
     description:
       'A flagship ideathon hosted with Microsoft where students pitched real product ideas to industry experts. Attendees sharpened their problem framing, delivery, and presentation skills under professional mentorship.',
     tag: 'Ideathon',
     status: 'past',
-    poster: 'https://hashtag-official.vercel.app/assets/cs-CL4FeSij.jpg',
+    poster: '/images/Events/posters/troubleshoot.jpg',
     registerUrl: 'https://reskilll.com/hack/troubleshoot',
     gradientFrom: '#8ff5ff',
     gradientTo: '#00fc40',
@@ -368,7 +379,7 @@ export const EVENTS: Event[] = [
       'A high-energy Valorant tournament that brought competitive tech culture to campus. The event reinforced teamwork, strategy, and community spirit while celebrating the energy of student gaming culture.',
     tag: 'Gaming',
     status: 'past',
-    poster: 'https://hashtag-official.vercel.app/assets/vct-CFqoO1u7.jpg',
+    poster: '/images/Events/posters/hack-battle.jpg',
     gradientFrom: '#ac89ff',
     gradientTo: '#ff6b9b',
   },
@@ -379,7 +390,7 @@ export const EVENTS: Event[] = [
       'Our flagship innovation festival where teams turned insights into solutions. Participants pitched creative technology concepts and received expert feedback, recognition, and growth opportunities.',
     tag: 'Ideathon',
     status: 'past',
-    poster: 'https://hashtag-official.vercel.app/assets/ideautsav-1JXVl_ej.jpg',
+    poster: '/images/Events/posters/ideautsav.jpg',
     gradientFrom: '#00fc40',
     gradientTo: '#8ff5ff',
   },
@@ -390,7 +401,7 @@ export const EVENTS: Event[] = [
       'A design-driven build challenge where students created websites with bold themes and strong brand storytelling. Teams were evaluated on usability, visual polish, and creativity under tight timelines.',
     tag: 'Design',
     status: 'past',
-    poster: 'https://hashtag-official.vercel.app/assets/brandbrawl-XMbxOCOp.jpg',
+    poster: '/images/Events/posters/brand-brawl.jpg',
     gradientFrom: '#ac89ff',
     gradientTo: '#8ff5ff',
   },
@@ -401,7 +412,7 @@ export const EVENTS: Event[] = [
       'A strategic puzzle challenge that tested logic, teamwork, and problem solving. Participants decoded clues across multiple rounds, sharpening analytical thinking and rapid decision-making.',
     tag: 'Hunt',
     status: 'past',
-    poster: 'https://hashtag-official.vercel.app/assets/cryptichunt-DwtjWL7t.jpg',
+    poster: '/images/Events/posters/cryptic-hunt.jpg',
     gradientFrom: '#ff6b9b',
     gradientTo: '#ac89ff',
   },
@@ -412,7 +423,7 @@ export const EVENTS: Event[] = [
       'A campus adventure designed around suspense and clever challenges. Teams navigated hidden clues, collaborated under pressure, and competed for the final prize with sharp problem solving.',
     tag: 'Hunt',
     status: 'past',
-    poster: 'https://hashtag-official.vercel.app/assets/treasurehunt-eDbFKxXs.jpg',
+    poster: '/images/Events/posters/treasure-hunt.jpg',
     gradientFrom: '#8ff5ff',
     gradientTo: '#ac89ff',
   },
@@ -423,7 +434,7 @@ export const EVENTS: Event[] = [
       'CodeTrek 25 challenged participants with relay-style coding rounds. Teams collaborated to solve timed problems, balancing speed, clarity, and accuracy under event pressure.',
     tag: 'Coding',
     status: 'past',
-    poster: 'https://hashtag-official.vercel.app/assets/codetrekrelay-Dv_602Cy.jpg',
+    poster: '/images/Events/posters/relay-coding.jpg',
     gradientFrom: '#00fc40',
     gradientTo: '#ac89ff',
   },
@@ -434,7 +445,7 @@ export const EVENTS: Event[] = [
       'A flagship coding competition where teams raced through real-time algorithmic challenges. The event highlighted technical skill, teamwork, and a strong drive to deliver polished solutions.',
     tag: 'Coding',
     status: 'past',
-    poster: 'https://hashtag-official.vercel.app/assets/codetrek-CNHi5dxE.jpg',
+    poster: '/images/Events/posters/codetrek.jpg',
     gradientFrom: '#ac89ff',
     gradientTo: '#00fc40',
   },
@@ -463,7 +474,7 @@ export const BLOGS: Blog[] = [
     accent: '#ff8b5a',
     date: 'March 2025',
     featured: true,
-    coverImage: 'https://cdn.sanity.io/images/4czbk8j7/production/deea2612b2b9021206ababb56515bfca0f466cee-4032x2268.jpg',
+    coverImage: '/images/Blogs/valorant-showdown.jpg',
   },
   {
     id: 'welcome-to-hashtag',
@@ -474,7 +485,7 @@ export const BLOGS: Blog[] = [
     accent: '#6f82ff',
     date: '2024',
     featured: false,
-    coverImage: 'https://cdn.sanity.io/images/4czbk8j7/production/6badacb22cf366eb5b2e366feceb6a5090d0a626-128x74.png',
+    coverImage: '/images/Blogs/welcome-to-hashtag.png',
   },
 ]
 
@@ -517,6 +528,7 @@ export const MILESTONES: Milestone[] = [
 
 // ── Marquee Events (for scrolling banner) ─────────────────────
 export const MARQUEE_EVENTS: string[] = [
+  'Hacktivate 2.0',
   'TroubleShoot Ideathon',
   'Brand Brawl',
   'IdeaUtsav',

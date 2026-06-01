@@ -27,23 +27,23 @@ const VALUES = [
 ]
 
 const SPONSORS = [
-  { name: "Microsoft Azure", image: "/Photos/Sponsors/Microsoft Azure.png" },
-  { name: "AZD", image: "/Photos/Sponsors/AZD.png" },
-  { name: "Reskilll", image: "/Photos/Sponsors/Reskill.png" },
-  { name: "Softmart", image: "/Photos/Sponsors/Softmart solutions_title sponser 1.png" },
-  { name: "Physics Wallah", image: "/Photos/Sponsors/Physics wallah.png" },
-  { name: "Finlatics", image: "/Photos/Sponsors/Finlatics.png" },
-  { name: "Click a Diet", image: "/Photos/Sponsors/clickadiet.png" },
-  { name: "Genesis", image: "/Photos/Sponsors/genesis.png" },
-  { name: "Interview Buddy", image: "/Photos/Sponsors/interview buddy.png" },
-  { name: "LinkedOut", image: "/Photos/Sponsors/LinkedOut_Bg_removed.png" },
-  { name: "Julep AI", image: "/Photos/Sponsors/julep.png" },
-  { name: "Events Info", image: "/Photos/Sponsors/Events Info.png" },
-  { name: "Give My Certificates", image: "/Photos/Sponsors/Givemycert.png" },
-  { name: "Advertising Point Line", image: "/Photos/Sponsors/adv point line.png" },
-  { name: "Meraj's Creatives", image: "/Photos/Sponsors/meraj's creatives.png" },
-  { name: "Navras Jemtec", image: "/Photos/Sponsors/NAVRAS LOGO (Original).png" },
-  { name: ".xyz Domain Registry", image: "/Photos/Sponsors/.xyz.png" }
+  { name: "Microsoft Azure", image: "/images/Sponsors/Microsoft Azure.png" },
+  { name: "AZD", image: "/images/Sponsors/AZD.png" },
+  { name: "Reskilll", image: "/images/Sponsors/Reskill.png" },
+  { name: "Softmart", image: "/images/Sponsors/Softmart solutions_title sponser 1.png" },
+  { name: "Physics Wallah", image: "/images/Sponsors/Physics wallah.png" },
+  { name: "Finlatics", image: "/images/Sponsors/Finlatics.png" },
+  { name: "Click a Diet", image: "/images/Sponsors/clickadiet.png" },
+  { name: "Genesis", image: "/images/Sponsors/genesis.png" },
+  { name: "Interview Buddy", image: "/images/Sponsors/interview buddy.png" },
+  { name: "LinkedOut", image: "/images/Sponsors/LinkedOut_Bg_removed.png" },
+  { name: "Julep AI", image: "/images/Sponsors/julep.png" },
+  { name: "Events Info", image: "/images/Sponsors/Events Info.png" },
+  { name: "Give My Certificates", image: "/images/Sponsors/Givemycert.png" },
+  { name: "Advertising Point Line", image: "/images/Sponsors/adv point line.png" },
+  { name: "Meraj's Creatives", image: "/images/Sponsors/meraj's creatives.png" },
+  { name: "Navras Jemtec", image: "/images/Sponsors/NAVRAS LOGO (Original).png" },
+  { name: ".xyz Domain Registry", image: "/images/Sponsors/.xyz.png" }
 ]
 
 // Fix 2: Premium Mission/Vision card — glass surface, gradient mesh, glowing icon, readable text

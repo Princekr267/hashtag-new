@@ -2,18 +2,18 @@ import { motion } from 'framer-motion'
 import AlumniCard3D from '../components/ui/AlumniCard3D'
 
 const ALUMNI = [
-  { name: 'Nishit Mehta', role: 'Application Engineer @Quadrafort', quote: 'Building the future, one line of code at a time.', photo: '/Photos/Nishit.png', accent: '#8ff5ff', email: 'nishit@example.com', linkedin: 'https://linkedin.com/in/nishit' },
-  { name: 'Manav Sharma', role: 'Software Engineer @ Irdeto', quote: 'Innovation through collaboration and creativity.', photo: '/Photos/Manav.jpeg', accent: '#00fc40', email: 'manav@example.com', linkedin: 'https://linkedin.com/in/manav' },
-  { name: 'Agamjot Singh', role: 'Full Stack Developer @ Mojo Web', quote: 'Turning ideas into reality with technology.', photo: '/Photos/Agamjot.jpg', accent: '#ac89ff', email: 'agamjot@example.com', linkedin: 'https://linkedin.com/in/agamjot' },
-  { name: 'Divyanshu S', role: 'Founder @2ByteCode', quote: 'Empowering developers, one byte at a time.', photo: '/Photos/Divyanshu.jpeg', accent: '#ff6b9b', email: 'divyanshu@example.com', linkedin: 'https://linkedin.com/in/divyanshu' },
-  { name: 'Satyajeet Sau', role: 'Engineer @IUS Digital Solutions', quote: 'Code is poetry written in logic.', photo: '/Photos/satya.jpg', accent: '#8ff5ff', email: 'satyajeet@example.com', linkedin: 'https://linkedin.com/in/satyajeet' },
-  { name: 'Mayank Pruthi', role: 'Frontend Dev @White Light IT', quote: 'Creating beautiful user experiences.', photo: '/Photos/Mayank.jpg', accent: '#00fc40', email: 'mayank@example.com', linkedin: 'https://linkedin.com/in/mayank' },
-  { name: 'Mehul Anand', role: 'Intern @IIT Delhi', quote: 'Learning and growing every day.', photo: '/Photos/Mehul.jpeg', accent: '#ac89ff', email: 'mehul@example.com', linkedin: 'https://linkedin.com/in/mehul' },
-  { name: 'Harsh Nainwaya', role: 'Intern @BirchStreet Systems', quote: 'Building scalable solutions for tomorrow.', photo: '/Photos/Harsh_Nainwaya.jpg', accent: '#ff6b9b', email: 'harsh@example.com', linkedin: 'https://linkedin.com/in/harsh' },
-  { name: 'Tanuja Pujari', role: 'Ex Software Dev Intern @SUEZ', quote: 'Passionate about clean code and innovation.', photo: '/Photos/Tanuja.jpg', accent: '#8ff5ff', email: 'tanuja@example.com', linkedin: 'https://linkedin.com/in/tanuja' },
-  { name: 'Charu Aggarwal', role: 'System Engineer @TCS', quote: 'Bridging the gap between technology and business.', photo: '/Photos/charu.jpeg', accent: '#00fc40', email: 'charu@example.com', linkedin: 'https://linkedin.com/in/charu' },
-  { name: 'Nikhil Aswal', role: 'Frontend Dev @Staar Payout', quote: 'Crafting intuitive digital experiences.', photo: '/Photos/Nikhil.jpg', accent: '#ac89ff', email: 'nikhil@example.com', linkedin: 'https://linkedin.com/in/nikhil' },
-  { name: 'Kunal Singh', role: 'Tech Intern @ Spay India', quote: 'Exploring the endless possibilities of technology.', photo: '/Photos/Kunal.jpg', accent: '#ff6b9b', email: 'kunal@example.com', linkedin: 'https://linkedin.com/in/kunal' },
+  { name: 'Nishit Mehta', role: 'Application Engineer @Quadrafort', quote: 'Building the future, one line of code at a time.', photo: '/images/Alumni/Nishit.png', accent: '#8ff5ff', email: 'nishit@example.com', linkedin: 'https://linkedin.com/in/nishit' },
+  { name: 'Manav Sharma', role: 'Software Engineer @ Irdeto', quote: 'Innovation through collaboration and creativity.', photo: '/images/Alumni/Manav.jpeg', accent: '#00fc40', email: 'manav@example.com', linkedin: 'https://linkedin.com/in/manav' },
+  { name: 'Agamjot Singh', role: 'Full Stack Developer @ Mojo Web', quote: 'Turning ideas into reality with technology.', photo: '/images/Alumni/Agamjot.jpg', accent: '#ac89ff', email: 'agamjot@example.com', linkedin: 'https://linkedin.com/in/agamjot' },
+  { name: 'Divyanshu S', role: 'Founder @2ByteCode', quote: 'Empowering developers, one byte at a time.', photo: '/images/Alumni/Divyanshu.jpeg', accent: '#ff6b9b', email: 'divyanshu@example.com', linkedin: 'https://linkedin.com/in/divyanshu' },
+  { name: 'Satyajeet Sau', role: 'Engineer @IUS Digital Solutions', quote: 'Code is poetry written in logic.', photo: '/images/Alumni/satya.jpg', accent: '#8ff5ff', email: 'satyajeet@example.com', linkedin: 'https://linkedin.com/in/satyajeet' },
+  { name: 'Mayank Pruthi', role: 'Frontend Dev @White Light IT', quote: 'Creating beautiful user experiences.', photo: '/images/Alumni/Mayank.jpg', accent: '#00fc40', email: 'mayank@example.com', linkedin: 'https://linkedin.com/in/mayank' },
+  { name: 'Mehul Anand', role: 'Intern @IIT Delhi', quote: 'Learning and growing every day.', photo: '/images/Alumni/Mehul.jpeg', accent: '#ac89ff', email: 'mehul@example.com', linkedin: 'https://linkedin.com/in/mehul' },
+  { name: 'Harsh Nainwaya', role: 'Intern @BirchStreet Systems', quote: 'Building scalable solutions for tomorrow.', photo: '/images/Alumni/Harsh_Nainwaya.jpg', accent: '#ff6b9b', email: 'harsh@example.com', linkedin: 'https://linkedin.com/in/harsh' },
+  { name: 'Tanuja Pujari', role: 'Ex Software Dev Intern @SUEZ', quote: 'Passionate about clean code and innovation.', photo: '/images/Alumni/Tanuja.jpg', accent: '#8ff5ff', email: 'tanuja@example.com', linkedin: 'https://linkedin.com/in/tanuja' },
+  { name: 'Charu Aggarwal', role: 'System Engineer @TCS', quote: 'Bridging the gap between technology and business.', photo: '/images/Alumni/charu.jpeg', accent: '#00fc40', email: 'charu@example.com', linkedin: 'https://linkedin.com/in/charu' },
+  { name: 'Nikhil Aswal', role: 'Frontend Dev @Staar Payout', quote: 'Crafting intuitive digital experiences.', photo: '/images/Alumni/Nikhil.jpg', accent: '#ac89ff', email: 'nikhil@example.com', linkedin: 'https://linkedin.com/in/nikhil' },
+  { name: 'Kunal Singh', role: 'Tech Intern @ Spay India', quote: 'Exploring the endless possibilities of technology.', photo: '/images/Alumni/Kunal.jpg', accent: '#ff6b9b', email: 'kunal@example.com', linkedin: 'https://linkedin.com/in/kunal' },
 ]
 
 export default function Alumni(): JSX.Element {
