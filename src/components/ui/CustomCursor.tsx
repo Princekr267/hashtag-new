@@ -8,7 +8,7 @@ export default function CustomCursor(): JSX.Element | null {
   const outerRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
   const [cursorState, setCursorState] = useState<CursorState>({ type: 'default' })
-  const [isTouch, setIsTouch] = useState(false)
+  const [visible, setVisible] = useState(false)
 
   const mouseX = useRef(0)
   const mouseY = useRef(0)
@@ -17,12 +17,11 @@ export default function CustomCursor(): JSX.Element | null {
   const rafId = useRef<number>(0)
 
   useEffect(() => {
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
-    setIsTouch(isTouchDevice)
-
-    if (isTouchDevice) return
-
     const onMouseMove = (e: MouseEvent) => {
+      // Show custom cursor and hide default cursor
+      setVisible(true)
+      document.documentElement.classList.add('no-cursor')
+
       mouseX.current = e.clientX
       mouseY.current = e.clientY
 
@@ -30,6 +29,12 @@ export default function CustomCursor(): JSX.Element | null {
       if (inner) {
         inner.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0) translate(-50%, -50%)`
       }
+    }
+
+    const onTouchStart = () => {
+      // Hide custom cursor and restore default cursor on touch
+      setVisible(false)
+      document.documentElement.classList.remove('no-cursor')
     }
 
     const onMouseOver = (e: MouseEvent) => {
@@ -66,12 +71,15 @@ export default function CustomCursor(): JSX.Element | null {
     }
 
     document.addEventListener('mousemove', onMouseMove, { passive: true })
+    document.addEventListener('touchstart', onTouchStart, { passive: true })
     document.addEventListener('mouseover', onMouseOver, { passive: true })
     rafId.current = requestAnimationFrame(animate)
 
     return () => {
       document.removeEventListener('mousemove', onMouseMove)
+      document.removeEventListener('touchstart', onTouchStart)
       document.removeEventListener('mouseover', onMouseOver)
+      document.documentElement.classList.remove('no-cursor')
       cancelAnimationFrame(rafId.current)
     }
   }, [])
@@ -79,7 +87,7 @@ export default function CustomCursor(): JSX.Element | null {
   const isHover = cursorState.type === 'hover'
   const isText = cursorState.type === 'text'
 
-  if (isTouch) return null
+  if (!visible) return null
 
   return (
     <>
