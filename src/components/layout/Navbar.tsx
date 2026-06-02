@@ -57,7 +57,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
     if (!name.trim() || !email.trim() || !message.trim()) return
     setState('sending')
 
-    const mailtoHref = `mailto:hashtag@jims.edu.in?subject=${encodeURIComponent(subject || `Message from ${name}`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`
+    const mailtoHref = `mailto:hashtag.gn@jagannath.org?subject=${encodeURIComponent(subject || `Message from ${name}`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`
 
     await new Promise(r => setTimeout(r, 600))
     window.open(mailtoHref, '_blank')
@@ -74,14 +74,14 @@ function ContactModal({ onClose }: { onClose: () => void }) {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.25 }}
       onClick={e => { if (e.target === overlayRef.current) onClose() }}
-      className="fixed inset-0 z-[200] flex items-center justify-center p-6 backdrop-blur-md bg-black/75"
+      className="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-6 backdrop-blur-md bg-black/75"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.94, y: 24 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.94, y: 24 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-[520px] rounded-[24px] p-9 relative overflow-hidden gpu-accel"
+        className="w-full max-w-[520px] rounded-[24px] p-6 sm:p-9 relative overflow-hidden gpu-accel max-h-[90vh] flex flex-col"
         style={{
           background: 'linear-gradient(145deg, var(--bg-container-hi) 0%, var(--bg-container) 100%)',
           border: '1px solid var(--primary-glow)',
@@ -99,20 +99,20 @@ function ContactModal({ onClose }: { onClose: () => void }) {
         <button
           onClick={onClose}
           aria-label="Close contact form"
-          className="absolute top-4 right-4 w-11 h-11 rounded-full border border-white/10 bg-white/5 text-white/60 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-white/12 hover:text-white"
+          className="absolute top-4 right-4 w-11 h-11 rounded-full border border-white/10 bg-white/5 text-white/60 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-white/12 hover:text-white z-[10]"
         >
           <X size={18} />
         </button>
 
         {/* Header */}
-        <div className="mb-7 relative z-[2]">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-[14px] mb-4 border border-primary/30 bg-primary/10 shadow-[0_0_30px_var(--primary-glow)]">
-            <Mail size={22} className="text-primary" />
+        <div className="mb-5 sm:mb-7 relative z-[2] flex-shrink-0 pr-8">
+          <div className="inline-flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-[12px] sm:rounded-[14px] mb-3 sm:mb-4 border border-primary/30 bg-primary/10 shadow-[0_0_30px_var(--primary-glow)]">
+            <Mail size={20} className="text-primary" />
           </div>
-          <h2 className="font-display font-black text-[1.6rem] text-white m-0 leading-[1.2]">
+          <h2 className="font-display font-black text-[1.4rem] sm:text-[1.6rem] text-white m-0 leading-[1.2]">
             Get in Touch
           </h2>
-          <p className="text-sm text-text-muted/80 m-0 font-body">
+          <p className="text-xs sm:text-sm text-text-muted/80 m-0 font-body mt-1">
             Have a question or want to collaborate? Send us a message.
           </p>
         </div>
@@ -133,7 +133,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             </p>
           </motion.div>
         ) : (
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-[2]">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-[2] overflow-y-auto pr-1 sm:pr-2 form-scrollbar">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <FormField
                 label="Name"
@@ -183,7 +183,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
             <button
               type="submit"
               disabled={state === 'sending'}
-              className="btn-primary w-full py-3.5 rounded-[12px] text-sm font-bold tracking-wider gpu-accel"
+              className="btn-primary w-full py-3 sm:py-3.5 rounded-[12px] text-sm font-bold tracking-wider gpu-accel flex-shrink-0"
               style={{ minHeight: '44px' }}
             >
               {state === 'sending' ? (
@@ -249,6 +249,13 @@ export default function Navbar(): JSX.Element {
     const onReveal = () => setRevealed(true)
     window.addEventListener('site-revealed', onReveal)
     return () => window.removeEventListener('site-revealed', onReveal)
+  }, [])
+
+  // Allow footer / other components to open the contact modal
+  useEffect(() => {
+    const onOpenContact = () => setContactOpen(true)
+    window.addEventListener('open-contact-modal', onOpenContact)
+    return () => window.removeEventListener('open-contact-modal', onOpenContact)
   }, [])
 
   useEffect(() => {

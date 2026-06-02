@@ -77,10 +77,11 @@ export default function Team(): JSX.Element {
   const cols = useResponsiveColumns();
   const activeDepartments = DEPARTMENTS.filter(d => d !== 'All')
 
-  // Layout Constants
-  const DEPARTMENT_GAP = 500;
-  const HEADER_TO_CARDS_GAP = 280;
-  const ROW_HEIGHT = 440; 
+  // Layout Constants — smaller on mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640
+  const DEPARTMENT_GAP = isMobile ? 300 : 500;
+  const HEADER_TO_CARDS_GAP = isMobile ? 200 : 280;
+  const ROW_HEIGHT = isMobile ? 340 : 440; 
 
   // Generate Timeline Nodes
   const timelineNodes: TimelineNode[] = [];
@@ -270,7 +271,7 @@ export default function Team(): JSX.Element {
                   top: `${node.y}px`, 
                   left: `${node.colPercent}%`, 
                   transform: 'translate(-50%, -50%)',
-                  maxWidth: '320px', // Restrict card width inside the column
+                  maxWidth: cols === 1 ? '280px' : '320px',
                 }}
               >
                 <motion.div
@@ -285,7 +286,7 @@ export default function Team(): JSX.Element {
                         <div className="absolute inset-0 rounded-full animate-ping opacity-50" style={{ background: accentColor }} />
                       </div>
                       <h2 
-                        className="text-xl md:text-3xl font-mono uppercase tracking-[0.3em] font-bold bg-black/50 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/10"
+                        className="text-base sm:text-xl md:text-3xl font-mono uppercase tracking-[0.2em] sm:tracking-[0.3em] font-bold bg-black/50 backdrop-blur-md px-4 sm:px-6 py-2 sm:py-3 rounded-2xl border border-white/10"
                         style={{ color: accentColor, textShadow: `0 0 15px ${accentColor}80` }}
                       >
                         {node.data as string}

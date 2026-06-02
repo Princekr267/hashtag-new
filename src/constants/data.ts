@@ -20,6 +20,19 @@ export interface TeamMember {
   isLeader?: boolean
 }
 
+export interface EventTimelineItem {
+  date: string
+  location: string
+  title: string
+  description: string
+}
+
+export interface EventPrizeItem {
+  title: string
+  amount: string
+  winners: string
+}
+
 export interface Event {
   id: string
   title: string
@@ -30,6 +43,15 @@ export interface Event {
   registerUrl?: string
   gradientFrom: string
   gradientTo: string
+  duration?: string
+  venue?: string
+  timeline?: EventTimelineItem[]
+  tracks?: string[]
+  prizes?: EventPrizeItem[]
+  prizePool?: string
+  teamSize?: string
+  eligibility?: string
+  officialWebsite?: string
 }
 
 export interface Stat {
@@ -352,13 +374,74 @@ export const EVENTS: Event[] = [
   {
     id: 'hacktivate2',
     title: 'Hacktivate 2.0',
-    description: 'A flagship 24-hour national hackathon hosted by Hashtag Official. Gather your team, build innovative solutions to real-world challenges, and pitch to industry leaders for exciting prizes and mentorship.',
+    description: '36 hours. One Venue. Filled with talented builders. Hacktivate 2.0 is a 36-hour offline hackathon organized by Hashtag Technical Society, where students, developers and tech enthusiasts from across India come together to stop talking about ideas and actually build them.',
     tag: 'Hackathon',
     status: 'upcoming',
-    registerUrl: 'https://devfolio.co', // Placeholder URL
-    poster: '/images/Events/posters/poster.png', // Placeholder poster path
-    gradientFrom: '#8ff5ff',
-    gradientTo: '#ac89ff',
+    registerUrl: 'https://hackculture.io/hackathons/hacktivate-2-0',
+    officialWebsite: 'https://hacktivate-2-0-sigma.vercel.app/',
+    poster: '/images/Events/posters/poster.png',
+    gradientFrom: '#edac03',
+    gradientTo: '#221643',
+    duration: '36 Hours',
+    venue: 'JIMS Greater Noida',
+    teamSize: '4 Members required',
+    prizePool: '₹1 Lakh +',
+    eligibility: 'Open to all UG and PG students across India',
+    tracks: [
+      'Sports-Tech',
+      'Cloud Computing',
+      'Disaster Management',
+      'Road Safety',
+      'Agriculture',
+      'Healthcare Management',
+      'Environment Management',
+      'Open Innovation'
+    ],
+    prizes: [
+      { title: 'First Prize', amount: '₹ 20,000 cash', winners: '1 winner' },
+      { title: 'Second Prize', amount: '₹ 12,000 cash', winners: '1 winner' },
+      { title: 'Third Prize', amount: '₹ 8,000 cash', winners: '1 winner' },
+      { title: 'Best Beginners Team', amount: '₹ 5,000 cash', winners: '1 winner' },
+      { title: 'Best All Female Team', amount: '₹ 5,000 cash', winners: '1 winner' }
+    ],
+    timeline: [
+      {
+        date: 'Jun 1 – Aug 15, 2026',
+        location: 'Online',
+        title: 'Registration 📝',
+        description: 'Hackathon registration period. Sign up, form your team, and claim your spot at Hacktivate 2.0. Open from Jun 1 at 12:00 AM to Aug 15 at 11:59 PM.'
+      },
+      {
+        date: 'Jun 1 – Aug 15, 2026',
+        location: 'Online',
+        title: 'Team Formation 🤝',
+        description: 'Form teams and collaborate with other participants. Find your dream team before registrations close on Aug 15 at 11:59 PM.'
+      },
+      {
+        date: 'Jun 1 – Aug 15, 2026',
+        location: 'Online',
+        title: 'Presentation Submission 📊',
+        description: 'Submit your project idea presentation for evaluation. Window open from Jun 1 at 12:00 AM to Aug 15 at 11:59 PM.'
+      },
+      {
+        date: 'To Be Announced',
+        location: 'Online',
+        title: 'Online Presentation Round 🖥️',
+        description: 'Selected teams will showcase their ideas online to our panel of judges. Date and details to be announced soon.'
+      },
+      {
+        date: 'To Be Announced',
+        location: 'Online',
+        title: 'Shortlisted Teams Announced 🎉',
+        description: 'Teams selected for the offline hackathon at JIMSEMTC, Greater Noida are revealed. Date to be announced soon.'
+      },
+      {
+        date: '11–12 Sep 2026',
+        location: 'Offline at JIMS Greater Noida',
+        title: 'Offline Hacking Round 🚀',
+        description: '36 hours of non-stop building, mentoring, and pitching to industry experts at the campus.'
+      }
+    ]
   },
   {
     id: 'troubleshoot',

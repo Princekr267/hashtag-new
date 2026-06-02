@@ -46,7 +46,9 @@
   touch-action: manipulation;
 }
 
-html { cursor: none; }
+@media (pointer: fine) {
+  html { cursor: none; }
+}
 
 body {
   background-color: var(--bg-base);
@@ -204,6 +206,11 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Section Spacing ─────────────────────────────────────────── */
 .section    { padding: 100px 0; position: relative; }
 .section-sm { padding: 60px 0;  position: relative; }
+
+@media (max-width: 640px) {
+  .section    { padding: 60px 0; }
+  .section-sm { padding: 40px 0; }
+}
 
 /* ── Scrollbar ───────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }
@@ -668,7 +675,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ══════════════════════════════════════════════════════════════
-   ANIMATED GRADIENT BORDER (Events featured card)
+   ANIMATED ROTATING GRADIENT BORDER (Events featured card)
    ══════════════════════════════════════════════════════════════ */
 .event-gradient-border {
   position: relative;
@@ -683,11 +690,11 @@ h1, h2, h3, h4, h5, h6 {
   inset: 0;
   background: conic-gradient(
     from 0deg at 50% 50%,
-    #8ff5ff,
-    #00fc40,
-    #ac89ff,
-    #ff6b9b,
-    #8ff5ff
+    #f5c300,
+    #ffd700,
+    #b8860b,
+    #ffd700,
+    #f5c300
   );
   border-radius: inherit;
   animation: gradientBorderSpin 4s linear infinite;
@@ -698,7 +705,6 @@ h1, h2, h3, h4, h5, h6 {
   position: relative;
   z-index: 1;
   border-radius: 18px;
-  background: var(--bg-container);
   overflow: hidden;
 }
 
@@ -1087,3 +1093,75 @@ button:active::after,
 .animate-ripple {
   animation: ripple 0.8s cubic-bezier(0, 0, 0.2, 1) forwards;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ADDITIONAL MOBILE RESPONSIVE POLISH
+   ══════════════════════════════════════════════════════════════ */
+
+/* Footer: ensure proper stacking on mobile */
+@media (max-width: 768px) {
+  /* Footer grid — single column */
+  footer .grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+
+  /* Footer brand + logos stack properly */
+  footer .flex.flex-wrap.items-center { flex-wrap: wrap; gap: 0.75rem; }
+
+  /* Footer bottom bar — center on mobile */
+  footer .flex.justify-between { flex-direction: column; align-items: center; text-align: center; gap: 0.75rem; }
+
+  /* Display text in footer — smaller on mobile */
+  .footer-display-text { font-size: clamp(2.5rem, 15vw, 5rem) !important; }
+
+  /* EventDetail quick stats: 2-col on mobile */
+  .event-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* FeaturedEventCard inner padding on mobile */
+  .event-gradient-inner { padding: 1.5rem !important; }
+
+  /* Scrollbar — hidden on mobile */
+  ::-webkit-scrollbar { width: 0; }
+
+  /* Custom cursor — no custom cursor on touch */
+  .custom-cursor { display: none !important; }
+}
+
+/* Extra small phones */
+@media (max-width: 390px) {
+  /* Hero section padding */
+  .hero-section { padding-left: 1rem !important; padding-right: 1rem !important; }
+
+  /* EventCard height on tiny phones */
+  .h-\[380px\] { height: 340px !important; }
+
+  /* Featured card pills — smaller text */
+  .pill { font-size: 0.6rem !important; padding: 3px 8px !important; }
+
+  /* Reduce gap in featured card pills row */
+  .event-gradient-inner .flex.flex-wrap { gap: 0.5rem !important; }
+}
+
+/* Tablet (769px–1023px): intermediate adjustments */
+@media (min-width: 769px) and (max-width: 1023px) {
+  /* About page: sponsors grid on tablet */
+  .sponsors-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  
+  /* EventDetail: poster not too wide on tablet */
+  .event-poster-wrap { max-width: 220px; }
+}
+
+/* Custom scrollbar for form inside modal */
+.form-scrollbar::-webkit-scrollbar {
+  width: 4px !important;
+}
+.form-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.form-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 99px !important;
+}
+.form-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35) !important;
+}
+
+

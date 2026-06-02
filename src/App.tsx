@@ -17,6 +17,7 @@ const EventDetail = lazy(() => import('./pages/EventDetail'))
 const BlogDetail = lazy(() => import('./pages/BlogDetail'))
 import PageLoader from './components/ui/PageLoader'
 
+
 import { useSmoothScroll } from './hooks/useSmoothScroll'
 
 // Only show the loader when the user lands directly on the home page

@@ -194,7 +194,7 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             padding: '16px 12px',
             gap: 'clamp(6px, 1.5vw, 12px)',
             boxSizing: 'border-box',
-            pointerEvents: 'none',
+            pointerEvents: isFlipped ? 'auto' : 'none',
           }}
         >
           {/* Dot grid */}
