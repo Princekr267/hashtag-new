@@ -1149,3 +1149,19 @@ button:active::after,
   .event-poster-wrap { max-width: 220px; }
 }
 
+/* Custom scrollbar for form inside modal */
+.form-scrollbar::-webkit-scrollbar {
+  width: 4px !important;
+}
+.form-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.form-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 99px !important;
+}
+.form-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.35) !important;
+}
+
+
