@@ -1150,6 +1150,9 @@ button:active::after,
 }
 
 /* Custom scrollbar for form inside modal */
+.form-scrollbar {
+  overscroll-behavior: contain;
+}
 .form-scrollbar::-webkit-scrollbar {
   width: 4px !important;
 }
