@@ -68,7 +68,7 @@ export default function EventDetail(): JSX.Element {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center relative z-10">
                 {/* Poster Side */}
                 <div className="lg:col-span-4 flex justify-center">
-                  <div className="relative group w-full max-w-[280px] aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
+                  <div className="event-poster-wrap relative group w-full max-w-[200px] sm:max-w-[280px] aspect-[3/4] rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
                     <img 
                       src={event.poster} 
                       alt={event.title} 
@@ -80,24 +80,29 @@ export default function EventDetail(): JSX.Element {
 
                 {/* Event Summary Side */}
                 <div className="lg:col-span-8 space-y-6">
-                  <div>
+                  <div className="flex flex-wrap items-center gap-3 mb-2">
                     <span
-                      className="text-[10px] font-mono tracking-[0.25em] px-3 py-1 rounded-full border mb-4 inline-block font-semibold uppercase"
+                      className="text-[10px] font-mono tracking-[0.25em] px-3 py-1 rounded-full border inline-block font-semibold uppercase"
                       style={{ color: event.gradientFrom, borderColor: `${event.gradientFrom}30`, background: `${event.gradientFrom}10` }}
                     >
                       {event.tag}
                     </span>
-                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-white leading-tight">
-                      {event.title}
-                    </h1>
+                    {event.status === 'upcoming' && (
+                      <span className="pill pill-live flex-shrink-0 text-[10px] px-3 py-0.5 rounded-full font-mono font-semibold tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_rgba(52,211,153,0.15)] uppercase">
+                        REGISTRATIONS LIVE
+                      </span>
+                    )}
                   </div>
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold text-white leading-tight">
+                    {event.title}
+                  </h1>
 
                   <p className="text-text-muted font-body text-base sm:text-lg leading-relaxed max-w-2xl">
                     {event.description}
                   </p>
 
                   {/* Badges/Quick Stats Grid */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                  <div className="event-stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
                     {event.duration && (
                       <div className="bg-[#121c38]/50 border border-white/5 rounded-2xl p-4 flex flex-col gap-2">
                         <Clock size={18} style={{ color: event.gradientFrom }} />
@@ -129,17 +134,13 @@ export default function EventDetail(): JSX.Element {
                   </div>
 
                   {/* Actions Row */}
-                  <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 pt-2">
                     {event.registerUrl && (
                       <a
                         href={event.registerUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold tracking-wider text-black font-mono transition-all duration-300 hover:-translate-y-0.5 hover:shadow-2xl"
-                        style={{
-                          background: `linear-gradient(135deg, ${event.gradientFrom} 0%, ${event.gradientTo} 100%)`,
-                          boxShadow: `0 8px 24px -6px ${event.gradientTo}60`
-                        }}
+                        className="inline-flex items-center justify-center gap-2 min-w-[180px] px-6 py-3 rounded-full text-sm font-semibold tracking-wider font-mono border border-transparent bg-gradient-to-r from-[#edac03] to-[#ffcf40] text-[#221643] hover:from-[#221643] hover:to-[#221643] hover:text-[#edac03] hover:border-[#edac03] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(237,172,3,0.35)]"
                       >
                         <span>REGISTER NOW</span>
                         <ExternalLink size={14} />
@@ -150,13 +151,14 @@ export default function EventDetail(): JSX.Element {
                         href={event.officialWebsite}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full text-sm font-semibold tracking-wider text-white font-mono border border-white/10 transition-all duration-300 hover:border-white/30 hover:bg-white/5"
+                        className="inline-flex items-center justify-center gap-2 min-w-[180px] px-6 py-3 rounded-full text-sm font-semibold tracking-wider font-mono border border-[#edac03] bg-[#221643] text-[#edac03] hover:bg-gradient-to-r hover:from-[#edac03] hover:to-[#ffcf40] hover:text-[#221643] hover:border-transparent transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(237,172,3,0.25)]"
                       >
                         <span>OFFICIAL WEBSITE</span>
                         <Globe size={14} />
                       </a>
                     )}
                   </div>
+
                 </div>
               </div>
             </div>
@@ -176,7 +178,7 @@ export default function EventDetail(): JSX.Element {
                         // THEMES & TRACKS
                       </h2>
                     </div>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {event.tracks.map((track) => (
                         <div 
                           key={track} 
@@ -337,20 +339,19 @@ export default function EventDetail(): JSX.Element {
               >
                 {event.tag.toUpperCase()}
               </span>
-              <h1 className="text-4xl md:text-6xl font-display font-bold text-white mb-6 leading-tight">
+              <h1 className="text-3xl sm:text-4xl md:text-6xl font-display font-bold text-white mb-6 leading-tight">
                 {event.title}
               </h1>
-              <div className="flex flex-wrap items-center gap-4">
+              <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
                 {event.status === 'upcoming' && (
-                  <span className="pill pill-live flex-shrink-0">LIVE SOON</span>
+                  <span className="pill pill-live flex-shrink-0">REGISTRATIONS LIVE</span>
                 )}
                 {event.registerUrl && event.status === 'upcoming' && (
                   <a
                     href={event.registerUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="btn-primary inline-flex items-center gap-2"
-                    style={{ padding: '8px 16px', fontSize: '13px' }}
+                    className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider font-mono border border-transparent bg-gradient-to-r from-[#edac03] to-[#ffcf40] text-[#221643] hover:from-[#221643] hover:to-[#221643] hover:text-[#edac03] hover:border-[#edac03] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(237,172,3,0.25)]"
                   >
                     <span className="leading-none">Register Now</span>
                     <ExternalLink size={14} className="flex-shrink-0" />

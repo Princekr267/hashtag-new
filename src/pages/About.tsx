@@ -670,12 +670,12 @@ export default function About(): JSX.Element {
                 return (
                   <div
                     key={`${m.year}-${m.title}`}
-                    className={`flex items-center gap-8 py-10 ${isLeft ? 'flex-row' : 'flex-row-reverse'}`}
+                    className={`flex items-center gap-4 sm:gap-8 py-8 sm:py-10 flex-col sm:${isLeft ? 'flex-row' : 'flex-row-reverse'}`}
                   >
                     {/* Content — initial hidden state, revealed by scroll listener */}
                     <div
                       ref={(el) => { cardRefs.current[idx] = el }}
-                      className={`flex-1 ${isLeft ? 'text-right pr-8' : 'text-left pl-8'}`}
+                      className={`w-full sm:flex-1 ${isLeft ? 'sm:text-right sm:pr-8' : 'sm:text-left sm:pl-8'} text-left px-2`}
                       style={{
                         opacity: 0,
                         transform: `translateX(${isLeft ? '-20px' : '20px'})`,
@@ -703,11 +703,12 @@ export default function About(): JSX.Element {
                       />
                     </div>
 
-                    <div className="flex-1" />
+                    <div className="hidden sm:flex flex-1" />
                   </div>
                 )
               })}
             </div>
+
           </div>
         </div>
       </section>

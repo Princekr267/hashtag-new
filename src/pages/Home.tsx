@@ -254,16 +254,17 @@ export default function Home(): JSX.Element {
             initial={{ opacity: 0, y: 30 }}
             animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
             transition={{ duration: 1.0, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="text-white text-5xl md:text-8xl font-black mb-8 leading-[1.05] tracking-tight relative"
+            className="text-white text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black mb-6 sm:mb-8 leading-[1.05] tracking-tight relative"
           >
-            Explore the cosmos <br /> of <span className="text-gradient-premium">Technologies</span>
+            Explore the cosmos <br />
+            of <span className="text-gradient-premium">Technologies</span>
           </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
             transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-2xl text-text-muted text-lg md:text-xl font-body leading-relaxed mb-12 px-4"
+            className="max-w-2xl text-text-muted text-base md:text-lg lg:text-xl font-body leading-relaxed mb-10 sm:mb-12 px-2 sm:px-4"
           >
             A community-driven tech hub at <span className="text-primary font-bold">JIMS Greater Noida</span> dedicated to building, learning, and leading the future of technology.
           </motion.p>
@@ -417,12 +418,12 @@ export default function Home(): JSX.Element {
             </p>
           </RevealSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 border border-outline-var/30 overflow-hidden rounded-2xl">
+          <div className="grid grid-cols-1 sm:grid-cols-3 border border-outline-var/30 overflow-hidden rounded-2xl">
             {STATS.map((stat, idx) => (
               <RevealSection revealed={revealed}
                 key={stat.label}
                 delay={0.3 + idx * 0.12}
-                className="stat-block p-10 md:p-12 surface-card border-b md:border-b-0 border-outline-var/30 md:border-r last:border-r-0 last:border-b-0 hover:bg-white/[0.01] transition-colors duration-500"
+                className="stat-block p-8 sm:p-10 md:p-12 surface-card border-b sm:border-b-0 border-outline-var/30 sm:border-r last:border-r-0 last:border-b-0 hover:bg-white/[0.01] transition-colors duration-500"
               >
                 <StatCounter stat={stat} />
               </RevealSection>
