@@ -160,13 +160,13 @@ export default function Footer(): JSX.Element {
               </li>
             </ul>
             <div className="lg:hidden">
-              <a 
-                href="mailto:hashtag.gn@jagannath.org" 
-                className="btn-ghost inline-flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase p-3"
+              <button 
+                onClick={() => window.dispatchEvent(new CustomEvent('open-contact-modal'))}
+                className="btn-ghost inline-flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase p-3 cursor-pointer"
               >
                 <Mail size={14} />
                 <span>Contact Us</span>
-              </a>
+              </button>
             </div>
           </div>
         </div>

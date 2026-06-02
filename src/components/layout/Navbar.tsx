@@ -57,7 +57,7 @@ function ContactModal({ onClose }: { onClose: () => void }) {
     if (!name.trim() || !email.trim() || !message.trim()) return
     setState('sending')
 
-    const mailtoHref = `mailto:hashtag@jims.edu.in?subject=${encodeURIComponent(subject || `Message from ${name}`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`
+    const mailtoHref = `mailto:hashtag.gn@jagannath.org?subject=${encodeURIComponent(subject || `Message from ${name}`)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\n${message}`)}`
 
     await new Promise(r => setTimeout(r, 600))
     window.open(mailtoHref, '_blank')
@@ -249,6 +249,13 @@ export default function Navbar(): JSX.Element {
     const onReveal = () => setRevealed(true)
     window.addEventListener('site-revealed', onReveal)
     return () => window.removeEventListener('site-revealed', onReveal)
+  }, [])
+
+  // Allow footer / other components to open the contact modal
+  useEffect(() => {
+    const onOpenContact = () => setContactOpen(true)
+    window.addEventListener('open-contact-modal', onOpenContact)
+    return () => window.removeEventListener('open-contact-modal', onOpenContact)
   }, [])
 
   useEffect(() => {
