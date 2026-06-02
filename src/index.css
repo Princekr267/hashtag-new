@@ -46,8 +46,8 @@
   touch-action: manipulation;
 }
 
-@media (pointer: fine) {
-  html { cursor: none; }
+.no-cursor, .no-cursor * {
+  cursor: none !important;
 }
 
 body {
