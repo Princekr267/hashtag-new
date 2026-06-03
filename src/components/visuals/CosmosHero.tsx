@@ -55,7 +55,13 @@ export default function CosmosHero(): JSX.Element {
       pendingMouse = true
     }
 
+    let isRevealed = typeof window !== 'undefined' ? !!(window as any).siteRevealedOnce : false
+
     const draw = () => {
+      if (!isRevealed) {
+        raf = requestAnimationFrame(draw)
+        return
+      }
       const scrollY = window.scrollY
       // Only recalculate rotation when mouse actually moved
       if (pendingMouse) {
@@ -190,12 +196,18 @@ export default function CosmosHero(): JSX.Element {
     )
     observer.observe(cv)
 
+    const handleReveal = () => {
+      isRevealed = true
+    }
+    window.addEventListener('site-revealed', handleReveal, { passive: true })
+
     window.addEventListener('resize', resize, { passive: true })
     window.addEventListener('mousemove', onMouseMove, { passive: true })
 
     return () => {
       cancelAnimationFrame(raf)
       observer.disconnect()
+      window.removeEventListener('site-revealed', handleReveal)
       window.removeEventListener('resize', resize)
       window.removeEventListener('mousemove', onMouseMove)
     }

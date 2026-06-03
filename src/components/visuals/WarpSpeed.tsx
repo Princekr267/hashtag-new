@@ -27,14 +27,18 @@ export default function WarpSpeed(): JSX.Element {
       }
     }
 
+    const isMobile = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+
     const resize = () => {
       W = window.innerWidth
       H = window.innerHeight
-      cv.width = W * devicePixelRatio
-      cv.height = H * devicePixelRatio
-      ctx.scale(devicePixelRatio, devicePixelRatio)
+      const dpr = isMobile ? Math.min(window.devicePixelRatio, 1.5) : window.devicePixelRatio
+      cv.width = W * dpr
+      cv.height = H * dpr
+      ctx.scale(dpr, dpr)
       
-      streaks = Array.from({ length: 120 }, () => {
+      const streakCount = isMobile ? 40 : 120
+      streaks = Array.from({ length: streakCount }, () => {
         const s = mkStreak(W, H)
         s.life = Math.random() * s.maxLife
         return s
@@ -58,15 +62,19 @@ export default function WarpSpeed(): JSX.Element {
         const ty = s.y - Math.sin(s.a) * tailLen
         const alpha = s.bright * (1 - prog * 0.3)
         
-        const gr = ctx.createLinearGradient(tx, ty, s.x, s.y)
-        gr.addColorStop(0, 'rgba(0,30,120,0)')
-        gr.addColorStop(0.6, `rgba(20,90,220,${alpha * 0.5})`)
-        gr.addColorStop(1, `rgba(140,200,255,${alpha})`)
+        if (isMobile) {
+          ctx.strokeStyle = `rgba(140,200,255,${alpha * 0.6})`
+        } else {
+          const gr = ctx.createLinearGradient(tx, ty, s.x, s.y)
+          gr.addColorStop(0, 'rgba(0,30,120,0)')
+          gr.addColorStop(0.6, `rgba(20,90,220,${alpha * 0.5})`)
+          gr.addColorStop(1, `rgba(140,200,255,${alpha})`)
+          ctx.strokeStyle = gr
+        }
         
         ctx.beginPath()
         ctx.moveTo(tx, ty)
         ctx.lineTo(s.x, s.y)
-        ctx.strokeStyle = gr
         ctx.lineWidth = 0.8 + prog * 0.8
         ctx.stroke()
         

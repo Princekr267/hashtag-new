@@ -1,6 +1,10 @@
 import { useEffect, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import Lenis from 'lenis'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+
+gsap.registerPlugin(ScrollTrigger)
 
 // Detect touch-primary devices — on these we skip Lenis and use native scroll
 const isTouchDevice = () => {
@@ -36,17 +40,26 @@ export function useSmoothScroll(): void {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.5,
     })
 
     lenisRef.current = lenis
 
-    let rafId: number
-    function raf(time: number) {
-      lenis.raf(time)
-      rafId = requestAnimationFrame(raf)
-    }
+    // Sync Lenis scroll updates with GSAP ScrollTrigger
+    lenis.on('scroll', () => {
+      ScrollTrigger.update()
+    })
 
-    rafId = requestAnimationFrame(raf)
+    // Align Lenis rendering cycles with GSAP ticker loop
+    const updateTicker = (time: number) => {
+      lenis.raf(time * 1000)
+    }
+    gsap.ticker.add(updateTicker)
+    gsap.ticker.lagSmoothing(0)
 
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
@@ -86,7 +99,7 @@ export function useSmoothScroll(): void {
       document.removeEventListener('click', handleClick)
       window.removeEventListener('horizontal-gallery-hijack', handleGalleryHijack as EventListener)
       window.removeEventListener('site-revealed', onRevealed)
-      cancelAnimationFrame(rafId)
+      gsap.ticker.remove(updateTicker)
       lenis.destroy()
       lenisRef.current = null
     }
