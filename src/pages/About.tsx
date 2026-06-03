@@ -7,6 +7,8 @@ import { MILESTONES, ABOUT_CONTENT, JIMS_RELATION } from '../constants/data'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const PRESET_OFFSETS = ['-30px', '35px', '-25px', '40px', '-35px']
+
 const VALUES = [
   {
     icon: '⚡',
@@ -333,10 +335,10 @@ function AboutValuesSection() {
               }}
             >
               <FlipCard
-                height="260px"
+                className="h-[290px] sm:h-[260px]"
                 front={
                   <div
-                    className="w-full h-full relative overflow-hidden flex flex-col gap-5 p-8 rounded-[24px] border border-white/[0.05] bg-[#0A0F1A]/80 backdrop-blur-md hover:border-primary/30 transition-all duration-500 group"
+                    className="w-full h-full relative overflow-hidden flex flex-col gap-4 sm:gap-5 p-6 sm:p-8 rounded-[24px] border border-white/[0.05] bg-[#0A0F1A]/80 backdrop-blur-md hover:border-primary/30 transition-all duration-500 group"
                   >
                     {/* Background glow orb */}
                     <div className="absolute -top-10 -right-10 w-32 h-32 blur-[60px] opacity-20 pointer-events-none"
@@ -361,7 +363,7 @@ function AboutValuesSection() {
                 }
                 back={
                   <div
-                    className="w-full h-full rounded-[24px] flex flex-col items-center justify-center p-8 text-center gap-5"
+                    className="w-full h-full rounded-[24px] flex flex-col items-center justify-center p-6 sm:p-8 text-center gap-4 sm:gap-5"
                     style={{
                       background: `linear-gradient(145deg, #0A0F1A 0%, #050810 100%)`,
                       border: `1px solid ${v.accent}30`,
@@ -386,32 +388,74 @@ function AboutValuesSection() {
 
 export default function About(): JSX.Element {
   const timelineWrap   = useRef<HTMLDivElement>(null)
-  const progressLine   = useRef<HTMLDivElement>(null)
+  const progressLine   = useRef<SVGPathElement>(null)
   const nodeRefs       = useRef<(HTMLDivElement | null)[]>([])
   const cardRefs       = useRef<(HTMLDivElement | null)[]>([])
 
   // Change 4: Scroll-driven timeline progress via rAF-throttled scroll listener
+  // Change 4: Scroll-driven timeline progress via rAF-throttled scroll listener
   const updateTimeline = useCallback(() => {
     const wrap = timelineWrap.current
-    const line = progressLine.current
+    const line = progressLine.current as SVGPathElement | null
     if (!wrap || !line) return
 
-    const rect = wrap.getBoundingClientRect()
+    const wrapRect = wrap.getBoundingClientRect()
     const winH = window.innerHeight
-    // progress 0 when top enters viewport, 1 when bottom leaves
-    const progress = Math.min(1, Math.max(0,
-      (winH - rect.top) / (rect.height + winH)
-    ))
+
+    const firstDot = nodeRefs.current[0]
+    const lastDot = nodeRefs.current[nodeRefs.current.length - 1]
+    if (!firstDot || !lastDot) return
+
+    const firstRect = firstDot.getBoundingClientRect()
+    const lastRect = lastDot.getBoundingClientRect()
+
+    const topOffset = (firstRect.top + firstRect.height / 2) - wrapRect.top
+    const bottomOffset = wrapRect.bottom - (lastRect.top + lastRect.height / 2)
+    const totalHeight = wrapRect.height - topOffset - bottomOffset
+
+    // Document-relative positions of the first and last dots
+    const currentScroll = window.scrollY
+    const firstDotDocTop = currentScroll + firstRect.top
+    const lastDotDocTop = currentScroll + lastRect.top
+
+    // Timeline starts growing when first dot is at 80% of viewport height
+    const startScroll = firstDotDocTop - winH * 0.8
+    // Timeline is fully grown when last dot is at 55% of viewport height
+    const endScroll = lastDotDocTop - winH * 0.55
+
+    let progress = 0
+    if (endScroll > startScroll) {
+      progress = (currentScroll - startScroll) / (endScroll - startScroll)
+    }
+    
+    // Check if we are at the bottom of the page (safety fallback)
+    const maxScroll = document.documentElement.scrollHeight - winH
+    if (currentScroll >= maxScroll - 15) {
+      progress = 1
+    } else {
+      progress = Math.min(1, Math.max(0, progress))
+    }
 
     // Grow line height according to progress
-    line.style.transform = `scaleY(${progress})`
+    const lengthStr = wrap.getAttribute('data-path-length')
+    if (lengthStr) {
+      const length = parseFloat(lengthStr)
+      line.style.strokeDashoffset = `${length * (1 - progress)}`
+    }
 
     // Glow each node when line reaches its position
     nodeRefs.current.forEach((node, i) => {
       if (!node) return
       const nodeRect = node.getBoundingClientRect()
-      const nodeProgress = (winH - nodeRect.top) / (winH * 0.8)
-      const active = nodeProgress > 0.5
+      
+      // Calculate dot's center offset relative to the container
+      const dotCenterOffset = (nodeRect.top + nodeRect.height / 2) - wrapRect.top
+      
+      // The relative position of the dot along the active line path (0 to 1)
+      const dotRelativePosition = totalHeight > 0 ? (dotCenterOffset - topOffset) / totalHeight : 0
+
+      // The dot is active if the progress of the line has reached it
+      const active = progress >= dotRelativePosition
 
       if (active) {
         node.style.background = 'var(--primary, #60a5fa)'
@@ -422,7 +466,7 @@ export default function About(): JSX.Element {
         if (card && card.style.opacity === '0') {
           card.style.transition = 'opacity 0.4s cubic-bezier(0.16,1,0.3,1), transform 0.4s cubic-bezier(0.16,1,0.3,1)'
           card.style.opacity    = '1'
-          card.style.transform  = 'translateX(0)'
+          card.style.transform  = 'none'
           void card.offsetHeight // flush
         }
       } else {
@@ -436,6 +480,54 @@ export default function About(): JSX.Element {
   useEffect(() => {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
+    const updateLinePosition = () => {
+      const wrap = timelineWrap.current
+      const line = progressLine.current as SVGPathElement | null
+      const track = document.getElementById('timeline-track-path') as SVGPathElement | null
+      const dots = nodeRefs.current.filter((dot): dot is HTMLDivElement => dot !== null)
+
+      if (!wrap || !line || !track || dots.length < 2) return
+
+      const wrapRect = wrap.getBoundingClientRect()
+      
+      // Calculate coordinates of the center of each dot relative to wrap
+      const points = dots.map(dot => {
+        const rect = dot.getBoundingClientRect()
+        return {
+          x: (rect.left + rect.width / 2) - wrapRect.left,
+          y: (rect.top + rect.height / 2) - wrapRect.top
+        }
+      })
+
+      // Generate smooth cubic Bezier curve path string
+      let d = `M ${points[0].x} ${points[0].y}`
+      for (let i = 1; i < points.length; i++) {
+        const p0 = points[i - 1]
+        const p1 = points[i]
+        const cpY1 = p0.y + (p1.y - p0.y) / 2
+        const cpY2 = p0.y + (p1.y - p0.y) / 2
+        d += ` C ${p0.x} ${cpY1}, ${p1.x} ${cpY2}, ${p1.x} ${p1.y}`
+      }
+
+      // Apply path string to both track and progress lines
+      track.setAttribute('d', d)
+      line.setAttribute('d', d)
+
+      // Measure total path length
+      const length = line.getTotalLength()
+      line.style.strokeDasharray = `${length}`
+      
+      // Cache the length for updateTimeline
+      wrap.setAttribute('data-path-length', `${length}`)
+      
+      // Trigger timeline update immediately to set the correct progress
+      updateTimeline()
+    }
+
+    // Measure initially and on resize
+    const timer = setTimeout(updateLinePosition, 100)
+    window.addEventListener('resize', updateLinePosition)
+
     if (prefersReduced) {
       // Show everything immediately
       nodeRefs.current.forEach(n => {
@@ -446,10 +538,13 @@ export default function About(): JSX.Element {
       cardRefs.current.forEach(c => {
         if (!c) return
         c.style.opacity   = '1'
-        c.style.transform = 'translateX(0)'
+        c.style.transform = 'none'
       })
       if (progressLine.current) progressLine.current.style.transform = 'scaleY(1)'
-      return
+      return () => {
+        clearTimeout(timer)
+        window.removeEventListener('resize', updateLinePosition)
+      }
     }
 
     let ticking = false
@@ -480,7 +575,9 @@ export default function About(): JSX.Element {
     })
 
     return () => {
+      clearTimeout(timer)
       window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', updateLinePosition)
       ScrollTrigger.getAll().forEach(t => t.kill())
     }
   }, [updateTimeline])
@@ -583,7 +680,7 @@ export default function About(): JSX.Element {
       <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mt-6 rounded-full opacity-50" />
     </div>
 
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
       {SPONSORS.map((sponsor, idx) => (
         <motion.div
           key={sponsor.name}
@@ -643,26 +740,41 @@ export default function About(): JSX.Element {
           </div>
 
           <div className="relative" ref={timelineWrap}>
-            {/* Background track line */}
-            <div
-              className="absolute left-1/2 top-0 -translate-x-1/2 pointer-events-none"
-              style={{ width: '2px', height: '100%', background: 'rgba(96,165,250,0.08)', zIndex: 0 }}
-            />
-            {/* Progress line — scaleY driven by scroll */}
-            <div
-              ref={progressLine}
-              className="absolute left-1/2 top-0 -translate-x-1/2 origin-top pointer-events-none"
-              style={{
-                width: '2px',
-                height: '100%',
-                background: 'linear-gradient(180deg, #60a5fa, #818cf8)',
-                zIndex: 1,
-                transform: 'scaleY(0)',
-                transition: 'transform 0.05s linear',
-                willChange: 'transform',
-                boxShadow: '0 0 8px rgba(96,165,250,0.5)',
-              }}
-            />
+            {/* SVG Winding Timeline Path */}
+            <svg 
+              className="absolute inset-0 w-full h-full pointer-events-none" 
+              style={{ zIndex: 0 }}
+            >
+              {/* Linear Gradient for Progress Path */}
+              <defs>
+                <linearGradient id="timeline-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#60a5fa" />
+                  <stop offset="100%" stopColor="#818cf8" />
+                </linearGradient>
+              </defs>
+              
+              {/* Background Track Path */}
+              <path
+                id="timeline-track-path"
+                fill="none"
+                stroke="rgba(96,165,250,0.08)"
+                strokeWidth="2"
+              />
+              
+              {/* Active Progress Path */}
+              <path
+                id="timeline-progress-path"
+                ref={progressLine}
+                fill="none"
+                stroke="url(#timeline-gradient)"
+                strokeWidth="2"
+                strokeLinecap="round"
+                style={{
+                  willChange: 'stroke-dashoffset',
+                  transition: 'stroke-dashoffset 0.05s linear',
+                }}
+              />
+            </svg>
 
             <div className="flex flex-col gap-0">
               {MILESTONES.map((m, idx) => {
@@ -670,15 +782,15 @@ export default function About(): JSX.Element {
                 return (
                   <div
                     key={`${m.year}-${m.title}`}
-                    className={`flex items-center gap-4 sm:gap-8 py-8 sm:py-10 flex-col sm:${isLeft ? 'flex-row' : 'flex-row-reverse'}`}
+                    className={`flex items-start sm:items-center gap-4 sm:gap-8 py-6 sm:py-10 flex-row ${isLeft ? 'sm:flex-row' : 'sm:flex-row-reverse'}`}
                   >
                     {/* Content — initial hidden state, revealed by scroll listener */}
                     <div
                       ref={(el) => { cardRefs.current[idx] = el }}
-                      className={`w-full sm:flex-1 ${isLeft ? 'sm:text-right sm:pr-8' : 'sm:text-left sm:pl-8'} text-left px-2`}
+                      className={`flex-1 ${isLeft ? 'sm:text-right sm:pr-8' : 'sm:text-left sm:pl-8'} text-left px-2 order-2 sm:order-none ${isLeft ? '[--initial-transform:translateY(20px)] sm:[--initial-transform:translateX(-20px)]' : '[--initial-transform:translateY(20px)] sm:[--initial-transform:translateX(20px)]'}`}
                       style={{
                         opacity: 0,
-                        transform: `translateX(${isLeft ? '-20px' : '20px'})`,
+                        transform: 'var(--initial-transform)',
                         willChange: 'opacity, transform',
                       }}
                     >
@@ -688,7 +800,13 @@ export default function About(): JSX.Element {
                     </div>
 
                     {/* Node dot — glows when progress reaches it */}
-                    <div className="flex-shrink-0 relative z-10 flex items-center justify-center">
+                    <div 
+                      className="flex-shrink-0 w-9 relative z-10 flex items-center justify-center pt-1 sm:pt-0 order-1 sm:order-none [--dot-offset-val:0px] sm:[--dot-offset-val:var(--dot-offset)]"
+                      style={{
+                        '--dot-offset': PRESET_OFFSETS[idx],
+                        transform: 'translateX(var(--dot-offset-val, 0px))',
+                      } as React.CSSProperties}
+                    >
                       <div
                         ref={(el) => { nodeRefs.current[idx] = el }}
                         style={{
@@ -703,7 +821,7 @@ export default function About(): JSX.Element {
                       />
                     </div>
 
-                    <div className="hidden sm:flex flex-1" />
+                    <div className="hidden sm:flex flex-1 sm:order-none" />
                   </div>
                 )
               })}

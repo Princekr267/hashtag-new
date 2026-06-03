@@ -139,7 +139,7 @@ export default function Alumni(): JSX.Element {
         <div className="max-w-7xl mx-auto">
           <motion.div
             layout
-            className="grid grid-cols-1 min-[500px]:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
           >
             {ALUMNI.map((a, idx) => (
               <motion.div

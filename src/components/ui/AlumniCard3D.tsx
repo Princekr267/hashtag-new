@@ -69,16 +69,14 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
         perspective: 1200,
         willChange: 'transform',
       }}
-      className="relative w-full group"
+      className="relative w-full h-full group"
     >
       <div 
-        className="relative overflow-hidden rounded-[24px] p-4 min-[400px]:p-5 sm:p-8 md:p-10 flex flex-col items-center justify-between text-center gap-3 sm:gap-4 md:gap-6"
+        className="relative overflow-hidden rounded-[24px] p-4 min-[400px]:p-5 sm:p-8 md:p-10 flex flex-col items-center justify-between text-center gap-3 sm:gap-4 md:gap-6 h-full"
         style={{
           background: 'linear-gradient(165deg, rgba(15,23,42,0.9) 0%, rgba(8,12,24,0.98) 100%)',
           border: '1px solid rgba(255,255,255,0.06)',
           boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-          aspectRatio: '1 / 1',
-          minHeight: '200px',
         }}
       >
         {/* Animated Mesh Background */}
@@ -144,7 +142,7 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
 
         {/* ── Info ── */}
         <div style={{ transform: 'translateZ(40px)' }} className="relative z-20 flex flex-col gap-1 sm:gap-2 md:gap-3">
-          <h3 className="text-sm min-[400px]:text-base sm:text-lg md:text-xl lg:text-2xl font-display font-bold text-white tracking-tight">
+          <h3 className="text-sm min-[400px]:text-base sm:text-lg md:text-xl font-display font-bold text-white tracking-tight">
             {name}
           </h3>
 
@@ -156,7 +154,7 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
         {/* ── Magnetic Action Buttons ── */}
         <div 
           style={{ transform: 'translateZ(50px)' }} 
-          className="mt-auto flex items-center gap-2 min-[400px]:gap-3 sm:gap-4 py-2"
+          className="mt-auto flex items-center gap-2 min-[400px]:gap-3 sm:gap-4 pt-4 sm:pt-6 pb-2"
         >
           {email && (
             <MagneticIconButton href={`mailto:${email}`} accent={accent}>
