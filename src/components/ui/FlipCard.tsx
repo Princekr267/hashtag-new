@@ -4,7 +4,7 @@ interface FlipCardProps {
   front: ReactNode
   back: ReactNode
   className?: string
-  /** Height CSS string, e.g. '280px'. Needed because flip requires explicit height. */
+  /** Height CSS string, e.g. '280px'. Needed because flip requires explicit height. If omitted, style should be controlled via className height utilities. */
   height?: string
 }
 
@@ -17,14 +17,14 @@ export default function FlipCard({
   front,
   back,
   className = '',
-  height = '280px',
+  height,
 }: FlipCardProps): JSX.Element {
   const [isFlipped, setIsFlipped] = useState(false)
 
   return (
     <div
       className={`flip-card-root group cursor-pointer sm:cursor-default ${isFlipped ? 'flipped-root' : ''} ${className}`}
-      style={{ height, perspective: '800px' }}
+      style={{ ...(height ? { height } : {}), perspective: '800px' }}
       onClick={() => setIsFlipped(!isFlipped)}
     >
       <div

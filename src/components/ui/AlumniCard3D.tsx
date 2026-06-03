@@ -5,11 +5,15 @@ interface AlumniMember {
   name: string
   batch?: string
   role: string
-  quote: string
   photo: string
   accent: string
   email?: string
   linkedin?: string
+  social?: {
+    github?: string
+    linkedin?: string
+    instagram?: string
+  }
 }
 
 interface AlumniCardProps {
@@ -17,7 +21,7 @@ interface AlumniCardProps {
 }
 
 const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
-  const { name, role, quote, photo, accent, email, linkedin } = member
+  const { name, role, photo, accent, email, linkedin, social } = member
   const containerRef = useRef<HTMLDivElement>(null)
   
   // Spring-based 3D rotation
@@ -63,16 +67,16 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
         rotateY,
         transformStyle: 'preserve-3d',
         perspective: 1200,
+        willChange: 'transform',
       }}
-      className="relative w-full group"
+      className="relative w-full h-full group"
     >
       <div 
-        className="relative overflow-hidden rounded-[24px] p-8 md:p-10 flex flex-col items-center text-center gap-6"
+        className="relative overflow-hidden rounded-[24px] p-4 min-[400px]:p-5 sm:p-8 md:p-10 flex flex-col items-center justify-between text-center gap-3 sm:gap-4 md:gap-6 h-full"
         style={{
           background: 'linear-gradient(165deg, rgba(15,23,42,0.9) 0%, rgba(8,12,24,0.98) 100%)',
           border: '1px solid rgba(255,255,255,0.06)',
           boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
-          minHeight: '440px',
         }}
       >
         {/* Animated Mesh Background */}
@@ -110,7 +114,7 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
           className="relative"
         >
           <div
-            className="w-28 h-28 rounded-full p-1 relative z-10"
+            className="w-16 h-16 min-[400px]:w-20 min-[400px]:h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full p-1 relative z-10"
             style={{ 
               background: `linear-gradient(135deg, ${accent}, transparent)`,
               boxShadow: `0 15px 30px -5px ${accent}30`
@@ -137,34 +141,51 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
         </motion.div>
 
         {/* ── Info ── */}
-        <div style={{ transform: 'translateZ(40px)' }} className="relative z-20 flex flex-col gap-3">
-          <h3 className="text-2xl font-display font-bold text-white tracking-tight">
+        <div style={{ transform: 'translateZ(40px)' }} className="relative z-20 flex flex-col gap-1 sm:gap-2 md:gap-3">
+          <h3 className="text-sm min-[400px]:text-base sm:text-lg md:text-xl font-display font-bold text-white tracking-tight">
             {name}
           </h3>
 
-          <p className="text-primary/90 font-label text-sm font-semibold tracking-wide uppercase">
+          <p className="text-primary/90 font-label text-[10px] min-[400px]:text-xs sm:text-sm font-semibold tracking-wide uppercase">
             {role}
-          </p>
-        </div>
-
-        {/* ── Quote Section ── */}
-        <div style={{ transform: 'translateZ(30px)' }} className="relative z-20 max-w-[240px]">
-          <p className="text-text-muted/80 text-sm italic font-body leading-relaxed line-clamp-3">
-            "{quote}"
           </p>
         </div>
 
         {/* ── Magnetic Action Buttons ── */}
         <div 
           style={{ transform: 'translateZ(50px)' }} 
-          className="mt-auto flex items-center gap-4 py-2"
+          className="mt-auto flex items-center gap-2 min-[400px]:gap-3 sm:gap-4 pt-4 sm:pt-6 pb-2"
         >
-          <MagneticIconButton href={`mailto:${email}`} accent={accent}>
-            <EnvelopeIcon />
-          </MagneticIconButton>
-          <MagneticIconButton href={linkedin || '#'} accent={accent}>
-            <LinkedInIcon />
-          </MagneticIconButton>
+          {email && (
+            <MagneticIconButton href={`mailto:${email}`} accent={accent}>
+              <EnvelopeIcon />
+            </MagneticIconButton>
+          )}
+          {social ? (
+            <>
+              {social.github && (
+                <MagneticIconButton href={social.github} accent={accent}>
+                  <GitHubIcon />
+                </MagneticIconButton>
+              )}
+              {social.linkedin && (
+                <MagneticIconButton href={social.linkedin} accent={accent}>
+                  <LinkedInIcon />
+                </MagneticIconButton>
+              )}
+              {social.instagram && (
+                <MagneticIconButton href={social.instagram} accent={accent}>
+                  <InstagramIcon />
+                </MagneticIconButton>
+              )}
+            </>
+          ) : (
+            linkedin && (
+              <MagneticIconButton href={linkedin} accent={accent}>
+                <LinkedInIcon />
+              </MagneticIconButton>
+            )
+          )}
         </div>
       </div>
     </motion.div>
@@ -201,7 +222,7 @@ const MagneticIconButton: React.FC<{ href: string; accent: string; children: Rea
       href={href}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-12 h-12 rounded-full border flex items-center justify-center overflow-hidden relative"
+      className="w-8 h-8 min-[400px]:w-9 min-[400px]:h-9 sm:w-10 sm:h-10 md:w-12 md:h-12 rounded-full border flex items-center justify-center overflow-hidden relative"
       style={{ 
         borderColor: `${accent}30`, 
         background: 'rgba(255,255,255,0.02)',
@@ -230,17 +251,31 @@ const MagneticIconButton: React.FC<{ href: string; accent: string; children: Rea
 }
 
 const EnvelopeIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="4" width="20" height="16" rx="2" />
     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
   </svg>
 )
 
 const LinkedInIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+  <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
     <rect x="2" y="9" width="4" height="12" />
     <circle cx="4" cy="4" r="2" />
+  </svg>
+)
+
+const GitHubIcon = () => (
+  <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+  </svg>
+)
+
+const InstagramIcon = () => (
+  <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
   </svg>
 )
 

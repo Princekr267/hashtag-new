@@ -22,9 +22,11 @@ const containerVariants: Variants = {
 export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element {
   const [charStage, setCharStage] = useState<'idle' | 'typing' | 'done'>('idle')
   const [subVisible, setSubVisible] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const timeoutRefs = useRef<ReturnType<typeof setTimeout>[]>([])
 
   useEffect(() => {
+    setIsMobile('ontouchstart' in window || navigator.maxTouchPoints > 0)
     // Start character reveal sequence
     const t1 = setTimeout(() => setCharStage('typing'), 100)
     // TITLE.length * 30 is the stagger duration for the characters
@@ -111,11 +113,11 @@ export default function PageLoader({ onComplete }: PageLoaderProps): JSX.Element
             {TITLE.split('').map((char, idx) => (
               <motion.span
                 key={idx}
-                initial={{ opacity: 0, scale: 0.8, y: 40, filter: 'blur(12px)' }}
+                initial={{ opacity: 0, scale: 0.8, y: 40, filter: isMobile ? 'none' : 'blur(12px)' }}
                 animate={
                   charStage === 'idle'
-                    ? { opacity: 0, scale: 0.8, y: 40, filter: 'blur(12px)' }
-                    : { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }
+                    ? { opacity: 0, scale: 0.8, y: 40, filter: isMobile ? 'none' : 'blur(12px)' }
+                    : { opacity: 1, scale: 1, y: 0, filter: 'none' }
                 }
                 transition={{
                   delay: idx * 0.02,

@@ -96,6 +96,7 @@ const TeamCard3D: React.FC<TeamCard3DProps> = ({ member, accentColor = '#60a5fa'
             transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
             transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
             '--glow-color': `${accentColor}80`,
+            willChange: 'transform',
           } as React.CSSProperties}
         >
         {/* ── FRONT FACE ───────────────────────────────────────────── */}
