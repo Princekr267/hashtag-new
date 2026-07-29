@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState, Suspense, lazy } from 'react' // HYDRATION FIX
-import { motion, Variants } from 'framer-motion'
+import React, { useEffect, useRef, useState } from 'react'
+import { motion, Variants, AnimatePresence } from 'framer-motion'
 import { ChevronDown, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { gsap } from 'gsap'
@@ -7,12 +7,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import MagneticButton from '../components/ui/MagneticButton'
 import CosmosHero from '../components/visuals/CosmosHero'
 import InteractiveCard3D from '../components/ui/InteractiveCard3D'
-import HorizontalScrollSkeleton from '../components/ui/HorizontalScrollSkeleton' // HYDRATION FIX
-
-import { STATS, MARQUEE_EVENTS } from '../constants/data'
-
-// HYDRATION FIX: Convert to dynamic import with SSR disabled (lazy loading in Vite)
-const HorizontalGallery = lazy(() => import('../components/ui/HorizontalGallery'))
+import { STATS, MARQUEE_EVENTS, EVENTS } from '../constants/data'
+import HorizontalGallery from '../components/ui/HorizontalGallery'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -168,9 +164,187 @@ function BlurHeading({ text, className, revealed }: { text: string, className?: 
   )
 }
 
+// ── Hacktivate Ticker Banner Component ─────────────────────────────
+interface HacktivateTickerBannerProps {
+  revealed: boolean
+}
+
+function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
+  const TICKER_ITEMS = [
+    { text: "Hacktivate 2.0", highlight: true },
+    { text: "///", highlight: false },
+    { text: "36-Hour Hackathon", highlight: false },
+    { text: "///", highlight: false },
+    { text: "JIMS Greater Noida", highlight: false },
+    { text: "///", highlight: false },
+    { text: "₹15L+ Prize Pool", highlight: true },
+    { text: "///", highlight: false },
+    { text: "Sep 11–12, 2026", highlight: false },
+    { text: "///", highlight: false },
+    { text: "4 Members Per Team", highlight: false },
+    { text: "///", highlight: false },
+    { text: "8 Tracks Open", highlight: false },
+    { text: "///", highlight: false }
+  ]
+
+  const marqueeItems = [...TICKER_ITEMS, ...TICKER_ITEMS]
+
+  return (
+    <RevealSection revealed={revealed} delay={0.2}>
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes marqueeScroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes pulseGreen {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.2); opacity: 0.4; }
+        }
+      `}} />
+
+      <div className="py-8 relative overflow-hidden w-full">
+        {/* Top/Bottom divider lines */}
+        <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.15), transparent)' }} />
+        <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(129,140,248,0.15), transparent)' }} />
+
+        <div className="max-w-7xl mx-auto px-6">
+          
+          {/* Mobile View: Entire banner is a Link, no internal links to avoid nesting */}
+          <div className="block sm:hidden">
+            <Link 
+              to="/events/hacktivate2"
+              className="block border border-[#edac03]/20 rounded-[16px] overflow-hidden bg-[#060b14] relative shadow-lg active:scale-[0.98] transition-transform duration-200"
+            >
+              <div className="h-[52px] flex items-center justify-between relative overflow-hidden select-none">
+                {/* Left tab */}
+                <div 
+                  className="flex items-center justify-center px-4 h-full shrink-0 font-display font-bold text-[10px] tracking-widest text-[#1a0f40] uppercase select-none z-[11]"
+                  style={{
+                    background: 'linear-gradient(135deg, #edac03, #c8860a)'
+                  }}
+                >
+                  Upcoming
+                </div>
+
+                {/* Scrolling Center */}
+                <div className="relative flex-1 overflow-hidden h-full flex items-center bg-[#060b14]">
+                  {/* Fade masks */}
+                  <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-[#060b14] to-transparent pointer-events-none z-10" />
+                  <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#060b14] to-transparent pointer-events-none z-10" />
+
+                  {/* Ticker Track */}
+                  <div 
+                    className="flex whitespace-nowrap items-center gap-6"
+                    style={{
+                      width: 'max-content',
+                      animation: 'marqueeScroll 25s linear infinite'
+                    }}
+                  >
+                    {marqueeItems.map((item, idx) => (
+                      <span 
+                        key={idx} 
+                        className={`text-xs font-label uppercase flex items-center gap-4 ${
+                          item.highlight ? 'text-[#edac03] font-bold' : 'text-[#adaaad]'
+                        }`}
+                      >
+                        {item.text}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right info tab */}
+                <div className="flex items-center gap-2 px-3 h-full shrink-0 bg-[#060b14] z-[11] border-l border-white/[0.03]">
+                  <div className="relative flex h-2 w-2 items-center justify-center">
+                    <span 
+                      className="absolute inline-flex h-full w-full rounded-full bg-[#10b981] opacity-75"
+                      style={{ animation: 'pulseGreen 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
+                    />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]" />
+                  </div>
+                  <span className="text-[#10b981] font-bold text-[9px] tracking-wider uppercase font-label">Live</span>
+                </div>
+              </div>
+            </Link>
+          </div>
+
+          {/* Desktop View: Regular div container, only the button is the link */}
+          <div className="hidden sm:block">
+            <div className="border border-[#edac03]/20 rounded-[16px] overflow-hidden bg-[#060b14] relative shadow-lg">
+              <div className="h-[52px] flex items-center justify-between relative overflow-hidden select-none">
+                {/* Left tab */}
+                <div 
+                  className="flex items-center justify-center px-4 h-full shrink-0 font-display font-bold text-[10px] tracking-widest text-[#1a0f40] uppercase select-none z-[11]"
+                  style={{
+                    background: 'linear-gradient(135deg, #edac03, #c8860a)'
+                  }}
+                >
+                  Upcoming
+                </div>
+
+                {/* Scrolling Center */}
+                <div className="relative flex-1 overflow-hidden h-full flex items-center bg-[#060b14]">
+                  {/* Fade masks */}
+                  <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-[#060b14] to-transparent pointer-events-none z-10" />
+                  <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#060b14] to-transparent pointer-events-none z-10" />
+
+                  {/* Ticker Track */}
+                  <div 
+                    className="flex whitespace-nowrap items-center gap-6"
+                    style={{
+                      width: 'max-content',
+                      animation: 'marqueeScroll 25s linear infinite'
+                    }}
+                  >
+                    {marqueeItems.map((item, idx) => (
+                      <span 
+                        key={idx} 
+                        className={`text-xs md:text-sm font-label uppercase flex items-center gap-4 ${
+                          item.highlight ? 'text-[#edac03] font-bold' : 'text-[#adaaad]'
+                        }`}
+                      >
+                        {item.text}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right info tab */}
+                <div className="flex items-center gap-2.5 px-4 h-full shrink-0 bg-[#060b14] z-[11] border-l border-white/[0.03]">
+                  <div className="relative flex h-2 w-2 items-center justify-center">
+                    <span 
+                      className="absolute inline-flex h-full w-full rounded-full bg-[#10b981] opacity-75"
+                      style={{ animation: 'pulseGreen 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
+                    />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]" />
+                  </div>
+                  <span className="text-[#10b981] font-bold text-[10px] tracking-wider uppercase font-label">Live</span>
+                  
+                  {/* View Details Button */}
+                  <Link 
+                    to="/events/hacktivate2"
+                    className="inline-flex items-center justify-center font-bold text-[10px] px-3 py-1.5 rounded-full transition-transform hover:scale-105 active:scale-95 select-none text-[#221643] whitespace-nowrap ml-2"
+                    style={{
+                      background: 'linear-gradient(45deg, #edac03, #ffcf40)',
+                    }}
+                  >
+                    View Details <span className="ml-1 text-[10px] font-sans">↗</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </RevealSection>
+  )
+}
+
 export default function Home(): JSX.Element {
   const [revealed, setRevealed] = useState(false)
   const marqueeDoubled = [...MARQUEE_EVENTS, ...MARQUEE_EVENTS]
+  const upcomingEvent = EVENTS.find(e => e.status === 'upcoming')
 
   useEffect(() => {
     // If skipping the loader, trigger reveal animation after a tiny delay to ensure fade-in is visible
@@ -378,31 +552,12 @@ export default function Home(): JSX.Element {
         </div>
       </section>
 
+
+
       {/* ════════════════════════════════════════════════════════
           SCROLLING MARQUEE
           ════════════════════════════════════════════════════ */}
-      <RevealSection revealed={revealed} className="py-8 overflow-hidden" delay={0.2}>
-        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.15), transparent)' }} />
-        <div className="flex overflow-hidden py-6">
-          <div className="marquee-track animate-marquee">
-            {marqueeDoubled.map((e, i) => (
-              <span key={i} className="text-3xl md:text-5xl font-bold text-text-faint/30 uppercase mx-8 font-display">
-                {e}<span className="mx-6 text-primary/20">///</span>
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="flex overflow-hidden py-2">
-          <div className="marquee-track animate-marquee-reverse">
-            {[...marqueeDoubled].reverse().map((e, i) => (
-              <span key={i} className="text-lg md:text-2xl font-bold text-text-faint/20 uppercase mx-6 font-label tracking-widest">
-                <span className="mr-4 text-primary/20">◈</span>{e}
-              </span>
-            ))}
-          </div>
-        </div>
-        <div className="h-px w-full" style={{ background: 'linear-gradient(90deg, transparent, rgba(129,140,248,0.15), transparent)' }} />
-      </RevealSection>
+      <HacktivateTickerBanner revealed={revealed} />
 
       {/* ════════════════════════════════════════════════════════
           STATS
@@ -447,22 +602,19 @@ export default function Home(): JSX.Element {
         </div>
       </section>
 
-      {/* HYDRATION FIX: Wrap in Suspense to handle lazy loading and prevent layout shift */}
       <RevealSection revealed={revealed} delay={0.2}>
-        <Suspense fallback={<HorizontalScrollSkeleton />}>
-          <HorizontalGallery 
-            label="Event Moments"
-            images={[
-              { src: '/images/Events/photos/img1.png', alt: 'Event Moment 1' },
-              { src: '/images/Events/photos/img2.png', alt: 'Event Moment 2' },
-              { src: '/images/Events/photos/img3.png', alt: 'Event Moment 3' },
-              { src: '/images/Events/photos/img4.png', alt: 'Event Moment 4' },
-              { src: '/images/Events/photos/img5.png', alt: 'Event Moment 5' },
-              { src: '/images/Events/photos/img6.png', alt: 'Event Moment 6' },
-              { src: '/images/Events/photos/img7.png', alt: 'Event Moment 7' },
-            ]}
-          />
-        </Suspense>
+        <HorizontalGallery 
+          label="Event Moments"
+          images={[
+            { src: '/images/Events/photos/img1.png', alt: 'Event Moment 1' },
+            { src: '/images/Events/photos/img2.png', alt: 'Event Moment 2' },
+            { src: '/images/Events/photos/img3.png', alt: 'Event Moment 3' },
+            { src: '/images/Events/photos/img4.png', alt: 'Event Moment 4' },
+            { src: '/images/Events/photos/img5.png', alt: 'Event Moment 5' },
+            { src: '/images/Events/photos/img6.png', alt: 'Event Moment 6' },
+            { src: '/images/Events/photos/img7.png', alt: 'Event Moment 7' },
+          ]}
+        />
       </RevealSection>
 
     </div>
