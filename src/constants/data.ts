@@ -385,7 +385,7 @@ export const EVENTS: Event[] = [
     duration: '36 Hours',
     venue: 'JIMS Greater Noida',
     teamSize: '4 Members required',
-    prizePool: '₹1 Lakh +',
+    prizePool: '₹15L+',
     eligibility: 'Open to all UG and PG students across India',
     tracks: [
       'Sports-Tech',

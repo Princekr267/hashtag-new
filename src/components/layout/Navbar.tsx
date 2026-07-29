@@ -245,6 +245,8 @@ export default function Navbar(): JSX.Element {
   const lastScrollY                     = useRef(0)
   const location                        = useLocation()
 
+
+
   useEffect(() => {
     const onReveal = () => setRevealed(true)
     window.addEventListener('site-revealed', onReveal)
@@ -310,6 +312,8 @@ export default function Navbar(): JSX.Element {
           transition:           'transform 0.8s var(--ease-expo), opacity 0.8s var(--ease-expo), filter 0.8s var(--ease-expo), background 0.4s ease, border-bottom 0.4s ease',
         }}
       >
+
+
         <div
           className="max-w-7xl mx-auto px-6 flex items-center justify-between transition-all duration-400"
           style={{ padding: scrolled ? '12px 24px' : '20px 24px' }}
