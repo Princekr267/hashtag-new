@@ -219,7 +219,7 @@ export default function EventDetail(): JSX.Element {
                         return (
                           <div 
                             key={prize.title} 
-                            className={`bg-[#0b1329]/50 border ${rankColors.border} rounded-2xl p-6 text-center shadow-lg ${rankColors.glow} relative flex flex-col justify-between`}
+                            className={`bg-[#0b1329]/50 border ${rankColors.border} rounded-2xl p-5 text-center shadow-lg ${rankColors.glow} relative flex flex-col justify-between min-h-[130px]`}
                           >
                             <span className="absolute top-3 right-4 font-mono text-[10px] text-text-faint font-semibold uppercase tracking-widest">
                               {rankColors.num}
@@ -232,7 +232,7 @@ export default function EventDetail(): JSX.Element {
                                 {prize.amount}
                               </p>
                             </div>
-                            <span className="text-[10px] font-mono text-text-faint uppercase mt-2">
+                            <span className="text-[10px] font-mono text-text-faint uppercase mt-1 whitespace-nowrap">
                               {prize.winners}
                             </span>
                           </div>
@@ -242,23 +242,23 @@ export default function EventDetail(): JSX.Element {
 
                     {/* Special Category Prizes */}
                     {event.prizes.length > 3 && (
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {event.prizes.slice(3).map((prize) => (
                           <div 
                             key={prize.title} 
-                            className="bg-[#0b1329]/40 border border-white/5 rounded-2xl p-5 flex items-center justify-between shadow-md"
+                            className="bg-[#0b1329]/40 border border-white/5 rounded-2xl p-5 flex flex-col justify-between min-h-[110px] shadow-md hover:border-white/10 transition-colors"
                           >
-                            <div>
-                              <h3 className="text-text-muted font-mono text-xs font-medium uppercase tracking-wider mb-1">
+                            <div className="flex items-start justify-between gap-2">
+                              <h3 className="text-text-muted font-mono text-xs font-medium uppercase tracking-wider">
                                 {prize.title}
                               </h3>
-                              <p className="text-white font-display font-bold text-base">
-                                {prize.amount}
-                              </p>
+                              <span className="shrink-0 text-[10px] font-mono text-text-faint uppercase bg-white/5 border border-white/10 px-2 py-0.5 rounded whitespace-nowrap">
+                                {prize.winners}
+                              </span>
                             </div>
-                            <span className="text-[10px] font-mono text-text-faint uppercase bg-white/5 px-2 py-1 rounded">
-                              {prize.winners}
-                            </span>
+                            <p className="text-white font-display font-bold text-base mt-2">
+                              {prize.amount}
+                            </p>
                           </div>
                         ))}
                       </div>

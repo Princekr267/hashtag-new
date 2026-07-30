@@ -398,11 +398,12 @@ export const EVENTS: Event[] = [
       'Open Innovation'
     ],
     prizes: [
-      { title: 'First Prize', amount: '₹ 20,000 cash', winners: '1 winner' },
-      { title: 'Second Prize', amount: '₹ 12,000 cash', winners: '1 winner' },
-      { title: 'Third Prize', amount: '₹ 8,000 cash', winners: '1 winner' },
-      { title: 'Best Beginners Team', amount: '₹ 5,000 cash', winners: '1 winner' },
-      { title: 'Best All Female Team', amount: '₹ 5,000 cash', winners: '1 winner' }
+      { title: 'First Prize', amount: '₹ 20,000', winners: '1 winner' },
+      { title: 'Second Prize', amount: '₹ 12,000', winners: '1 winner' },
+      { title: 'Third Prize', amount: '₹ 8,000', winners: '1 winner' },
+      { title: 'ASI ONE Track Prize', amount: 'Internship Opp.', winners: '1 winner' },
+      { title: 'Best Beginners Team', amount: '₹ 1,000', winners: '1 winner' },
+      { title: 'Best All Female Team', amount: '₹ 1,000', winners: '1 winner' }
     ],
     timeline: [
       {

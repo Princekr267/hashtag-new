@@ -41,7 +41,7 @@ const FEATURES = [
 
 // ── Animated stat counter ─────────────────────────────────────
 function StatCounter({ stat }: { stat: typeof STATS[0] }) {
-  const ref       = useRef<HTMLSpanElement>(null)
+  const ref = useRef<HTMLSpanElement>(null)
   const triggered = useRef(false)
 
   useEffect(() => {
@@ -54,10 +54,10 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
         if (triggered.current) return
         triggered.current = true
         const dur = 2000
-        const t0  = performance.now()
+        const t0 = performance.now()
         const tick = (now: number) => {
-          const p  = Math.min((now - t0) / dur, 1)
-          const e  = 1 - Math.pow(1 - p, 3)
+          const p = Math.min((now - t0) / dur, 1)
+          const e = 1 - Math.pow(1 - p, 3)
           el.textContent = Math.round(stat.value * e).toString()
           if (p < 1) requestAnimationFrame(tick)
         }
@@ -68,7 +68,7 @@ function StatCounter({ stat }: { stat: typeof STATS[0] }) {
   }, [stat.value])
 
   return (
-    <motion.div 
+    <motion.div
       className="text-center cursor-pointer group"
       whileHover={{ scale: 1.15 }}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -96,10 +96,10 @@ function RevealSection({ children, className = "", delay = 0, revealed = false, 
       variants={variants}
       initial="hidden"
       animate={revealed ? "visible" : "hidden"}
-      transition={{ 
-        duration: 1.2, 
+      transition={{
+        duration: 1.2,
         delay: delay,
-        ease: [0.16, 1, 0.3, 1] 
+        ease: [0.16, 1, 0.3, 1]
       }}
       className={className}
       style={style}
@@ -117,29 +117,29 @@ function BlurHeading({ text, className, revealed }: { text: string, className?: 
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { 
-        staggerChildren: 0.08, 
+      transition: {
+        staggerChildren: 0.08,
         delayChildren: 1.4
       },
     },
   }
 
   const item: Variants = {
-    hidden: { 
-      opacity: 0, 
-      y: 30, 
+    hidden: {
+      opacity: 0,
+      y: 30,
       filter: `blur(${blurVal})`,
       scale: 0.95
     },
-    show: { 
-      opacity: 1, 
-      y: 0, 
+    show: {
+      opacity: 1,
+      y: 0,
       filter: 'blur(0px)',
       scale: 1,
-      transition: { 
-        duration: 1.2, 
-        ease: [0.16, 1, 0.3, 1] 
-      } 
+      transition: {
+        duration: 1.2,
+        ease: [0.16, 1, 0.3, 1]
+      }
     },
   }
 
@@ -191,7 +191,8 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
 
   return (
     <RevealSection revealed={revealed} delay={0.2}>
-      <style dangerouslySetInnerHTML={{ __html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes marqueeScroll {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -208,16 +209,16 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
         <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(90deg, transparent, rgba(129,140,248,0.15), transparent)' }} />
 
         <div className="max-w-7xl mx-auto px-6">
-          
+
           {/* Mobile View: Entire banner is a Link, no internal links to avoid nesting */}
           <div className="block sm:hidden">
-            <Link 
+            <Link
               to="/events/hacktivate2"
               className="block border border-[#edac03]/20 rounded-[16px] overflow-hidden bg-[#060b14] relative shadow-lg active:scale-[0.98] transition-transform duration-200"
             >
               <div className="h-[52px] flex items-center justify-between relative overflow-hidden select-none">
                 {/* Left tab */}
-                <div 
+                <div
                   className="flex items-center justify-center px-4 h-full shrink-0 font-display font-bold text-[10px] tracking-widest text-[#1a0f40] uppercase select-none z-[11]"
                   style={{
                     background: 'linear-gradient(135deg, #edac03, #c8860a)'
@@ -233,7 +234,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                   <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#060b14] to-transparent pointer-events-none z-10" />
 
                   {/* Ticker Track */}
-                  <div 
+                  <div
                     className="flex whitespace-nowrap items-center gap-6"
                     style={{
                       width: 'max-content',
@@ -241,11 +242,10 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                     }}
                   >
                     {marqueeItems.map((item, idx) => (
-                      <span 
-                        key={idx} 
-                        className={`text-xs font-label uppercase flex items-center gap-4 ${
-                          item.highlight ? 'text-[#edac03] font-bold' : 'text-[#adaaad]'
-                        }`}
+                      <span
+                        key={idx}
+                        className={`text-xs font-label uppercase flex items-center gap-4 ${item.highlight ? 'text-[#edac03] font-bold' : 'text-[#adaaad]'
+                          }`}
                       >
                         {item.text}
                       </span>
@@ -256,7 +256,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                 {/* Right info tab */}
                 <div className="flex items-center gap-2 px-3 h-full shrink-0 bg-[#060b14] z-[11] border-l border-white/[0.03]">
                   <div className="relative flex h-2 w-2 items-center justify-center">
-                    <span 
+                    <span
                       className="absolute inline-flex h-full w-full rounded-full bg-[#10b981] opacity-75"
                       style={{ animation: 'pulseGreen 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
                     />
@@ -273,7 +273,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
             <div className="border border-[#edac03]/20 rounded-[16px] overflow-hidden bg-[#060b14] relative shadow-lg">
               <div className="h-[52px] flex items-center justify-between relative overflow-hidden select-none">
                 {/* Left tab */}
-                <div 
+                <div
                   className="flex items-center justify-center px-4 h-full shrink-0 font-display font-bold text-[10px] tracking-widest text-[#1a0f40] uppercase select-none z-[11]"
                   style={{
                     background: 'linear-gradient(135deg, #edac03, #c8860a)'
@@ -289,7 +289,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                   <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-[#060b14] to-transparent pointer-events-none z-10" />
 
                   {/* Ticker Track */}
-                  <div 
+                  <div
                     className="flex whitespace-nowrap items-center gap-6"
                     style={{
                       width: 'max-content',
@@ -297,11 +297,10 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                     }}
                   >
                     {marqueeItems.map((item, idx) => (
-                      <span 
-                        key={idx} 
-                        className={`text-xs md:text-sm font-label uppercase flex items-center gap-4 ${
-                          item.highlight ? 'text-[#edac03] font-bold' : 'text-[#adaaad]'
-                        }`}
+                      <span
+                        key={idx}
+                        className={`text-xs md:text-sm font-label uppercase flex items-center gap-4 ${item.highlight ? 'text-[#edac03] font-bold' : 'text-[#adaaad]'
+                          }`}
                       >
                         {item.text}
                       </span>
@@ -312,16 +311,16 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                 {/* Right info tab */}
                 <div className="flex items-center gap-2.5 px-4 h-full shrink-0 bg-[#060b14] z-[11] border-l border-white/[0.03]">
                   <div className="relative flex h-2 w-2 items-center justify-center">
-                    <span 
+                    <span
                       className="absolute inline-flex h-full w-full rounded-full bg-[#10b981] opacity-75"
                       style={{ animation: 'pulseGreen 2s cubic-bezier(0.4, 0, 0.6, 1) infinite' }}
                     />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]" />
                   </div>
                   <span className="text-[#10b981] font-bold text-[10px] tracking-wider uppercase font-label">Live</span>
-                  
+
                   {/* View Details Button */}
-                  <Link 
+                  <Link
                     to="/events/hacktivate2"
                     className="inline-flex items-center justify-center font-bold text-[10px] px-3 py-1.5 rounded-full transition-transform hover:scale-105 active:scale-95 select-none text-[#221643] whitespace-nowrap ml-2"
                     style={{
@@ -387,7 +386,7 @@ export default function Home(): JSX.Element {
           HERO SECTION
           ════════════════════════════════════════════════════ */}
       <section className="hero-section relative w-full min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-6 overflow-hidden">
-        
+
         {/* Subtle Grid pattern for tech feel (restoring from original) */}
         <div className="absolute inset-0 pointer-events-none opacity-40" style={{
           backgroundImage: `
@@ -411,7 +410,7 @@ export default function Home(): JSX.Element {
 
         {/* Hero Content */}
         <div className="hero-content relative z-10 w-full max-w-7xl mx-auto flex flex-col items-center text-center gpu-accel">
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
@@ -491,7 +490,7 @@ export default function Home(): JSX.Element {
                 What We <span className="text-gradient">Build</span>
               </h2>
               <p className="text-text-muted mt-4 font-body text-base md:text-lg">
-                Hashtag pulses with ideas, energy, and moments that unite learners. 
+                Hashtag pulses with ideas, energy, and moments that unite learners.
                 We don't just learn tech—we build it.
               </p>
             </div>
@@ -506,45 +505,45 @@ export default function Home(): JSX.Element {
                 <div style={{ transformStyle: 'preserve-3d', height: '100%' }}>
                   <InteractiveCard3D accentColor={f.accent} className="h-full">
                     <div className="p-10 flex flex-col gap-6 h-full relative">
-                    {/* Badge — absolutely positioned top-left */}
-                    <div className="absolute top-6 left-10">
-                      <span
-                        className="text-[9px] font-label tracking-widest px-2 py-1 border rounded bg-white/5 backdrop-blur-sm"
-                        style={{ color: `${f.accent}cc`, borderColor: `${f.accent}33` }}
-                      >
-                        {f.tag}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-col gap-4 mt-8">
-                      {/* Icon + Title */}
-                      <div className="flex items-center gap-3">
+                      {/* Badge — absolutely positioned top-left */}
+                      <div className="absolute top-6 left-10">
                         <span
-                          className="text-4xl font-mono-custom flex-shrink-0"
-                          style={{ color: f.accent, textShadow: `0 0 20px ${f.accent}44` }}
+                          className="text-[9px] font-label tracking-widest px-2 py-1 border rounded bg-white/5 backdrop-blur-sm"
+                          style={{ color: `${f.accent}cc`, borderColor: `${f.accent}33` }}
                         >
-                          {f.icon}
+                          {f.tag}
                         </span>
-                        <h3
-                          className="text-2xl font-display font-bold m-0 leading-tight"
-                          style={{ color: f.accent }}
-                        >
-                          {f.title}
-                        </h3>
                       </div>
-                      {/* Description */}
-                      <p className="text-text-muted leading-relaxed text-[13px] font-body opacity-80">
-                        {f.desc}
-                      </p>
-                    </div>
 
-                    {/* Bottom accent line */}
-                    <div
-                      className="h-px mt-auto transition-all duration-500 group-hover:w-full"
-                      style={{ width: '3rem', background: `linear-gradient(90deg, ${f.accent}, transparent)` }}
-                    />
-                  </div>
-                </InteractiveCard3D>
+                      <div className="flex flex-col gap-4 mt-8">
+                        {/* Icon + Title */}
+                        <div className="flex items-center gap-3">
+                          <span
+                            className="text-4xl font-mono-custom flex-shrink-0"
+                            style={{ color: f.accent, textShadow: `0 0 20px ${f.accent}44` }}
+                          >
+                            {f.icon}
+                          </span>
+                          <h3
+                            className="text-2xl font-display font-bold m-0 leading-tight"
+                            style={{ color: f.accent }}
+                          >
+                            {f.title}
+                          </h3>
+                        </div>
+                        {/* Description */}
+                        <p className="text-text-muted leading-relaxed text-[13px] font-body opacity-80">
+                          {f.desc}
+                        </p>
+                      </div>
+
+                      {/* Bottom accent line */}
+                      <div
+                        className="h-px mt-auto transition-all duration-500 group-hover:w-full"
+                        style={{ width: '3rem', background: `linear-gradient(90deg, ${f.accent}, transparent)` }}
+                      />
+                    </div>
+                  </InteractiveCard3D>
                 </div>
               </RevealSection>
             ))}
@@ -603,7 +602,7 @@ export default function Home(): JSX.Element {
       </section>
 
       <RevealSection revealed={revealed} delay={0.2}>
-        <HorizontalGallery 
+        <HorizontalGallery
           label="Event Moments"
           images={[
             { src: '/images/Events/photos/img1.png', alt: 'Event Moment 1' },
