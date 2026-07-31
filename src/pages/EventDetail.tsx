@@ -318,7 +318,7 @@ export default function EventDetail(): JSX.Element {
                       Eligibility & Guidelines
                     </h3>
                     <p className="text-text-muted font-body text-xs sm:text-sm leading-relaxed">
-                      {event.eligibility}. Make sure your team has exactly 4 members before registrations close.
+                      {event.eligibility}. Make sure your team has 2-4 members before registrations close.
                     </p>
                   </div>
                 )}

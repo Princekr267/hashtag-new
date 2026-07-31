@@ -181,9 +181,9 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
     { text: "///", highlight: false },
     { text: "Sep 11–12, 2026", highlight: false },
     { text: "///", highlight: false },
-    { text: "4 Members Per Team", highlight: false },
+    { text: "2-4 Members Per Team", highlight: false },
     { text: "///", highlight: false },
-    { text: "8 Tracks Open", highlight: false },
+    { text: "10 Tracks Open", highlight: false },
     { text: "///", highlight: false }
   ]
 
