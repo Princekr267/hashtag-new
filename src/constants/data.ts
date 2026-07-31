@@ -384,10 +384,12 @@ export const EVENTS: Event[] = [
     gradientTo: '#221643',
     duration: '36 Hours',
     venue: 'JIMS Greater Noida',
-    teamSize: '4 Members required',
+    teamSize: '2-4 Members required',
     prizePool: '₹15L+',
     eligibility: 'Open to all UG and PG students across India',
     tracks: [
+      'ASI:ONE',
+      'Best use of n8n',
       'Sports-Tech',
       'Cloud Computing',
       'Disaster Management',
@@ -401,7 +403,7 @@ export const EVENTS: Event[] = [
       { title: 'First Prize', amount: '₹ 20,000', winners: '1 winner' },
       { title: 'Second Prize', amount: '₹ 12,000', winners: '1 winner' },
       { title: 'Third Prize', amount: '₹ 8,000', winners: '1 winner' },
-      { title: 'ASI ONE Track Prize', amount: 'Internship Opp.', winners: '1 winner' },
+      { title: 'ASI:ONE Track Prize', amount: 'Internship Opp.', winners: '1 winner' },
       { title: 'Best Beginners Team', amount: '₹ 1,000', winners: '1 winner' },
       { title: 'Best All Female Team', amount: '₹ 1,000', winners: '1 winner' }
     ],
