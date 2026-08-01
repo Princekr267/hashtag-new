@@ -1,5 +1,6 @@
 import React, { useRef } from 'react'
 import { motion, useSpring, useTransform } from 'framer-motion'
+import { GlowingEffect } from './glowing-effect'
 
 interface AlumniMember {
   name: string
@@ -79,6 +80,14 @@ const AlumniCard: React.FC<AlumniCardProps> = ({ member }) => {
           boxShadow: '0 25px 50px -12px rgba(0,0,0,0.5)',
         }}
       >
+        <GlowingEffect
+          spread={40}
+          glow={true}
+          disabled={false}
+          proximity={64}
+          inactiveZone={0.01}
+          borderWidth={1.5}
+        />
         {/* Animated Mesh Background */}
         <div 
           className="absolute inset-0 opacity-20 pointer-events-none"

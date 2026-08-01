@@ -4,6 +4,7 @@ import { ArrowRight, ExternalLink, Clock, Trophy, MapPin, Users, Award, Tag } fr
 import { Link, useNavigate } from 'react-router-dom'
 import { EVENTS, type Event } from '../constants/data'
 import { useCountdown } from '../hooks/useCountdown'
+import { DirectionAwareHover } from '../components/ui/direction-aware-hover'
 
 const STATUS = ['All', 'upcoming', 'past'] as const
 type StatusFilter = typeof STATUS[number]
@@ -120,123 +121,118 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       className="h-[380px] sm:h-[440px]"
     >
-      <div
-        ref={cardRef}
-        className="relative group h-full flex flex-col justify-end overflow-hidden rounded-[30px] border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] cursor-pointer"
-        onClick={() => navigate(`/events/${event.id}`)}
-        onMouseMove={handleMouseMove}
+      <DirectionAwareHover
+        imageUrl={event.poster || ''}
+        className="w-full h-full rounded-[30px] border border-white/5 shadow-[0_20px_50px_rgba(0,0,0,0.4)] cursor-pointer"
+        imageClassName="w-full h-full object-cover"
+        childrenClassName="w-full h-full"
       >
-        {/* Background square poster */}
-        <div className="absolute inset-0 z-0">
-          {event.poster ? (
-            <img
-              src={event.poster}
-              alt={`${event.title} poster`}
-              className="w-full h-full object-cover transition-transform duration-700 ease-[0.16, 1, 0.3, 1] group-hover:scale-110"
-            />
-          ) : (
-            <div className="w-full h-full bg-gradient-to-br from-[#121c38] to-[#08101d]" />
-          )}
+        <div
+          ref={cardRef}
+          className="relative h-full w-full flex flex-col justify-end overflow-hidden"
+          onClick={() => navigate(`/events/${event.id}`)}
+          onMouseMove={handleMouseMove}
+        >
           {/* Subtle gradient vignette to overlay details */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#060b14] via-[#060b14]/75 to-[#060b14]/15 group-hover:via-[#060b14]/85 transition-colors duration-500" />
-        </div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#060b14] via-[#060b14]/75 to-[#060b14]/15 group-hover:via-[#060b14]/85 transition-colors duration-500 pointer-events-none" />
 
-        {/* Glowing hover light tracking */}
-        <div
-          aria-hidden
-          className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
-          style={{
-            background: `radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), ${event.gradientFrom}15, transparent 60%)`,
-          }}
-        />
+          {/* Glowing hover light tracking */}
+          <div
+            aria-hidden
+            className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10"
+            style={{
+              background: `radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%), ${event.gradientFrom}15, transparent 60%)`,
+            }}
+          />
 
-        {/* Dynamic Glow Side Accent */}
-        <div
-          className="absolute left-0 top-0 bottom-0 w-[4px] opacity-80 group-hover:opacity-100 transition-opacity duration-300 z-10"
-          style={{ background: `linear-gradient(to bottom, ${event.gradientFrom}, ${event.gradientTo})` }}
-        />
+          {/* Dynamic Glow Side Accent */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-[4px] opacity-80 group-hover:opacity-100 transition-opacity duration-300 z-10"
+            style={{ background: `linear-gradient(to bottom, ${event.gradientFrom}, ${event.gradientTo})` }}
+          />
 
-        {/* Content Box */}
-        <div className="relative z-20 p-6 sm:p-7 flex flex-col gap-4 w-full">
+          {/* Content Box */}
+          <div className="relative z-20 p-6 sm:p-7 flex flex-col gap-4 w-full">
 
-          <div className="space-y-2">
-            {/* Category tag & Status */}
-            <div className="flex items-center justify-between gap-4">
-              <span
-                className="text-[9px] font-mono tracking-[0.25em] font-semibold uppercase px-2.5 py-0.5 rounded border"
-                style={{
-                  color: event.gradientFrom,
-                  borderColor: `${event.gradientFrom}20`,
-                  background: `${event.gradientFrom}08`
-                }}
-              >
-                {event.tag}
-              </span>
-              <div className="shrink-0">
-                {event.status === 'upcoming' ? (
-                  <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-0.5 text-[8px] font-mono font-bold uppercase tracking-wider text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.1)]">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                    LIVE
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center rounded-full border border-white/5 bg-white/5 px-2.5 py-0.5 text-[8px] font-mono tracking-wider text-white/40 uppercase">
-                    Completed
-                  </span>
+            <div className="space-y-2">
+              {/* Category tag & Status */}
+              <div className="flex items-center justify-between gap-4">
+                <span
+                  className="text-[9px] font-mono tracking-[0.25em] font-semibold uppercase px-2.5 py-0.5 rounded border"
+                  style={{
+                    color: event.gradientFrom,
+                    borderColor: `${event.gradientFrom}20`,
+                    background: `${event.gradientFrom}08`
+                  }}
+                >
+                  {event.tag}
+                </span>
+                <div className="shrink-0">
+                  {event.status === 'upcoming' ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-2.5 py-0.5 text-[8px] font-mono font-bold uppercase tracking-wider text-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.1)]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                      LIVE
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center rounded-full border border-white/5 bg-white/5 px-2.5 py-0.5 text-[8px] font-mono tracking-wider text-white/40 uppercase">
+                      Completed
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              {/* Title */}
+              <h3 className="text-xl sm:text-2xl font-display font-bold text-white leading-tight break-words">
+                {event.title}
+              </h3>
+            </div>
+
+            {/* Description */}
+            <p className="text-xs text-text-muted leading-relaxed line-clamp-2 break-words font-body transition-opacity duration-300 group-hover:text-white/90">
+              {event.description}
+            </p>
+
+            {/* Event Quick Info Pills */}
+            {(event.duration || event.prizePool) && (
+              <div className="flex flex-wrap items-center gap-2">
+                {event.duration && (
+                  <div className="flex items-center gap-1.5 bg-white/5 border border-white/5 px-2 py-0.5 rounded-lg text-[9px] font-mono text-white/90">
+                    <Clock size={10} className="flex-shrink-0" style={{ color: event.gradientFrom }} />
+                    <span>{event.duration}</span>
+                  </div>
+                )}
+                {event.prizePool && (
+                  <div className="flex items-center gap-1.5 bg-white/5 border border-white/5 px-2 py-0.5 rounded-lg text-[9px] font-mono text-white/90">
+                    <Trophy size={10} className="flex-shrink-0" style={{ color: event.gradientTo }} />
+                    <span>{event.prizePool}</span>
+                  </div>
                 )}
               </div>
-            </div>
-
-            {/* Title */}
-            <h3 className="text-xl sm:text-2xl font-display font-bold text-white leading-tight break-words">
-              {event.title}
-            </h3>
-          </div>
-
-          {/* Description */}
-          <p className="text-xs text-text-muted leading-relaxed line-clamp-2 break-words font-body transition-opacity duration-300 group-hover:text-white/90">
-            {event.description}
-          </p>
-
-          {/* Event Quick Info Pills */}
-          {(event.duration || event.prizePool) && (
-            <div className="flex flex-wrap items-center gap-2">
-              {event.duration && (
-                <div className="flex items-center gap-1.5 bg-white/5 border border-white/5 px-2 py-0.5 rounded-lg text-[9px] font-mono text-white/90">
-                  <Clock size={10} className="flex-shrink-0" style={{ color: event.gradientFrom }} />
-                  <span>{event.duration}</span>
-                </div>
-              )}
-              {event.prizePool && (
-                <div className="flex items-center gap-1.5 bg-white/5 border border-white/5 px-2 py-0.5 rounded-lg text-[9px] font-mono text-white/90">
-                  <Trophy size={10} className="flex-shrink-0" style={{ color: event.gradientTo }} />
-                  <span>{event.prizePool}</span>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Footer Action */}
-          <div className="pt-3 border-t border-white/10 flex items-center justify-between mt-2">
-            {event.status === 'upcoming' && event.registerUrl ? (
-              <MagneticRegisterBtn
-                href={event.registerUrl}
-              >
-                <span className="leading-none text-[11px] tracking-wider">Register Now</span>
-                <ExternalLink size={11} className="flex-shrink-0" />
-              </MagneticRegisterBtn>
-            ) : (
-              <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-white/30">
-                // COMPLETED EVENT
-              </span>
             )}
 
-            <span className="text-[9px] font-mono tracking-[0.15em] text-white/20 uppercase group-hover:text-white/40 transition-colors duration-300">
-              Details →
-            </span>
-          </div>
-        </div>
+            {/* Footer Action */}
+            <div className="pt-3 border-t border-white/10 flex items-center justify-between mt-2">
+              {event.status === 'upcoming' && event.registerUrl ? (
+                <MagneticRegisterBtn
+                  href={event.registerUrl}
+                >
+                  <span className="leading-none text-[11px] tracking-wider">Register Now</span>
+                  <ExternalLink size={11} className="flex-shrink-0" />
+                </MagneticRegisterBtn>
+              ) : (
+                <span className="text-[9px] font-mono tracking-[0.2em] uppercase text-white/30">
+                  // COMPLETED EVENT
+                </span>
+              )}
 
-      </div>
+              <span className="text-[9px] font-mono tracking-[0.15em] text-white/20 uppercase group-hover:text-white/40 transition-colors duration-300">
+                Details →
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </DirectionAwareHover>
     </motion.div>
   )
 }
@@ -1021,7 +1017,7 @@ export default function Events(): JSX.Element {
           {/* Cards grid — past events have polaroid tilt */}
           <motion.div
             layout
-            className="events-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6"
+            className="events-grid grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-10 xl:gap-12"
           >
             <AnimatePresence mode="popLayout">
               {filtered.map((event, idx) => (

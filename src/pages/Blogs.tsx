@@ -3,8 +3,11 @@ import { ArrowRight } from 'lucide-react'
 import { BLOGS } from '../constants/data'
 import { Link } from 'react-router-dom'
 
+import AcertinityCard3D from "../components/visuals/AcertinityCard3D"
+
+
 export default function Blogs(): JSX.Element {
-  
+
   const allPosts = BLOGS
   const featuredPost = allPosts.find(p => p.featured) || allPosts[0]
   const otherPosts = allPosts.filter(p => p.id !== featuredPost.id)
@@ -23,7 +26,7 @@ export default function Blogs(): JSX.Element {
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
             className="text-center md:text-left mb-12 md:mb-16"
           >
-            <motion.span 
+            <motion.span
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
@@ -36,7 +39,7 @@ export default function Blogs(): JSX.Element {
               <span className="text-gradient">Frontier</span>
             </h1>
             <p className="text-text-muted text-base md:text-lg max-w-2xl font-body leading-relaxed opacity-70 mx-auto md:mx-0">
-              Technical deep-dives, community culture, and campus innovation. 
+              Technical deep-dives, community culture, and campus innovation.
             </p>
           </motion.div>
 
@@ -49,38 +52,15 @@ export default function Blogs(): JSX.Element {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: idx * 0.1, duration: 0.8 }}
+                className="h-full flex justify-center"
               >
-                <Link to={`/blogs/${blog.id}`} className="group block h-full">
-                  <div className="h-full flex flex-col rounded-[32px] bg-white/[0.03] border border-white/5 backdrop-blur-md overflow-hidden transition-all duration-500 hover:border-white/20 hover:bg-white/[0.06] hover:-translate-y-2">
-                    <div className="aspect-[16/10] overflow-hidden relative">
-                      {blog.coverImage ? (
-                        <img src={blog.coverImage} alt={blog.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                      ) : (
-                        <div className="w-full h-full bg-slate-900/50" />
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                      <div className="absolute top-4 left-4">
-                        <span className="px-3 py-1 rounded-full bg-primary/20 backdrop-blur-md border border-primary/20 text-[10px] font-label text-primary-dim uppercase tracking-widest font-bold">
-                          {blog.tag}
-                        </span>
-                      </div>
-                    </div>
-                    
-                    <div className="p-8 flex flex-col flex-grow">
-                      <span className="text-[10px] font-label tracking-[0.3em] text-text-faint uppercase mb-4">{blog.date}</span>
-                      <h3 className="text-2xl font-display font-bold text-white mb-4 leading-tight group-hover:text-primary-dim transition-colors">{blog.title}</h3>
-                      <p className="text-text-muted text-sm line-clamp-3 mb-8 opacity-70 leading-relaxed">{blog.excerpt}</p>
-                      
-                      <div className="mt-auto flex items-center justify-between pt-6 border-t border-white/5">
-                        <span className="text-[10px] font-label text-text-faint tracking-widest">{blog.readTime}</span>
-                        <div className="flex items-center gap-2 text-primary-dim group-hover:text-primary transition-colors">
-                          <span className="text-[10px] font-label tracking-widest font-bold">READ STORY</span>
-                          <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
+                <AcertinityCard3D
+                  id={blog.id}
+                  image={blog.coverImage}
+                  header={blog.title}
+                  desc={blog.excerpt}
+                  readTime={blog.readTime}
+                />
               </motion.div>
             ))}
           </div>
