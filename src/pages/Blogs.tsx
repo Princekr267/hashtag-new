@@ -58,8 +58,8 @@ export default function Blogs(): JSX.Element {
                   id={blog.id}
                   image={blog.coverImage}
                   header={blog.title}
-                  desc={blog.excerpt}
                   readTime={blog.readTime}
+                  desc={blog.excerpt}
                 />
               </motion.div>
             ))}
