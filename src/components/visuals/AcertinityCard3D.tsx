@@ -27,13 +27,7 @@ export default function ThreeDCardDemo(props: any) {
           >
             {id ? <Link to={`/blogs/${id}`} className="hover:underline">{header}</Link> : header}
           </CardItem>
-          <CardItem
-            as="p"
-            translateZ="60"
-            className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
-          >
-            {desc}
-          </CardItem>
+          
           <CardItem translateZ="100" className="w-full mt-4">
             {id ? (
               <Link to={`/blogs/${id}`}>
@@ -55,6 +49,15 @@ export default function ThreeDCardDemo(props: any) {
               />
             )}
           </CardItem>
+
+          <CardItem
+            as="p"
+            translateZ="60"
+            className="text-neutral-500 text-sm max-w-sm mt-2 dark:text-neutral-300"
+          >
+            {desc}
+          </CardItem>
+
           <div className="flex justify-between items-center mt-20">
             <CardItem
               translateZ={20}
