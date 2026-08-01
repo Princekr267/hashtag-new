@@ -2,6 +2,7 @@ import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft } from 'lucide-react'
 import { BLOGS } from '../constants/data'
+import { SparklesCore } from '../components/ui/sparkles'
 
 export default function BlogDetail(): JSX.Element {
   const { id } = useParams<{ id: string }>()
@@ -23,20 +24,29 @@ export default function BlogDetail(): JSX.Element {
   return (
     <div className="min-h-screen pt-24 pb-24 bg-[#020617] relative">
       {/* Background Ambience */}
-      <div className="absolute top-0 left-0 w-full h-[1000px] pointer-events-none -z-10">
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <SparklesCore
+          background="transparent"
+          minSize={0.5}
+          maxSize={1.2}
+          particleDensity={60}
+          className="w-full h-full"
+          particleColor="#FFFFFF"
+        />
         <div 
           className="absolute top-0 right-0 w-[800px] h-[800px] opacity-20 blur-[120px]"
           style={{ background: `radial-gradient(circle, ${blog.accent}, transparent 70%)` }} 
         />
       </div>
-
-      <div className="max-w-4xl mx-auto px-6">
+      
+      <div className="max-w-4xl mx-auto px-6 relative z-10">
         {/* Navigation */}
         <motion.div
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 1, x: 0 }}
           className="mb-12"
         >
+          
           <Link
             to="/blogs"
             className="group inline-flex items-center gap-3 text-xs font-label tracking-[0.3em] text-text-faint hover:text-white transition-colors uppercase"
