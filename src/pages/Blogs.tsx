@@ -4,7 +4,6 @@ import { BLOGS } from '../constants/data'
 import { Link } from 'react-router-dom'
 
 import AcertinityCard3D from "../components/visuals/AcertinityCard3D"
-import { DottedGlowBackground } from "../components/ui/dotted-glow-background";
 
 
 export default function Blogs(): JSX.Element {
