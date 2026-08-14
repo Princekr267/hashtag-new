@@ -400,31 +400,31 @@ export const EVENTS: Event[] = [
       'Open Innovation'
     ],
     prizes: [
-      { title: 'First Prize', amount: '₹ 20,000', winners: '1 winner' },
-      { title: 'Second Prize', amount: '₹ 12,000', winners: '1 winner' },
-      { title: 'Third Prize', amount: '₹ 8,000', winners: '1 winner' },
-      { title: 'ASI:ONE Track Prize', amount: 'Internship Opp.', winners: '1 winner' },
-      { title: 'Best Beginners Team', amount: '₹ 1,000', winners: '1 winner' },
-      { title: 'Best All Female Team', amount: '₹ 1,000', winners: '1 winner' }
+      { title: 'First Prize', amount: '₹ 15,000', winners: '1 winner' },
+      { title: 'Second Prize', amount: '₹ 10,000', winners: '1 winner' },
+      { title: 'Third Prize', amount: '₹ 5,000', winners: '1 winner' },
+      { title: 'ASI:ONE Track Prize', amount: 'Internship Opportunity', winners: '1 winner' },
+      { title: 'Best Beginners Team', amount: '₹ 1,000 in Goodies', winners: '1 winner' },
+      { title: 'Best All Female Team', amount: '₹ 1,000 in Goodies', winners: '1 winner' }
     ],
     timeline: [
       {
-        date: 'Jun 1 – Aug 15, 2026',
+        date: 'Jun 1 – Aug 26, 2026',
         location: 'Online',
         title: 'Registration 📝',
-        description: 'Hackathon registration period. Sign up, form your team, and claim your spot at Hacktivate 2.0. Open from Jun 1 at 12:00 AM to Aug 15 at 11:59 PM.'
+        description: 'Hackathon registration period. Sign up, form your team, and claim your spot at Hacktivate 2.0. Open from Jun 1 at 12:00 AM to Aug 26 at 11:59 PM.'
       },
       {
-        date: 'Jun 1 – Aug 15, 2026',
+        date: 'Jun 1 – Aug 26, 2026',
         location: 'Online',
         title: 'Team Formation 🤝',
-        description: 'Form teams and collaborate with other participants. Find your dream team before registrations close on Aug 15 at 11:59 PM.'
+        description: 'Form teams and collaborate with other participants. Find your dream team before registrations close on Aug 26 at 11:59 PM.'
       },
       {
-        date: 'Jun 1 – Aug 15, 2026',
+        date: 'Jun 1 – Aug 26, 2026',
         location: 'Online',
         title: 'Presentation Submission 📊',
-        description: 'Submit your project idea presentation for evaluation. Window open from Jun 1 at 12:00 AM to Aug 15 at 11:59 PM.'
+        description: 'Submit your project idea presentation for evaluation. Window open from Jun 1 at 12:00 AM to Aug 26 at 11:59 PM.'
       },
       {
         date: 'To Be Announced',
