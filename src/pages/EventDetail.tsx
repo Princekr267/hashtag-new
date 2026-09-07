@@ -22,6 +22,7 @@ export default function EventDetail(): JSX.Element {
 
   // Check if it's a detailed event (e.g. Hacktivate 2.0)
   const isDetailed = !!(event.timeline || event.tracks || event.prizes)
+  const isHacktivateLive = event.id === 'hacktivate2' && new Date() >= new Date('2026-09-11T09:00:00')
 
   return (
     <div className="min-h-screen pt-28 pb-20 px-4 sm:px-6 md:px-8 bg-[#060b14] relative overflow-hidden">
@@ -89,7 +90,7 @@ export default function EventDetail(): JSX.Element {
                     </span>
                     {event.status === 'upcoming' && (
                       <span className="pill pill-live flex-shrink-0 text-[10px] px-3 py-0.5 rounded-full font-mono font-semibold tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shadow-[0_0_15px_rgba(52,211,153,0.15)] uppercase">
-                        REGISTRATIONS LIVE
+                        {isHacktivateLive ? 'LIVE' : 'REGISTRATIONS LIVE'}
                       </span>
                     )}
                   </div>
@@ -142,7 +143,7 @@ export default function EventDetail(): JSX.Element {
                         rel="noopener noreferrer"
                         className="inline-flex items-center justify-center gap-2 min-w-[180px] px-6 py-3 rounded-full text-sm font-semibold tracking-wider font-mono border border-transparent bg-gradient-to-r from-[#edac03] to-[#ffcf40] text-[#221643] hover:from-[#221643] hover:to-[#221643] hover:text-[#edac03] hover:border-[#edac03] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_20px_rgba(237,172,3,0.35)]"
                       >
-                        <span>REGISTER NOW</span>
+                        <span>{isHacktivateLive ? 'HACKATHON IS LIVE' : 'REGISTER NOW'}</span>
                         <ExternalLink size={14} />
                       </a>
                     )}
@@ -344,7 +345,9 @@ export default function EventDetail(): JSX.Element {
               </h1>
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4">
                 {event.status === 'upcoming' && (
-                  <span className="pill pill-live flex-shrink-0">REGISTRATIONS LIVE</span>
+                  <span className="pill pill-live flex-shrink-0">
+                    {isHacktivateLive ? 'LIVE' : 'REGISTRATIONS LIVE'}
+                  </span>
                 )}
                 {event.registerUrl && event.status === 'upcoming' && (
                   <a
@@ -353,7 +356,7 @@ export default function EventDetail(): JSX.Element {
                     rel="noreferrer"
                     className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-xs font-semibold tracking-wider font-mono border border-transparent bg-gradient-to-r from-[#edac03] to-[#ffcf40] text-[#221643] hover:from-[#221643] hover:to-[#221643] hover:text-[#edac03] hover:border-[#edac03] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_0_15px_rgba(237,172,3,0.25)]"
                   >
-                    <span className="leading-none">Register Now</span>
+                    <span className="leading-none">{isHacktivateLive ? 'Hackathon is Live' : 'Register Now'}</span>
                     <ExternalLink size={14} className="flex-shrink-0" />
                   </a>
                 )}

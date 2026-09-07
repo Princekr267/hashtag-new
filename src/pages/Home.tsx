@@ -188,6 +188,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
   ]
 
   const marqueeItems = [...TICKER_ITEMS, ...TICKER_ITEMS]
+  const isLive = new Date() >= new Date('2026-09-11T09:00:00') && new Date() < new Date('2026-09-13T00:00:00')
 
   return (
     <RevealSection revealed={revealed} delay={0.2}>
@@ -224,7 +225,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                     background: 'linear-gradient(135deg, #edac03, #c8860a)'
                   }}
                 >
-                  Upcoming
+                  {isLive ? 'Live' : 'Upcoming'}
                 </div>
 
                 {/* Scrolling Center */}
@@ -279,7 +280,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                     background: 'linear-gradient(135deg, #edac03, #c8860a)'
                   }}
                 >
-                  Upcoming
+                  {isLive ? 'Live' : 'Upcoming'}
                 </div>
 
                 {/* Scrolling Center */}

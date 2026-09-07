@@ -216,7 +216,9 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
                 <MagneticRegisterBtn
                   href={event.registerUrl}
                 >
-                  <span className="leading-none text-[11px] tracking-wider">Register Now</span>
+                  <span className="leading-none text-[11px] tracking-wider">
+                    {event.id === 'hacktivate2' && new Date() >= new Date('2026-09-11T09:00:00') ? 'Hackathon is Live' : 'Register Now'}
+                  </span>
                   <ExternalLink size={11} className="flex-shrink-0" />
                 </MagneticRegisterBtn>
               ) : (
@@ -631,7 +633,7 @@ function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
                     background: '#10b981',
                     animation: 'fec_pulseGreen 1.6s ease infinite'
                   }} />
-                  Registrations Live
+                  {countdown.isExpired ? 'Live' : 'Registrations Live'}
                 </div>
 
                 {/* Shimmer title */}
@@ -742,7 +744,7 @@ function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
                         background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
                         animation: 'fec_shimmerBtn 2.2s ease infinite'
                       }} />
-                      <span>Register Now</span>
+                      <span>{countdown.isExpired ? 'Hackathon is Live' : 'Register Now'}</span>
                       <ExternalLink size={12} className="flex-shrink-0" />
                     </a>
                   )}
@@ -774,92 +776,148 @@ function FeaturedEventCard({ event }: { event: Event }): JSX.Element {
                 </div>
               </div>
 
-              {/* Right Column — countdown */}
+              {/* Right Column — countdown or Live Status Badge */}
               {event.status === 'upcoming' && (
-                <div style={{
-                  flexShrink: 0,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px',
-                  alignItems: (isMobile || isTablet) ? 'center' : 'flex-end',
-                  position: 'relative',
-                  zIndex: 2,
-                  width: (isMobile || isTablet) ? '100%' : 'auto',
-                  marginTop: (isMobile || isTablet) ? '1rem' : 0
-                }}>
-                  {/* Countdown label */}
+                countdown.isExpired ? (
                   <div style={{
-                    fontSize: '9px',
-                    fontWeight: 700,
-                    letterSpacing: '0.2em',
-                    textTransform: 'uppercase',
-                    color: 'rgba(148,163,196,0.38)',
-                    textAlign: (isMobile || isTablet) ? 'center' : 'right'
+                    flexShrink: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '6px',
+                    alignItems: (isMobile || isTablet) ? 'center' : 'flex-end',
+                    position: 'relative',
+                    zIndex: 2,
+                    width: (isMobile || isTablet) ? '100%' : 'auto',
+                    marginTop: (isMobile || isTablet) ? '1rem' : 0
                   }}>
-                    Event starts in
-                  </div>
-
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    {timeUnits.map((unit, index) => (
-                      <React.Fragment key={unit.label}>
-                        {index > 0 && (
-                          <span style={{
-                            fontSize: '18px',
-                            color: 'rgba(96,165,250,0.2)',
-                            paddingTop: '5px',
-                            fontWeight: 'bold'
-                          }}>
-                            :
-                          </span>
-                        )}
-                        <div style={{
-                          background: 'rgba(96,165,250,0.06)',
-                          border: '1px solid rgba(96,165,250,0.18)',
-                          borderRadius: '12px',
-                          padding: '8px 10px',
-                          minWidth: '54px',
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          position: 'relative',
-                          overflow: 'hidden'
+                    <div style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                      padding: '10px 18px',
+                      borderRadius: '16px',
+                      background: 'rgba(16, 185, 129, 0.08)',
+                      border: '1px solid rgba(16, 185, 129, 0.35)',
+                      boxShadow: '0 0 25px rgba(16, 185, 129, 0.18), inset 0 0 15px rgba(16, 185, 129, 0.05)',
+                      backdropFilter: 'blur(10px)'
+                    }}>
+                      <div className="relative flex h-3 w-3 items-center justify-center">
+                        <span
+                          className="absolute inline-flex h-full w-full rounded-full bg-[#10b981] opacity-75"
+                          style={{ animation: 'fec_pulseGreen 1.6s ease infinite' }}
+                        />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]" />
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{
+                          fontFamily: "'Outfit', sans-serif",
+                          fontSize: '14px',
+                          fontWeight: 800,
+                          letterSpacing: '0.08em',
+                          textTransform: 'uppercase',
+                          color: '#34d399',
+                          lineHeight: 1.2
                         }}>
-                          <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            height: '1px',
-                            background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.5), transparent)'
-                          }} />
-                          <span
-                            key={unit.value}
-                            style={{
-                              fontFamily: "'JetBrains Mono', monospace",
-                              fontSize: '25px',
-                              fontWeight: 700,
-                              color: '#60a5fa',
-                              lineHeight: 1,
-                              animation: 'fec_cdFlip 0.3s ease'
-                            }}
-                          >
-                            {String(unit.value).padStart(2, '0')}
-                          </span>
-                          <span style={{
-                            fontSize: '8px',
-                            fontWeight: 700,
-                            letterSpacing: '0.15em',
-                            textTransform: 'uppercase',
-                            color: 'rgba(148,163,196,0.38)',
-                            marginTop: '3px'
-                          }}>
-                            {unit.label}
-                          </span>
-                        </div>
-                      </React.Fragment>
-                    ))}
+                          Hackathon is Live
+                        </span>
+                        <span style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: '9px',
+                          color: 'rgba(148,163,196,0.6)',
+                          letterSpacing: '0.12em',
+                          textTransform: 'uppercase'
+                        }}>
+                          36 Hours Hackathon in Progress
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div style={{
+                    flexShrink: 0,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '8px',
+                    alignItems: (isMobile || isTablet) ? 'center' : 'flex-end',
+                    position: 'relative',
+                    zIndex: 2,
+                    width: (isMobile || isTablet) ? '100%' : 'auto',
+                    marginTop: (isMobile || isTablet) ? '1rem' : 0
+                  }}>
+                    {/* Countdown label */}
+                    <div style={{
+                      fontSize: '9px',
+                      fontWeight: 700,
+                      letterSpacing: '0.2em',
+                      textTransform: 'uppercase',
+                      color: 'rgba(148,163,196,0.38)',
+                      textAlign: (isMobile || isTablet) ? 'center' : 'right'
+                    }}>
+                      Event starts in
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      {timeUnits.map((unit, index) => (
+                        <React.Fragment key={unit.label}>
+                          {index > 0 && (
+                            <span style={{
+                              fontSize: '18px',
+                              color: 'rgba(96,165,250,0.2)',
+                              paddingTop: '5px',
+                              fontWeight: 'bold'
+                            }}>
+                              :
+                            </span>
+                          )}
+                          <div style={{
+                            background: 'rgba(96,165,250,0.06)',
+                            border: '1px solid rgba(96,165,250,0.18)',
+                            borderRadius: '12px',
+                            padding: '8px 10px',
+                            minWidth: '54px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            position: 'relative',
+                            overflow: 'hidden'
+                          }}>
+                            <div style={{
+                              position: 'absolute',
+                              top: 0,
+                              left: 0,
+                              right: 0,
+                              height: '1px',
+                              background: 'linear-gradient(90deg, transparent, rgba(96,165,250,0.5), transparent)'
+                            }} />
+                            <span
+                              key={unit.value}
+                              style={{
+                                fontFamily: "'JetBrains Mono', monospace",
+                                fontSize: '25px',
+                                fontWeight: 700,
+                                color: '#60a5fa',
+                                lineHeight: 1,
+                                animation: 'fec_cdFlip 0.3s ease'
+                              }}
+                            >
+                              {String(unit.value).padStart(2, '0')}
+                            </span>
+                            <span style={{
+                              fontSize: '8px',
+                              fontWeight: 700,
+                              letterSpacing: '0.15em',
+                              textTransform: 'uppercase',
+                              color: 'rgba(148,163,196,0.38)',
+                              marginTop: '3px'
+                            }}>
+                              {unit.label}
+                            </span>
+                          </div>
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </div>
+                )
               )}
             </div>
 
