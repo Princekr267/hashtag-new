@@ -164,31 +164,18 @@ function BlurHeading({ text, className, revealed }: { text: string, className?: 
   )
 }
 
-// ── Hacktivate Ticker Banner Component ─────────────────────────────
-interface HacktivateTickerBannerProps {
+// ── Events Ticker Banner Component ─────────────────────────────
+interface EventsTickerBannerProps {
   revealed: boolean
 }
 
-function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
-  const TICKER_ITEMS = [
-    { text: "Hacktivate 2.0", highlight: true },
-    { text: "///", highlight: false },
-    { text: "36-Hour Hackathon", highlight: false },
-    { text: "///", highlight: false },
-    { text: "JIMS Greater Noida", highlight: false },
-    { text: "///", highlight: false },
-    { text: "₹15L+ Prize Pool", highlight: true },
-    { text: "///", highlight: false },
-    { text: "Sep 11–12, 2026", highlight: false },
-    { text: "///", highlight: false },
-    { text: "2-4 Members Per Team", highlight: false },
-    { text: "///", highlight: false },
-    { text: "10 Tracks Open", highlight: false },
-    { text: "///", highlight: false }
-  ]
+function EventsTickerBanner({ revealed }: EventsTickerBannerProps) {
+  const tickerItems = MARQUEE_EVENTS.flatMap((event) => [
+    { text: event, highlight: true },
+    { text: '///', highlight: false },
+  ])
 
-  const marqueeItems = [...TICKER_ITEMS, ...TICKER_ITEMS]
-  const isLive = new Date() >= new Date('2026-09-11T09:00:00') && new Date() < new Date('2026-09-13T00:00:00')
+  const marqueeItems = [...tickerItems, ...tickerItems]
 
   return (
     <RevealSection revealed={revealed} delay={0.2}>
@@ -214,7 +201,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
           {/* Mobile View: Entire banner is a Link, no internal links to avoid nesting */}
           <div className="block sm:hidden">
             <Link
-              to="/events/hacktivate2"
+              to="/events"
               className="block border border-[#edac03]/20 rounded-[16px] overflow-hidden bg-[#060b14] relative shadow-lg active:scale-[0.98] transition-transform duration-200"
             >
               <div className="h-[52px] flex items-center justify-between relative overflow-hidden select-none">
@@ -225,7 +212,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                     background: 'linear-gradient(135deg, #edac03, #c8860a)'
                   }}
                 >
-                  {isLive ? 'Live' : 'Upcoming'}
+                  Events
                 </div>
 
                 {/* Scrolling Center */}
@@ -280,7 +267,7 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                     background: 'linear-gradient(135deg, #edac03, #c8860a)'
                   }}
                 >
-                  {isLive ? 'Live' : 'Upcoming'}
+                  Events
                 </div>
 
                 {/* Scrolling Center */}
@@ -318,17 +305,17 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
                     />
                     <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]" />
                   </div>
-                  <span className="text-[#10b981] font-bold text-[10px] tracking-wider uppercase font-label">Live</span>
+                  <span className="text-[#10b981] font-bold text-[10px] tracking-wider uppercase font-label">Explore</span>
 
                   {/* View Details Button */}
                   <Link
-                    to="/events/hacktivate2"
+                    to="/events"
                     className="inline-flex items-center justify-center font-bold text-[10px] px-3 py-1.5 rounded-full transition-transform hover:scale-105 active:scale-95 select-none text-[#221643] whitespace-nowrap ml-2"
                     style={{
                       background: 'linear-gradient(45deg, #edac03, #ffcf40)',
                     }}
                   >
-                    View Details <span className="ml-1 text-[10px] font-sans">↗</span>
+                    View Events <span className="ml-1 text-[10px] font-sans">↗</span>
                   </Link>
                 </div>
               </div>
@@ -343,7 +330,6 @@ function HacktivateTickerBanner({ revealed }: HacktivateTickerBannerProps) {
 
 export default function Home(): JSX.Element {
   const [revealed, setRevealed] = useState(false)
-  const marqueeDoubled = [...MARQUEE_EVENTS, ...MARQUEE_EVENTS]
   const upcomingEvent = EVENTS.find(e => e.status === 'upcoming')
 
   useEffect(() => {
@@ -553,11 +539,6 @@ export default function Home(): JSX.Element {
       </section>
 
 
-
-      {/* ════════════════════════════════════════════════════════
-          SCROLLING MARQUEE
-          ════════════════════════════════════════════════════ */}
-      <HacktivateTickerBanner revealed={revealed} />
 
       {/* ════════════════════════════════════════════════════════
           STATS

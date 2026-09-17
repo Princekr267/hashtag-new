@@ -217,7 +217,7 @@ function EventCard({ event, idx }: { event: Event; idx: number }): JSX.Element {
                   href={event.registerUrl}
                 >
                   <span className="leading-none text-[11px] tracking-wider">
-                    {event.id === 'hacktivate2' && new Date() >= new Date('2026-09-11T09:00:00') ? 'Hackathon is Live' : 'Register Now'}
+                    Register Now
                   </span>
                   <ExternalLink size={11} className="flex-shrink-0" />
                 </MagneticRegisterBtn>

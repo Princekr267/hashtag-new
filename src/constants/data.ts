@@ -376,10 +376,7 @@ export const EVENTS: Event[] = [
     title: 'Hacktivate 2.0',
     description: '36 hours. One Venue. Filled with talented builders. Hacktivate 2.0 is a 36-hour offline hackathon organized by Hashtag Technical Society, where students, developers and tech enthusiasts from across India come together to stop talking about ideas and actually build them.',
     tag: 'Hackathon',
-    get status(): 'upcoming' | 'past' {
-      // Remains upcoming/live and becomes past on 13th of September 2026
-      return new Date() >= new Date('2026-09-13T00:00:00') ? 'past' : 'upcoming'
-    },
+    status: 'past',
     registerUrl: 'https://hackculture.io/hackathons/hacktivate-2-0',
     officialWebsite: 'https://hacktivate-2-0-sigma.vercel.app/',
     poster: '/images/Events/posters/poster.png',
@@ -617,7 +614,6 @@ export const MILESTONES: Milestone[] = [
 
 // ── Marquee Events (for scrolling banner) ─────────────────────
 export const MARQUEE_EVENTS: string[] = [
-  'Hacktivate 2.0',
   'TroubleShoot Ideathon',
   'Brand Brawl',
   'IdeaUtsav',
